@@ -18,25 +18,25 @@ class ShopAndAboutButton extends StatelessWidget {
 
     // Determine screen type based on width
     bool isMobile = screenWidth < 600;
-    bool isTablet = screenWidth >= 600 && screenWidth < 1024;
-    bool isDesktop = screenWidth >= 1024;
+    bool isTablet = screenWidth >= 600 && screenWidth <= 1024;
+    bool isDesktop = screenWidth > 1024;
     return Container(
       height: screenHeight *
           (isDesktop
-              ? 0.07
+              ? 0.065
               : isTablet
                   ? 0.05
-                  : 0.07),
+                  : 0.06),
       width: isWidth
           ? screenWidth *
               (isMobile
                   ? 0.3
                   : isDesktop
-                      ? 0.08
+                      ? 0.12
                       : 0.2)
           : screenWidth *
               (isDesktop
-                  ? 0.1
+                  ? 0.15
                   : isMobile
                       ? 0.4
                       : 0.2),

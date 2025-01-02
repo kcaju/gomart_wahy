@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gomart_wahy/view/all_products/all_productscreen.dart';
 import 'package:gomart_wahy/view/homescreen/widget/category_popup.dart';
 import 'package:gomart_wahy/view/homescreen/widget/homepage.dart';
+import 'package:gomart_wahy/view/quick_enquiry/quick_enquiryscreen.dart';
+import 'package:gomart_wahy/view/sign_up/signup_screen.dart';
+import 'package:gomart_wahy/view/signin/signin_screen.dart';
 
 class HeaderWhitebox extends StatelessWidget {
   const HeaderWhitebox({super.key});
@@ -84,13 +88,13 @@ class HeaderWhitebox extends StatelessWidget {
                   ),
                   onSelected: (value) {
                     // Handle any selection if required
-                    // if (value == 1) {
-                    //   Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => AllproductsScreen()),
-                    //   );
-                    // }
+                    if (value == 1) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AllProductscreen()),
+                      );
+                    }
                   },
                   itemBuilder: (context) => [
                     PopupMenuItem(
@@ -117,11 +121,11 @@ class HeaderWhitebox extends StatelessWidget {
           isDesktop
               ? GestureDetector(
                   onTap: () {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       builder: (context) => QuickenquiryScreen(),
-                    //     ));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => QuickEnquiryscreen(),
+                        ));
                   },
                   child: Text(
                     "Quick Enquiry",
@@ -214,19 +218,17 @@ class HeaderWhitebox extends StatelessWidget {
                   onSelected: (value) {
                     // Handle any selection if required
                     if (value == 1) {
-                      // Navigate to the Sign In screen
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //       builder: (context) => SigninScreen()),
-                      // );
+                      //Navigate to the Sign In screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SigninScreen()),
+                      );
                     } else if (value == 2) {
                       // Navigate to the Sign Up screen
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //       builder: (context) => SignupScreen()),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignupScreen()),
+                      );
                     }
                   },
                   itemBuilder: (context) => [

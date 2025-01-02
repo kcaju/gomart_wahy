@@ -14,8 +14,8 @@ class TopofferCard extends StatelessWidget {
 
     // Determine screen type based on width
     bool isMobile = screenWidth < 600;
-    bool isTablet = screenWidth >= 600 && screenWidth < 1024;
-    bool isDesktop = screenWidth >= 1024;
+    bool isTablet = screenWidth >= 600 && screenWidth <= 1024;
+    bool isDesktop = screenWidth > 1024;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       child: Column(
@@ -75,7 +75,7 @@ class TopofferCard extends StatelessWidget {
               : isMobile
                   ? double.infinity
                   : 0.6),
-      height: screenHeight * 0.25,
+      height: screenHeight * (isMobile ? 0.3 : 0.25),
       decoration: BoxDecoration(
           color: Colors.amber,
           image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(url)),

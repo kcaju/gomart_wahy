@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gomart_wahy/view/all_products/all_productscreen.dart';
+import 'package:gomart_wahy/view/homescreen/widget/homepage.dart';
+import 'package:gomart_wahy/view/quick_enquiry/quick_enquiryscreen.dart';
 
 class DrawerScreen extends StatelessWidget {
   const DrawerScreen({super.key});
@@ -119,11 +122,20 @@ class DrawerScreen extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(left: 15),
-                          child: Text(
-                            "Home",
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Homepage(),
+                                  ));
+                            },
+                            child: Text(
+                              "Home",
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ),
                         ExpansionTile(
@@ -139,19 +151,37 @@ class DrawerScreen extends StatelessWidget {
                                 fontSize: 14),
                           ),
                           children: [
-                            Text(
-                              "All Products",
-                              style: TextStyle(color: Colors.grey),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AllProductscreen(),
+                                    ));
+                              },
+                              child: Text(
+                                "All Products",
+                                style: TextStyle(color: Colors.grey),
+                              ),
                             )
                           ],
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 15),
-                          child: Text(
-                            "Quick Enquiry",
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => QuickEnquiryscreen(),
+                                  ));
+                            },
+                            child: Text(
+                              "Quick Enquiry",
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ),
                       ],

@@ -16,6 +16,14 @@ class TrendingproductsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Use MediaQuery to get screen width and height
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    // Determine screen type based on width
+    bool isMobile = screenWidth < 600;
+    bool isTablet = screenWidth >= 600 && screenWidth <= 1024;
+    bool isDesktop = screenWidth > 1024;
     return Stack(
       children: [
         Container(
@@ -122,7 +130,11 @@ class TrendingproductsCard extends StatelessWidget {
               )
             ],
           ),
-          width: 250,
+          width: isDesktop
+              ? 250
+              : isMobile
+                  ? 350
+                  : 300,
           decoration: BoxDecoration(
               border: Border.all(
                 color: Colors.grey.shade300,
