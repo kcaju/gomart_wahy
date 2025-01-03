@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:gomart_wahy/dummy_db.dart';
+import 'package:gomart_wahy/view/all_products/all_productscreen.dart';
 import 'package:gomart_wahy/view/floatingactionbutton/custom_floatingbutton.dart';
 import 'package:gomart_wahy/view/homescreen/drawerscreen/category_drawerscreen.dart';
 import 'package:gomart_wahy/view/homescreen/drawerscreen/drawer_screen.dart';
@@ -11,6 +12,7 @@ import 'package:gomart_wahy/view/homescreen/widget/new_and_organic_items_card.da
 import 'package:gomart_wahy/view/homescreen/widget/shop_and_about_button.dart';
 import 'package:gomart_wahy/view/homescreen/widget/topoffer_card.dart';
 import 'package:gomart_wahy/view/homescreen/widget/trendingproducts_card.dart';
+import 'package:gomart_wahy/view/shopbycategory_screen/category_screen.dart';
 import 'package:gomart_wahy/view/signin/signin_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -110,16 +112,32 @@ class HomeScreen extends StatelessWidget {
                                             ),
                                             Row(
                                               children: [
-                                                ShopAndAboutButton(
-                                                    text: "Shop Now",
-                                                    buttonColor: Colors.orange),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              AllProductscreen(),
+                                                        ));
+                                                  },
+                                                  child: ShopAndAboutButton(
+                                                      text: "Shop Now",
+                                                      buttonColor:
+                                                          Colors.orange),
+                                                ),
                                                 SizedBox(
                                                   width: 15,
                                                 ),
-                                                ShopAndAboutButton(
-                                                    text: "About Us",
-                                                    buttonColor:
-                                                        Color(0xFF03AC13)),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    //to about us page
+                                                  },
+                                                  child: ShopAndAboutButton(
+                                                      text: "About Us",
+                                                      buttonColor:
+                                                          Color(0xFF03AC13)),
+                                                ),
                                               ],
                                             )
                                           ],
@@ -183,15 +201,31 @@ class HomeScreen extends StatelessWidget {
                                         ),
                                         Row(
                                           children: [
-                                            ShopAndAboutButton(
-                                                text: "Shop Now",
-                                                buttonColor: Colors.orange),
+                                            GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          AllProductscreen(),
+                                                    ));
+                                              },
+                                              child: ShopAndAboutButton(
+                                                  text: "Shop Now",
+                                                  buttonColor: Colors.orange),
+                                            ),
                                             SizedBox(
                                               width: 15,
                                             ),
-                                            ShopAndAboutButton(
-                                                text: "About Us",
-                                                buttonColor: Color(0xFF03AC13)),
+                                            GestureDetector(
+                                              onTap: () {
+                                                //to aboutus page
+                                              },
+                                              child: ShopAndAboutButton(
+                                                  text: "About Us",
+                                                  buttonColor:
+                                                      Color(0xFF03AC13)),
+                                            ),
                                           ],
                                         ),
                                         SizedBox(
@@ -251,54 +285,69 @@ class HomeScreen extends StatelessWidget {
                                                     padding:
                                                         const EdgeInsets.only(
                                                             right: 15),
-                                                    child: Container(
-                                                      width: 250,
-                                                      padding:
-                                                          EdgeInsets.all(20),
-                                                      child: Column(
-                                                        children: [
-                                                          Container(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    8),
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              shape: BoxShape
-                                                                  .circle,
-                                                              border: Border.all(
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  CategoryScreen(),
+                                                            ));
+                                                      },
+                                                      child: Container(
+                                                        width: 250,
+                                                        padding:
+                                                            EdgeInsets.all(20),
+                                                        child: Column(
+                                                          children: [
+                                                            Container(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(8),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .green,
+                                                                    width: 2),
+                                                              ),
+                                                              child:
+                                                                  CircleAvatar(
+                                                                radius: 70,
+                                                                backgroundImage:
+                                                                    AssetImage(
+                                                                        "assets/png/vegbag.png"),
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              "Vegetables",
+                                                              style: TextStyle(
                                                                   color: Colors
-                                                                      .green,
-                                                                  width: 2),
+                                                                      .black,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
                                                             ),
-                                                            child: CircleAvatar(
-                                                              radius: 70,
-                                                              backgroundImage:
-                                                                  AssetImage(
-                                                                      "assets/png/vegbag.png"),
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            "Vegetables",
-                                                            style: TextStyle(
+                                                          ],
+                                                        ),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                                border:
+                                                                    Border.all(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                ),
                                                                 color: Colors
-                                                                    .black,
-                                                                fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                        ],
+                                                                    .white,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10)),
                                                       ),
-                                                      decoration: BoxDecoration(
-                                                          border: Border.all(
-                                                            color: Colors
-                                                                .grey.shade300,
-                                                          ),
-                                                          color: Colors.white,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      10)),
                                                     ),
                                                   );
                                                 },
@@ -676,11 +725,31 @@ class HomeScreen extends StatelessWidget {
                                                     height: 20,
                                                   ),
                                                   //shopnow button
-                                                  ShopAndAboutButton(
-                                                      isWidth: true,
-                                                      text: "Shop Now",
-                                                      buttonColor:
-                                                          Color(0xFF03AC13)),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                CategoryScreen(),
+                                                          ));
+                                                    },
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  CategoryScreen(),
+                                                            ));
+                                                      },
+                                                      child: ShopAndAboutButton(
+                                                          isWidth: true,
+                                                          text: "Show Now",
+                                                          buttonColor: Color(
+                                                              0xFF03AC13)),
+                                                    ),
+                                                  ),
                                                 ],
                                               ),
                                               decoration: BoxDecoration(
@@ -784,7 +853,8 @@ class HomeScreen extends StatelessWidget {
                                       ],
                                     ),
                                   )
-                                : Padding(
+                                : //other devices
+                                Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 20),
                                     child: Column(
@@ -866,7 +936,7 @@ class HomeScreen extends StatelessWidget {
                                                           ),
                                                         )
                                                       ],
-                                                    )
+                                                    ) //tablet
                                                   : Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -992,11 +1062,21 @@ class HomeScreen extends StatelessWidget {
                                                     height: 20,
                                                   ),
                                                   //shopnow button
-                                                  ShopAndAboutButton(
-                                                      isWidth: true,
-                                                      text: "Shop Now",
-                                                      buttonColor:
-                                                          Color(0xFF03AC13)),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                CategoryScreen(),
+                                                          ));
+                                                    },
+                                                    child: ShopAndAboutButton(
+                                                        isWidth: true,
+                                                        text: "Show Now",
+                                                        buttonColor:
+                                                            Color(0xFF03AC13)),
+                                                  ),
                                                 ],
                                               ),
                                               decoration: BoxDecoration(
@@ -1036,10 +1116,20 @@ class HomeScreen extends StatelessWidget {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            ShopAndAboutButton(
-                                              text: "Shop Now",
-                                              buttonColor: Colors.orange,
-                                              isWidth: true,
+                                            GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          CategoryScreen(),
+                                                    ));
+                                              },
+                                              child: ShopAndAboutButton(
+                                                text: "Shop Now",
+                                                buttonColor: Colors.orange,
+                                                isWidth: true,
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -1091,10 +1181,20 @@ class HomeScreen extends StatelessWidget {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              ShopAndAboutButton(
-                                                text: "Shop Now",
-                                                buttonColor: Colors.orange,
-                                                isWidth: true,
+                                              GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            CategoryScreen(),
+                                                      ));
+                                                },
+                                                child: ShopAndAboutButton(
+                                                  text: "Shop Now",
+                                                  buttonColor: Colors.orange,
+                                                  isWidth: true,
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -1164,22 +1264,34 @@ class HomeScreen extends StatelessWidget {
                                                           FontWeight.bold),
                                                 ),
                                                 Spacer(),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      "View More",
-                                                      style: TextStyle(
-                                                          color: Colors.orange,
-                                                          fontSize: 15,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    Icon(
-                                                      Icons.arrow_forward,
-                                                      color: Colors.orange,
-                                                      size: 20,
-                                                    )
-                                                  ],
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              AllProductscreen(),
+                                                        ));
+                                                  },
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        "View More",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.orange,
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      Icon(
+                                                        Icons.arrow_forward,
+                                                        color: Colors.orange,
+                                                        size: 20,
+                                                      )
+                                                    ],
+                                                  ),
                                                 )
                                               ],
                                             ),
@@ -1233,22 +1345,34 @@ class HomeScreen extends StatelessWidget {
                                                           FontWeight.bold),
                                                 ),
                                                 Spacer(),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      "View More",
-                                                      style: TextStyle(
-                                                          color: Colors.orange,
-                                                          fontSize: 15,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    Icon(
-                                                      Icons.arrow_forward,
-                                                      color: Colors.orange,
-                                                      size: 20,
-                                                    )
-                                                  ],
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              AllProductscreen(),
+                                                        ));
+                                                  },
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        "View More",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.orange,
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      Icon(
+                                                        Icons.arrow_forward,
+                                                        color: Colors.orange,
+                                                        size: 20,
+                                                      )
+                                                    ],
+                                                  ),
                                                 )
                                               ],
                                             ),
@@ -1347,29 +1471,40 @@ class HomeScreen extends StatelessWidget {
                                                       ),
                                                     ],
                                                   ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Text(
-                                                        "Shop Now",
-                                                        style: TextStyle(
-                                                            color: Colors.green,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 5,
-                                                      ),
-                                                      Icon(
-                                                        Icons.arrow_forward,
-                                                        size: 18,
-                                                        color: Colors.green,
-                                                      )
-                                                    ],
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                CategoryScreen(),
+                                                          ));
+                                                    },
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          "Shop Now",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.green,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        SizedBox(
+                                                          width: 5,
+                                                        ),
+                                                        Icon(
+                                                          Icons.arrow_forward,
+                                                          size: 18,
+                                                          color: Colors.green,
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
                                                   SizedBox(
                                                     height: 15,
@@ -1558,24 +1693,34 @@ class HomeScreen extends StatelessWidget {
                                                             FontWeight.bold),
                                                   ),
                                                   Spacer(),
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        "View More",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.orange,
-                                                            fontSize: 15,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      Icon(
-                                                        Icons.arrow_forward,
-                                                        color: Colors.orange,
-                                                        size: 20,
-                                                      )
-                                                    ],
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                AllProductscreen(),
+                                                          ));
+                                                    },
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
+                                                          "View More",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.orange,
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        Icon(
+                                                          Icons.arrow_forward,
+                                                          color: Colors.orange,
+                                                          size: 20,
+                                                        )
+                                                      ],
+                                                    ),
                                                   )
                                                 ],
                                               ),
@@ -1635,24 +1780,34 @@ class HomeScreen extends StatelessWidget {
                                                             FontWeight.bold),
                                                   ),
                                                   Spacer(),
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        "View More",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.orange,
-                                                            fontSize: 15,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      Icon(
-                                                        Icons.arrow_forward,
-                                                        color: Colors.orange,
-                                                        size: 20,
-                                                      )
-                                                    ],
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                AllProductscreen(),
+                                                          ));
+                                                    },
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
+                                                          "View More",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.orange,
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        Icon(
+                                                          Icons.arrow_forward,
+                                                          color: Colors.orange,
+                                                          size: 20,
+                                                        )
+                                                      ],
+                                                    ),
                                                   )
                                                 ],
                                               ),
@@ -1747,27 +1902,39 @@ class HomeScreen extends StatelessWidget {
                                                     ),
                                                   ],
                                                 ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      "Shop Now",
-                                                      style: TextStyle(
-                                                          color: Colors.green,
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    Icon(
-                                                      Icons.arrow_forward,
-                                                      size: 18,
-                                                      color: Colors.green,
-                                                    )
-                                                  ],
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              CategoryScreen(),
+                                                        ));
+                                                  },
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        "Shop Now",
+                                                        style: TextStyle(
+                                                            color: Colors.green,
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 5,
+                                                      ),
+                                                      Icon(
+                                                        Icons.arrow_forward,
+                                                        size: 18,
+                                                        color: Colors.green,
+                                                      )
+                                                    ],
+                                                  ),
                                                 ),
                                                 SizedBox(
                                                   height: 15,
