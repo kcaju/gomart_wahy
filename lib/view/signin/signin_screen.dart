@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gomart_wahy/view/homescreen/home_screen.dart';
 import 'package:gomart_wahy/view/homescreen/widget/customtextformfield.dart';
 import 'package:gomart_wahy/view/sign_up/signup_screen.dart';
 
@@ -15,188 +16,210 @@ class SigninScreen extends StatelessWidget {
     bool isMobile = screenWidth < 600;
     bool isTablet = screenWidth >= 600 && screenWidth < 1024;
     bool isDesktop = screenWidth >= 1024;
+
+    final signinFormKey = GlobalKey<FormState>();
+    TextEditingController password = TextEditingController();
+    TextEditingController email = TextEditingController();
     return Scaffold(
       backgroundColor: Colors.white.withAlpha(240),
       body: Padding(
         padding: EdgeInsets.symmetric(
-            horizontal: isDesktop ? 120 : 35,
-            vertical: isDesktop
-                ? 150
-                : isTablet
-                    ? 150
-                    : 50),
+            horizontal: isDesktop ? 120 : 35, vertical: isTablet ? 150 : 50),
         child: isDesktop
-            ? Container(
-                // height: 350,
-                child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            child: Image.asset(
-                              "assets/png/login.png",
-                              fit: BoxFit.fill,
+            ? Center(
+                child: Container(
+                  // height: 350,
+                  child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 25),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              child: Image.asset(
+                                "assets/png/login.png",
+                                fit: BoxFit.fill,
+                              ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
+                          Expanded(
+                            child: Form(
+                              key: signinFormKey,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    "Go",
-                                    style: TextStyle(
-                                        color: Colors.orange,
-                                        fontSize: 50,
-                                        fontWeight: FontWeight.bold),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Go",
+                                        style: TextStyle(
+                                            color: Colors.orange,
+                                            fontSize: 50,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        "mart",
+                                        style: TextStyle(
+                                            color: Color(0xFF03AC13),
+                                            fontSize: 50,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 12,
                                   ),
                                   Text(
-                                    "mart",
-                                    style: TextStyle(
-                                        color: Color(0xFF03AC13),
-                                        fontSize: 50,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 12,
-                              ),
-                              Text(
-                                "Hey there!",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    "Welcome back",
+                                    "Hey there!",
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 25,
                                         fontWeight: FontWeight.bold),
                                   ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Welcome back",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        "Gomart",
+                                        style: TextStyle(
+                                            color: Colors.orange,
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
                                   SizedBox(
-                                    width: 10,
+                                    height: 10,
                                   ),
                                   Text(
-                                    "Gomart",
+                                    "Email",
                                     style: TextStyle(
-                                        color: Colors.orange,
-                                        fontSize: 25,
+                                        color: Colors.black,
+                                        fontSize: 15,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                "Email",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Customtextformfield(hintText: "Enter your Email"),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                "Password",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Customtextformfield(
-                                hintText: "Password",
-                                isPassword: true,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
+                                  Customtextformfield(
+                                      controller: email,
+                                      hintText: "Enter your Email"),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
                                   Text(
-                                    "Forgot Password",
+                                    "Password",
                                     style: TextStyle(
-                                        color: Colors.green,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.normal),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              //sign in button
-                              Container(
-                                height: 40,
-                                width: 200,
-                                child: Center(
-                                  child: Text(
-                                    "Sign In",
-                                    style: TextStyle(
-                                        color: Colors.white,
+                                        color: Colors.black,
                                         fontSize: 15,
-                                        fontWeight: FontWeight.w500),
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                ),
-                                decoration: BoxDecoration(
-                                    color: Color(0xFF03AC13),
-                                    borderRadius: BorderRadius.circular(5)),
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    "Don't have an Account?",
-                                    style: TextStyle(
-                                        color: Colors.black.withAlpha(150),
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.normal),
+                                  Customtextformfield(
+                                    controller: password,
+                                    hintText: "Password",
+                                    isPassword: true,
                                   ),
-                                  InkWell(
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        "Forgot Password",
+                                        style: TextStyle(
+                                            color: Colors.green,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.normal),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  //sign in button
+                                  GestureDetector(
                                     onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                SignupScreen(),
-                                          ));
+                                      if (signinFormKey.currentState!
+                                          .validate()) {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  HomeScreen(),
+                                            ));
+                                      }
                                     },
-                                    child: Text(
-                                      "Sign Up",
-                                      style: TextStyle(
-                                          color: Colors.green,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.normal),
+                                    child: Container(
+                                      height: 40,
+                                      width: 200,
+                                      child: Center(
+                                        child: Text(
+                                          "Sign In",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ),
+                                      decoration: BoxDecoration(
+                                          color: Color(0xFF03AC13),
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
                                     ),
-                                  )
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Don't have an Account?",
+                                        style: TextStyle(
+                                            color: Colors.black.withAlpha(150),
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.normal),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SignupScreen(),
+                                              ));
+                                        },
+                                        child: Text(
+                                          "Sign Up",
+                                          style: TextStyle(
+                                              color: Colors.green,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
+                        ],
+                      )),
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.shade200, offset: Offset(5, 5))
                       ],
-                    )),
-                decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.shade200, offset: Offset(5, 5))
-                    ],
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white),
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white),
+                ),
               )
             : //other devices
             Container(
@@ -209,149 +232,165 @@ class SigninScreen extends StatelessWidget {
                     ],
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          "Go",
-                          style: TextStyle(
-                              color: Colors.orange,
-                              fontSize: 50,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "mart",
-                          style: TextStyle(
-                              color: Color(0xFF03AC13),
-                              fontSize: 50,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 12,
-                    ),
-                    Text(
-                      "Hey there!",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "Welcome back",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "Gomart",
-                          style: TextStyle(
-                              color: Colors.orange,
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      "Email",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Customtextformfield(hintText: "Enter your Email"),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      "Password",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Customtextformfield(
-                      hintText: "Password",
-                      isPassword: true,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          "Forgot Password",
-                          style: TextStyle(
-                              color: Colors.green,
-                              fontSize: 16,
-                              fontWeight: FontWeight.normal),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    //sign in button
-                    Container(
-                      height: isTablet ? 60 : 50,
-                      width: isTablet ? 300 : double.infinity,
-                      child: Center(
-                        child: Text(
-                          "Sign In",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: isTablet ? 16 : 15,
-                              fontWeight: FontWeight.bold),
-                        ),
+                child: Form(
+                  key: signinFormKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            "Go",
+                            style: TextStyle(
+                                color: Colors.orange,
+                                fontSize: 50,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            "mart",
+                            style: TextStyle(
+                                color: Color(0xFF03AC13),
+                                fontSize: 50,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
-                      decoration: BoxDecoration(
-                          color: Color(0xFF03AC13),
-                          borderRadius: BorderRadius.circular(5)),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "Don't have an Account?",
-                          style: TextStyle(
-                              color: Colors.black.withAlpha(150),
-                              fontSize: 15,
-                              fontWeight: FontWeight.normal),
-                        ),
-                        InkWell(
-                          onTap: () {
+                      SizedBox(
+                        height: 12,
+                      ),
+                      Text(
+                        "Hey there!",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Welcome back",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "Gomart",
+                            style: TextStyle(
+                                color: Colors.orange,
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Email",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Customtextformfield(
+                          controller: email, hintText: "Enter your Email"),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Password",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Customtextformfield(
+                        controller: password,
+                        hintText: "Password",
+                        isPassword: true,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            "Forgot Password",
+                            style: TextStyle(
+                                color: Colors.green,
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      //sign in button
+                      GestureDetector(
+                        onTap: () {
+                          if (signinFormKey.currentState!.validate()) {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => SignupScreen(),
+                                  builder: (context) => HomeScreen(),
                                 ));
-                          },
-                          child: Text(
-                            "Sign Up",
+                          }
+                        },
+                        child: Container(
+                          height: isTablet ? 60 : 50,
+                          width: isTablet ? 300 : double.infinity,
+                          child: Center(
+                            child: Text(
+                              "Sign In",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: isTablet ? 16 : 15,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                              color: Color(0xFF03AC13),
+                              borderRadius: BorderRadius.circular(5)),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Don't have an Account?",
                             style: TextStyle(
-                                color: Colors.green,
+                                color: Colors.black.withAlpha(150),
                                 fontSize: 15,
                                 fontWeight: FontWeight.normal),
                           ),
-                        )
-                      ],
-                    ),
-                  ],
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SignupScreen(),
+                                  ));
+                            },
+                            child: Text(
+                              "Sign Up",
+                              style: TextStyle(
+                                  color: Colors.green,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
       ),

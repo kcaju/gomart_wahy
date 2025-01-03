@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gomart_wahy/view/floatingactionbutton/custom_floatingbutton.dart';
 import 'package:gomart_wahy/view/homescreen/drawerscreen/drawer_screen.dart';
+import 'package:gomart_wahy/view/homescreen/home_screen.dart';
 import 'package:gomart_wahy/view/homescreen/widget/header_greencard.dart';
 import 'package:gomart_wahy/view/homescreen/widget/header_whitebox.dart';
 import 'package:gomart_wahy/view/homescreen/widget/trendingproducts_card.dart';
@@ -85,12 +86,33 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               ),
                             ),
                             Center(
-                              child: Text(
-                                "Home >> Page >> Category",
-                                style: TextStyle(
-                                    color: Colors.grey.shade500,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: isMobile ? 14 : 16),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => HomeScreen(),
+                                          ));
+                                    },
+                                    child: Text(
+                                      "Home >>",
+                                      style: TextStyle(
+                                          color: Colors.grey.shade500,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: isMobile ? 14 : 16),
+                                    ),
+                                  ),
+                                  Text(
+                                    "Page >> Category",
+                                    style: TextStyle(
+                                        color: Colors.grey.shade500,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: isMobile ? 14 : 16),
+                                  ),
+                                ],
                               ),
                             ),
                             SizedBox(

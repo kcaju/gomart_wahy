@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gomart_wahy/view/all_products/all_productscreen.dart';
+import 'package:gomart_wahy/view/cartpage/cartitems_page.dart';
 import 'package:gomart_wahy/view/homescreen/widget/category_popup.dart';
 import 'package:gomart_wahy/view/homescreen/widget/homepage.dart';
 import 'package:gomart_wahy/view/quick_enquiry/quick_enquiryscreen.dart';
@@ -286,10 +287,19 @@ class HeaderWhitebox extends StatelessWidget {
                 ),
           isMobile
               ? SizedBox()
-              : Icon(
-                  Icons.shopping_bag_outlined,
-                  color: Colors.grey,
-                  size: isDesktop ? 25 : 30,
+              : GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CartitemsPage(),
+                        ));
+                  },
+                  child: Icon(
+                    Icons.shopping_bag_outlined,
+                    color: Colors.grey,
+                    size: isDesktop ? 25 : 30,
+                  ),
                 ),
           isMobile
               ? SizedBox()

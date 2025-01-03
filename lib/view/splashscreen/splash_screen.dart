@@ -11,7 +11,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 4)).then(
+    Future.delayed(Duration(seconds: 1)).then(
       (value) {
         Navigator.pushReplacement(context, MaterialPageRoute(
           builder: (context) {

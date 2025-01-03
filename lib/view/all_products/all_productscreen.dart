@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gomart_wahy/view/floatingactionbutton/custom_floatingbutton.dart';
 import 'package:gomart_wahy/view/homescreen/drawerscreen/drawer_screen.dart';
+import 'package:gomart_wahy/view/homescreen/home_screen.dart';
 import 'package:gomart_wahy/view/homescreen/widget/header_greencard.dart';
 import 'package:gomart_wahy/view/homescreen/widget/header_whitebox.dart';
 import 'package:gomart_wahy/view/homescreen/widget/trendingproducts_card.dart';
+import 'package:gomart_wahy/view/shopbycategory_screen/category_screen.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class AllProductscreen extends StatefulWidget {
@@ -72,12 +74,33 @@ class _AllProductscreenState extends State<AllProductscreen> {
                               ),
                             ),
                             Center(
-                              child: Text(
-                                "Home >> Page >> Products",
-                                style: TextStyle(
-                                    color: Colors.grey.shade500,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: isMobile ? 14 : 16),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => HomeScreen(),
+                                          ));
+                                    },
+                                    child: Text(
+                                      "Home >>",
+                                      style: TextStyle(
+                                          color: Colors.grey.shade500,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: isMobile ? 14 : 16),
+                                    ),
+                                  ),
+                                  Text(
+                                    "Page >> Products",
+                                    style: TextStyle(
+                                        color: Colors.grey.shade500,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: isMobile ? 14 : 16),
+                                  ),
+                                ],
                               ),
                             ),
                             SizedBox(
@@ -249,13 +272,24 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
-                                                    Text(
-                                                      brands[index],
-                                                      style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                          fontSize: 16),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  CategoryScreen(),
+                                                            ));
+                                                      },
+                                                      child: Text(
+                                                        brands[index],
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal,
+                                                            fontSize: 16),
+                                                      ),
                                                     ),
                                                     SizedBox(
                                                       height: 15,
@@ -536,6 +570,9 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                                       mainAxisExtent: 600),
                                               itemBuilder: (context, index) {
                                                 return TrendingproductsCard(
+                                                    addToCartTap: () {
+                                                      //cart page navigation
+                                                    },
                                                     isProducts: true,
                                                     url:
                                                         "https://cdn.pixabay.com/photo/2010/12/10/08/chicken-1140_1280.jpg",

@@ -10,9 +10,11 @@ class TrendingproductsCard extends StatelessWidget {
       required this.oldRate,
       required this.newRate,
       required this.count,
-      this.isProducts = false});
+      this.isProducts = false,
+      this.addToCartTap});
   final String url, title, name, oldRate, newRate, count;
   final bool isProducts;
+  final void Function()? addToCartTap;
 
   @override
   Widget build(BuildContext context) {
@@ -112,21 +114,24 @@ class TrendingproductsCard extends StatelessWidget {
               SizedBox(
                 height: 15,
               ),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                width: double.infinity,
-                height: 45,
-                alignment: Alignment.center,
-                child: Text(
-                  "Add to Cart",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold),
+              GestureDetector(
+                onTap: addToCartTap,
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  width: double.infinity,
+                  height: 45,
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Add to Cart",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  decoration: BoxDecoration(
+                      color: Colors.orange,
+                      borderRadius: BorderRadius.circular(5)),
                 ),
-                decoration: BoxDecoration(
-                    color: Colors.orange,
-                    borderRadius: BorderRadius.circular(5)),
               )
             ],
           ),
