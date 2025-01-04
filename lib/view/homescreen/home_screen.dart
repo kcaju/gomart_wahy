@@ -2,7 +2,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:gomart_wahy/dummy_db.dart';
+import 'package:gomart_wahy/view/about_us_page/aboutus_page.dart';
 import 'package:gomart_wahy/view/all_products/all_productscreen.dart';
+import 'package:gomart_wahy/view/cartpage/cartitems_page.dart';
 import 'package:gomart_wahy/view/floatingactionbutton/custom_floatingbutton.dart';
 import 'package:gomart_wahy/view/homescreen/drawerscreen/category_drawerscreen.dart';
 import 'package:gomart_wahy/view/homescreen/drawerscreen/drawer_screen.dart';
@@ -12,6 +14,7 @@ import 'package:gomart_wahy/view/homescreen/widget/new_and_organic_items_card.da
 import 'package:gomart_wahy/view/homescreen/widget/shop_and_about_button.dart';
 import 'package:gomart_wahy/view/homescreen/widget/topoffer_card.dart';
 import 'package:gomart_wahy/view/homescreen/widget/trendingproducts_card.dart';
+import 'package:gomart_wahy/view/product_details/product_detailspage.dart';
 import 'package:gomart_wahy/view/shopbycategory_screen/category_screen.dart';
 import 'package:gomart_wahy/view/signin/signin_screen.dart';
 
@@ -132,6 +135,12 @@ class HomeScreen extends StatelessWidget {
                                                 GestureDetector(
                                                   onTap: () {
                                                     //to about us page
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              AboutusPage(),
+                                                        ));
                                                   },
                                                   child: ShopAndAboutButton(
                                                       text: "About Us",
@@ -219,7 +228,13 @@ class HomeScreen extends StatelessWidget {
                                             ),
                                             GestureDetector(
                                               onTap: () {
-                                                //to aboutus page
+                                                //to about us page
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          AboutusPage(),
+                                                    ));
                                               },
                                               child: ShopAndAboutButton(
                                                   text: "About Us",
@@ -489,14 +504,24 @@ class HomeScreen extends StatelessWidget {
                                           return Padding(
                                             padding: const EdgeInsets.only(
                                                 right: 15),
-                                            child: TrendingproductsCard(
-                                                count: "9",
-                                                url:
-                                                    "https://rukminim2.flixcart.com/image/720/864/l1nwnm80/spice-masala/m/h/z/100-sambar-powder-1-pouch-kitchen-treasures-powder-original-imagd6knzpdyhnwp.jpeg?q=60&crop=false",
-                                                title: "Fresh Oragnic",
-                                                name: "Sambar Powder",
-                                                oldRate: "\$ 3.55",
-                                                newRate: "\$ 3.69"),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ProductDetailspage(),
+                                                    ));
+                                              },
+                                              child: TrendingproductsCard(
+                                                  count: "9",
+                                                  url:
+                                                      "https://rukminim2.flixcart.com/image/720/864/l1nwnm80/spice-masala/m/h/z/100-sambar-powder-1-pouch-kitchen-treasures-powder-original-imagd6knzpdyhnwp.jpeg?q=60&crop=false",
+                                                  title: "Fresh Oragnic",
+                                                  name: "Sambar Powder",
+                                                  oldRate: "\$ 3.55",
+                                                  newRate: "\$ 3.69"),
+                                            ),
                                           );
                                         },
                                       ),
@@ -541,14 +566,24 @@ class HomeScreen extends StatelessWidget {
                                           return Padding(
                                             padding: const EdgeInsets.only(
                                                 right: 15),
-                                            child: TrendingproductsCard(
-                                                url:
-                                                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdxHhS9OGZcFxxbP5-0Gfb-DMs3QKi9QaGRw&s",
-                                                title: "Fresh Organic",
-                                                name: "Brinjal",
-                                                oldRate: "\$ 2.5",
-                                                newRate: "\$ 3.08",
-                                                count: "10"),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ProductDetailspage(),
+                                                    ));
+                                              },
+                                              child: TrendingproductsCard(
+                                                  url:
+                                                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdxHhS9OGZcFxxbP5-0Gfb-DMs3QKi9QaGRw&s",
+                                                  title: "Fresh Organic",
+                                                  name: "Brinjal",
+                                                  oldRate: "\$ 2.5",
+                                                  newRate: "\$ 3.08",
+                                                  count: "10"),
+                                            ),
                                           );
                                         },
                                       ),
@@ -593,14 +628,24 @@ class HomeScreen extends StatelessWidget {
                                           return Padding(
                                               padding: const EdgeInsets.only(
                                                   right: 15),
-                                              child: TrendingproductsCard(
-                                                  url:
-                                                      "https://cdn.pixabay.com/photo/2010/12/10/08/chicken-1140_1280.jpg",
-                                                  title: "Fresh Organic",
-                                                  name: "Chicken",
-                                                  oldRate: "\$ 5.5",
-                                                  newRate: "\$ 6.77",
-                                                  count: "18"));
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ProductDetailspage(),
+                                                      ));
+                                                },
+                                                child: TrendingproductsCard(
+                                                    url:
+                                                        "https://cdn.pixabay.com/photo/2010/12/10/08/chicken-1140_1280.jpg",
+                                                    title: "Fresh Organic",
+                                                    name: "Chicken",
+                                                    oldRate: "\$ 5.5",
+                                                    newRate: "\$ 6.77",
+                                                    count: "18"),
+                                              ));
                                         },
                                       ),
                                     ),
@@ -1301,16 +1346,27 @@ class HomeScreen extends StatelessWidget {
                                             ListView.separated(
                                                 shrinkWrap: true,
                                                 itemBuilder: (context, index) {
-                                                  return NewAndOrganicItemsCard(
-                                                      url: DummyDb
-                                                              .products[index]
-                                                          ['image'],
-                                                      title: DummyDb
-                                                              .products[index]
-                                                          ['name'],
-                                                      rate: DummyDb
-                                                              .products[index]
-                                                          ['rate']);
+                                                  return GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                ProductDetailspage(),
+                                                          ));
+                                                    },
+                                                    child:
+                                                        NewAndOrganicItemsCard(
+                                                            url: DummyDb
+                                                                    .products[
+                                                                index]['image'],
+                                                            title: DummyDb
+                                                                    .products[
+                                                                index]['name'],
+                                                            rate: DummyDb
+                                                                    .products[
+                                                                index]['rate']),
+                                                  );
                                                 },
                                                 separatorBuilder:
                                                     (context, index) =>
@@ -1382,16 +1438,27 @@ class HomeScreen extends StatelessWidget {
                                             ListView.separated(
                                                 shrinkWrap: true,
                                                 itemBuilder: (context, index) {
-                                                  return NewAndOrganicItemsCard(
-                                                      url: DummyDb
-                                                              .bestseller[index]
-                                                          ['image'],
-                                                      title: DummyDb
-                                                              .bestseller[index]
-                                                          ['name'],
-                                                      rate: DummyDb
-                                                              .bestseller[index]
-                                                          ['rate']);
+                                                  return GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                ProductDetailspage(),
+                                                          ));
+                                                    },
+                                                    child:
+                                                        NewAndOrganicItemsCard(
+                                                            url: DummyDb
+                                                                    .bestseller[
+                                                                index]['image'],
+                                                            title: DummyDb
+                                                                    .bestseller[
+                                                                index]['name'],
+                                                            rate: DummyDb
+                                                                    .bestseller[
+                                                                index]['rate']),
+                                                  );
                                                 },
                                                 separatorBuilder:
                                                     (context, index) =>
@@ -1732,16 +1799,25 @@ class HomeScreen extends StatelessWidget {
                                                   physics: ScrollPhysics(),
                                                   itemBuilder:
                                                       (context, index) {
-                                                    return NewAndOrganicItemsCard(
-                                                        url: DummyDb
-                                                                .products[index]
-                                                            ['image'],
-                                                        title: DummyDb
-                                                                .products[index]
-                                                            ['name'],
-                                                        rate: DummyDb
-                                                                .products[index]
-                                                            ['rate']);
+                                                    return GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  ProductDetailspage(),
+                                                            ));
+                                                      },
+                                                      child: NewAndOrganicItemsCard(
+                                                          url: DummyDb.products[
+                                                              index]['image'],
+                                                          title: DummyDb
+                                                                  .products[
+                                                              index]['name'],
+                                                          rate: DummyDb
+                                                                  .products[
+                                                              index]['rate']),
+                                                    );
                                                   },
                                                   separatorBuilder:
                                                       (context, index) =>
@@ -1819,15 +1895,26 @@ class HomeScreen extends StatelessWidget {
                                                   physics: ScrollPhysics(),
                                                   itemBuilder:
                                                       (context, index) {
-                                                    return NewAndOrganicItemsCard(
-                                                        url: DummyDb.bestseller[
-                                                            index]['image'],
-                                                        title:
-                                                            DummyDb.bestseller[
-                                                                index]['name'],
-                                                        rate:
-                                                            DummyDb.bestseller[
-                                                                index]['rate']);
+                                                    return GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  ProductDetailspage(),
+                                                            ));
+                                                      },
+                                                      child: NewAndOrganicItemsCard(
+                                                          url: DummyDb
+                                                                  .bestseller[
+                                                              index]['image'],
+                                                          title: DummyDb
+                                                                  .bestseller[
+                                                              index]['name'],
+                                                          rate: DummyDb
+                                                                  .bestseller[
+                                                              index]['rate']),
+                                                    );
                                                   },
                                                   separatorBuilder:
                                                       (context, index) =>
@@ -2399,7 +2486,7 @@ class HomeScreen extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => SigninScreen(),
+                                  builder: (context) => CartitemsPage(),
                                 ));
                           },
                           child: Column(

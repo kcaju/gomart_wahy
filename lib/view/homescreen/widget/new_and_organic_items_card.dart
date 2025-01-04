@@ -26,7 +26,17 @@ class NewAndOrganicItemsCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
+                  alignment: Alignment.topRight,
                   height: 200,
+                  child: CircleAvatar(
+                    radius: 15,
+                    backgroundColor: Colors.green,
+                    child: Icon(
+                      Icons.favorite_outline,
+                      size: 20,
+                      color: Colors.white,
+                    ),
+                  ),
                   decoration: BoxDecoration(
                       image: DecorationImage(
                           fit: BoxFit.contain, image: NetworkImage(url))),
@@ -94,6 +104,16 @@ class NewAndOrganicItemsCard extends StatelessWidget {
           : Row(
               children: [
                 Container(
+                  alignment: Alignment.topLeft,
+                  child: CircleAvatar(
+                    radius: 15,
+                    backgroundColor: Colors.green,
+                    child: Icon(
+                      Icons.favorite_outline,
+                      size: 20,
+                      color: Colors.white,
+                    ),
+                  ),
                   height: 100,
                   width: 100,
                   decoration: BoxDecoration(

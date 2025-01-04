@@ -127,4 +127,73 @@ class DummyDb {
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoJBBOqoVKwwhSEMDkuOWGFU1wiCAStZZBzA&s"
     },
   ];
+
+  //about us page
+  static List<Map> abilityDetails = [
+    {
+      "url": "assets/png/icon-1_new.png",
+      "title": "0k+",
+      "subtitle": "Total Products"
+    },
+    {
+      "url": "assets/png/icon-2_new.png",
+      "title": "0k+",
+      "subtitle": "Total Orders"
+    },
+    {
+      "url": "assets/png/icon-3_new.png",
+      "title": "0k+",
+      "subtitle": "Total Visitors"
+    },
+    {
+      "url": "assets/png/icon-4_new.png",
+      "title": "0k+",
+      "subtitle": "Total Delivery"
+    },
+  ];
+  static List<Map> ceolist = [
+    {
+      "url": "assets/png/team-2_new.jpg",
+      "name": "Frances Gilmartin",
+      "desig": "CEO & Founder"
+    },
+    {
+      "url": "assets/png/team-1_new.jpg",
+      "name": "Frances Gilmartin",
+      "desig": "CEO & Founder"
+    },
+    {
+      "url": "assets/png/team-2_new.jpg",
+      "name": "Frances Gilmartin",
+      "desig": "CEO & Founder"
+    },
+    {
+      "url": "assets/png/team-1_new.jpg",
+      "name": "Frances Gilmartin",
+      "desig": "CEO & Founder"
+    },
+  ];
+
+  static List<Map> gridDetails = [
+    {
+      "title": "Trusted Partner",
+      "desc":
+          "Compellingly fashion intermandat opportunities e-business fashion intermandated business."
+    },
+    {
+      "title": "Return Policy",
+      "desc":
+          "Compellingly fashion intermandat opportunities e-business fashion intermandated business."
+    },
+    {
+      "title": "100% Organic Fresh",
+      "desc":
+          "Compellingly fashion intermandat opportunities e-business fashion intermandated business."
+    },
+    {
+      "title": "Secured Payment",
+      "desc":
+          "Compellingly fashion intermandat opportunities e-business fashion intermandated business."
+    },
+  ];
 }

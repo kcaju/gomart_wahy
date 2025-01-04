@@ -602,7 +602,7 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                                         child: Text(
                                                           textAlign:
                                                               TextAlign.center,
-                                                          "Continue Shipping",
+                                                          "Continue Shopping",
                                                           style: TextStyle(
                                                               color:
                                                                   Colors.orange,
@@ -706,6 +706,7 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                         Container(
                                           child: ListView.builder(
                                             itemCount: 2,
+                                            physics: ScrollPhysics(),
                                             shrinkWrap: true,
                                             itemBuilder: (context, index) {
                                               return Column(
@@ -782,6 +783,13 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                                                 EdgeInsets.all(
                                                                     10),
                                                             height: 50,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              border: Border.all(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade200),
+                                                            ),
                                                             child: Text(
                                                               "1",
                                                               style: TextStyle(
@@ -809,7 +817,6 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                                         )
                                                       ],
                                                     ),
-                                                    decoration: BoxDecoration(),
                                                   ),
                                                   SizedBox(
                                                     height: 10,
@@ -984,7 +991,7 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                                   Container(
                                                     alignment: Alignment.center,
                                                     child: Text(
-                                                      "Continue Shipping",
+                                                      "Continue Shopping",
                                                       style: TextStyle(
                                                           color: Colors.orange,
                                                           fontSize: 15,
