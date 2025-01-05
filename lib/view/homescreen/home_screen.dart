@@ -17,6 +17,7 @@ import 'package:gomart_wahy/view/homescreen/widget/trendingproducts_card.dart';
 import 'package:gomart_wahy/view/product_details/product_detailspage.dart';
 import 'package:gomart_wahy/view/shopbycategory_screen/category_screen.dart';
 import 'package:gomart_wahy/view/signin/signin_screen.dart';
+import 'package:gomart_wahy/view/wishlist_page/wish_listpage.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -514,6 +515,14 @@ class HomeScreen extends StatelessWidget {
                                                     ));
                                               },
                                               child: TrendingproductsCard(
+                                                  addToFavourite: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              WishListpage(),
+                                                        ));
+                                                  },
                                                   count: "9",
                                                   url:
                                                       "https://rukminim2.flixcart.com/image/720/864/l1nwnm80/spice-masala/m/h/z/100-sambar-powder-1-pouch-kitchen-treasures-powder-original-imagd6knzpdyhnwp.jpeg?q=60&crop=false",
@@ -576,6 +585,14 @@ class HomeScreen extends StatelessWidget {
                                                     ));
                                               },
                                               child: TrendingproductsCard(
+                                                  addToFavourite: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              WishListpage(),
+                                                        ));
+                                                  },
                                                   url:
                                                       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdxHhS9OGZcFxxbP5-0Gfb-DMs3QKi9QaGRw&s",
                                                   title: "Fresh Organic",
@@ -638,6 +655,14 @@ class HomeScreen extends StatelessWidget {
                                                       ));
                                                 },
                                                 child: TrendingproductsCard(
+                                                    addToFavourite: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                WishListpage(),
+                                                          ));
+                                                    },
                                                     url:
                                                         "https://cdn.pixabay.com/photo/2010/12/10/08/chicken-1140_1280.jpg",
                                                     title: "Fresh Organic",
@@ -1357,6 +1382,15 @@ class HomeScreen extends StatelessWidget {
                                                     },
                                                     child:
                                                         NewAndOrganicItemsCard(
+                                                            addToFavourite: () {
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            WishListpage(),
+                                                                  ));
+                                                            },
                                                             url: DummyDb
                                                                     .products[
                                                                 index]['image'],
@@ -1449,6 +1483,15 @@ class HomeScreen extends StatelessWidget {
                                                     },
                                                     child:
                                                         NewAndOrganicItemsCard(
+                                                            addToFavourite: () {
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            WishListpage(),
+                                                                  ));
+                                                            },
                                                             url: DummyDb
                                                                     .bestseller[
                                                                 index]['image'],
@@ -1808,15 +1851,29 @@ class HomeScreen extends StatelessWidget {
                                                                   ProductDetailspage(),
                                                             ));
                                                       },
-                                                      child: NewAndOrganicItemsCard(
-                                                          url: DummyDb.products[
-                                                              index]['image'],
-                                                          title: DummyDb
-                                                                  .products[
-                                                              index]['name'],
-                                                          rate: DummyDb
-                                                                  .products[
-                                                              index]['rate']),
+                                                      child:
+                                                          NewAndOrganicItemsCard(
+                                                              addToFavourite:
+                                                                  () {
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              WishListpage(),
+                                                                    ));
+                                                              },
+                                                              url: DummyDb
+                                                                          .products[
+                                                                      index]
+                                                                  ['image'],
+                                                              title:
+                                                                  DummyDb.products[
+                                                                          index]
+                                                                      ['name'],
+                                                              rate: DummyDb
+                                                                      .products[
+                                                                  index]['rate']),
                                                     );
                                                   },
                                                   separatorBuilder:
@@ -1904,16 +1961,29 @@ class HomeScreen extends StatelessWidget {
                                                                   ProductDetailspage(),
                                                             ));
                                                       },
-                                                      child: NewAndOrganicItemsCard(
-                                                          url: DummyDb
-                                                                  .bestseller[
-                                                              index]['image'],
-                                                          title: DummyDb
-                                                                  .bestseller[
-                                                              index]['name'],
-                                                          rate: DummyDb
-                                                                  .bestseller[
-                                                              index]['rate']),
+                                                      child:
+                                                          NewAndOrganicItemsCard(
+                                                              addToFavourite:
+                                                                  () {
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              WishListpage(),
+                                                                    ));
+                                                              },
+                                                              url: DummyDb
+                                                                          .bestseller[
+                                                                      index]
+                                                                  ['image'],
+                                                              title:
+                                                                  DummyDb.bestseller[
+                                                                          index]
+                                                                      ['name'],
+                                                              rate: DummyDb
+                                                                      .bestseller[
+                                                                  index]['rate']),
                                                     );
                                                   },
                                                   separatorBuilder:

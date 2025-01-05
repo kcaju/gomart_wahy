@@ -6,8 +6,10 @@ class NewAndOrganicItemsCard extends StatelessWidget {
     required this.url,
     required this.title,
     required this.rate,
+    this.addToFavourite,
   });
   final String url, title, rate;
+  final VoidCallback? addToFavourite;
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +30,16 @@ class NewAndOrganicItemsCard extends StatelessWidget {
                 Container(
                   alignment: Alignment.topRight,
                   height: 200,
-                  child: CircleAvatar(
-                    radius: 15,
-                    backgroundColor: Colors.green,
-                    child: Icon(
-                      Icons.favorite_outline,
-                      size: 20,
-                      color: Colors.white,
+                  child: GestureDetector(
+                    onTap: addToFavourite,
+                    child: CircleAvatar(
+                      radius: 15,
+                      backgroundColor: Colors.green,
+                      child: Icon(
+                        Icons.favorite_outline,
+                        size: 20,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                   decoration: BoxDecoration(
@@ -105,13 +110,16 @@ class NewAndOrganicItemsCard extends StatelessWidget {
               children: [
                 Container(
                   alignment: Alignment.topLeft,
-                  child: CircleAvatar(
-                    radius: 15,
-                    backgroundColor: Colors.green,
-                    child: Icon(
-                      Icons.favorite_outline,
-                      size: 20,
-                      color: Colors.white,
+                  child: GestureDetector(
+                    onTap: addToFavourite,
+                    child: CircleAvatar(
+                      radius: 15,
+                      backgroundColor: Colors.green,
+                      child: Icon(
+                        Icons.favorite_outline,
+                        size: 20,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                   height: 100,

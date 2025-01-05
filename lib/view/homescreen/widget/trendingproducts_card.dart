@@ -11,10 +11,12 @@ class TrendingproductsCard extends StatelessWidget {
       required this.newRate,
       required this.count,
       this.isProducts = false,
-      this.addToCartTap});
+      this.addToCartTap,
+      this.addToFavourite});
   final String url, title, name, oldRate, newRate, count;
   final bool isProducts;
   final void Function()? addToCartTap;
+  final VoidCallback? addToFavourite;
 
   @override
   Widget build(BuildContext context) {
@@ -168,13 +170,16 @@ class TrendingproductsCard extends StatelessWidget {
         Positioned(
           right: isProducts ? 120 : 8,
           top: 8,
-          child: CircleAvatar(
-            radius: 15,
-            backgroundColor: Colors.green,
-            child: Icon(
-              Icons.favorite_outline,
-              size: 20,
-              color: Colors.white,
+          child: GestureDetector(
+            onTap: addToFavourite,
+            child: CircleAvatar(
+              radius: 15,
+              backgroundColor: Colors.green,
+              child: Icon(
+                Icons.favorite_outline,
+                size: 20,
+                color: Colors.white,
+              ),
             ),
           ),
         )

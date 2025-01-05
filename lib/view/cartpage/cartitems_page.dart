@@ -183,7 +183,7 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                                   Container(
                                                     height:
                                                         screenHeight * 0.085,
-                                                    width: screenWidth * 0.15,
+                                                    width: screenWidth * 0.18,
                                                     child: Center(
                                                       child: Text(
                                                         "Product Name",
@@ -219,7 +219,7 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                                   Container(
                                                     height:
                                                         screenHeight * 0.085,
-                                                    width: screenWidth * 0.075,
+                                                    width: screenWidth * 0.078,
                                                     child: Center(
                                                       child: Text(
                                                         "Unit Price",
@@ -273,7 +273,7 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                                   Container(
                                                     height:
                                                         screenHeight * 0.085,
-                                                    width: screenWidth * 0.09,
+                                                    width: screenWidth * 0.06,
                                                     color:
                                                         Colors.green.shade200,
                                                   ),
@@ -284,9 +284,10 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                               ),
                                               //list of items in cart
                                               ListView.builder(
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 15),
+                                                padding: EdgeInsets.only(
+                                                    top: 15, right: 10),
                                                 itemCount: 2,
+                                                physics: ScrollPhysics(),
                                                 shrinkWrap: true,
                                                 itemBuilder: (context, index) {
                                                   return Row(
@@ -326,7 +327,7 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                                       ),
 
                                                       Text(
-                                                        "Product name",
+                                                        "Sambar Powder 99gm",
                                                         style: TextStyle(
                                                             color: Colors.black,
                                                             fontSize: 18,
@@ -408,7 +409,7 @@ class _CartitemsPageState extends State<CartitemsPage> {
 
                                                       //unitprice
                                                       Text(
-                                                        "unit price",
+                                                        "₹7.38",
                                                         style: TextStyle(
                                                             color: Colors.black,
                                                             fontSize: 18,
@@ -430,7 +431,7 @@ class _CartitemsPageState extends State<CartitemsPage> {
 
                                                       //price
                                                       Text(
-                                                        "Price",
+                                                        "₹7.38",
                                                         style: TextStyle(
                                                             color: Colors.black,
                                                             fontSize: 18,
@@ -461,9 +462,9 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                                                     .circular(
                                                                         5)),
                                                       ),
-                                                      SizedBox(
-                                                        width: 1,
-                                                      )
+                                                      // SizedBox(
+                                                      //   width: 1,
+                                                      // )
                                                     ],
                                                   );
                                                 },
@@ -677,7 +678,7 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                                 width: 160,
                                                 child: Center(
                                                   child: Text(
-                                                    "Delete selectec only",
+                                                    "Delete selected only",
                                                     style: TextStyle(
                                                         color: Colors.white,
                                                         fontWeight:
@@ -745,7 +746,7 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                                     height: 10,
                                                   ),
                                                   Text(
-                                                    "Product name",
+                                                    "Sambar Powder",
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 18,
@@ -823,7 +824,7 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                                   ),
                                                   //unitprice
                                                   Text(
-                                                    "unit price",
+                                                    "Unit Price: ₹7.38",
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 18,
@@ -836,7 +837,7 @@ class _CartitemsPageState extends State<CartitemsPage> {
 
                                                   //dealprice
                                                   Text(
-                                                    "Not Applicable",
+                                                    "Deal Price: Not Applicable",
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 18,
@@ -849,7 +850,7 @@ class _CartitemsPageState extends State<CartitemsPage> {
 
                                                   //price
                                                   Text(
-                                                    "Price",
+                                                    "Total Price: ₹7.38",
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 18,

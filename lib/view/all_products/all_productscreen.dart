@@ -6,6 +6,7 @@ import 'package:gomart_wahy/view/homescreen/widget/header_greencard.dart';
 import 'package:gomart_wahy/view/homescreen/widget/header_whitebox.dart';
 import 'package:gomart_wahy/view/homescreen/widget/trendingproducts_card.dart';
 import 'package:gomart_wahy/view/shopbycategory_screen/category_screen.dart';
+import 'package:gomart_wahy/view/wishlist_page/wish_listpage.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class AllProductscreen extends StatefulWidget {
@@ -570,6 +571,14 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                                       mainAxisExtent: 600),
                                               itemBuilder: (context, index) {
                                                 return TrendingproductsCard(
+                                                    addToFavourite: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                WishListpage(),
+                                                          ));
+                                                    },
                                                     addToCartTap: () {
                                                       //cart page navigation
                                                     },
@@ -1153,6 +1162,14 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                                         mainAxisExtent: 600),
                                                 itemBuilder: (context, index) {
                                                   return TrendingproductsCard(
+                                                      addToFavourite: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  WishListpage(),
+                                                            ));
+                                                      },
                                                       isProducts: true,
                                                       url:
                                                           "https://cdn.pixabay.com/photo/2010/12/10/08/chicken-1140_1280.jpg",
@@ -1169,6 +1186,14 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                                 physics: ScrollPhysics(),
                                                 itemBuilder: (context, index) {
                                                   return TrendingproductsCard(
+                                                      addToFavourite: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  WishListpage(),
+                                                            ));
+                                                      },
                                                       isProducts: true,
                                                       url:
                                                           "https://cdn.pixabay.com/photo/2010/12/10/08/chicken-1140_1280.jpg",
