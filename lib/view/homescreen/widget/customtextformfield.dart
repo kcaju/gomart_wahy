@@ -43,8 +43,8 @@ class Customtextformfield extends StatelessWidget {
                 : null,
             hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 16),
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5),
-                borderSide: BorderSide.none)),
+              borderRadius: BorderRadius.circular(5),
+            )),
       ),
     );
   }

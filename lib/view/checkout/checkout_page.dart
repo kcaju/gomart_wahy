@@ -99,353 +99,846 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               height: isMobile ? 20 : 100,
                             ),
                             //shipment address
-                            Row(
-                              children: [
-                                //fields column
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                            isDesktop
+                                ? Row(
                                     children: [
-                                      Text(
-                                        "Shipment Address",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Customtextformfield(
-                                                hintText: "First Name",
-                                                controller: fname),
-                                          ),
-                                          SizedBox(
-                                            width: 20,
-                                          ),
-                                          Expanded(
-                                            child: Customtextformfield(
-                                                hintText: "First Name",
-                                                controller: fname),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Customtextformfield(
-                                          hintText: "Street Address",
-                                          controller: address),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Customtextformfield(
-                                                hintText: "Mobile",
-                                                controller: fname),
-                                          ),
-                                          SizedBox(
-                                            width: 20,
-                                          ),
-                                          Expanded(
-                                            child: Customtextformfield(
-                                                hintText: "Email",
-                                                controller: fname),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Row(
-                                        children: [
-                                          SizedBox(
-                                            width: 250,
-                                            child: Customtextformfield(
-                                                hintText: "State",
-                                                controller: fname),
-                                          ),
-                                          SizedBox(
-                                            width: 20,
-                                          ),
-                                          SizedBox(
-                                            width: 250,
-                                            child: Customtextformfield(
-                                                hintText: "EirCode",
-                                                controller: fname),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      //save button
-                                      Container(
-                                        height: 50,
-                                        alignment: Alignment.center,
-                                        width: 150,
-                                        child: Text(
-                                          "Save this Address",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        decoration: BoxDecoration(
-                                            color: Colors.orange,
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      //checkboxes
-                                      Row(
-                                        children: [
-                                          Checkbox(
-                                            value: isBillingSameAsShipping,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                isBillingSameAsShipping =
-                                                    value!;
-                                              });
-                                            },
-                                          ),
-                                          Text(
-                                            "Billing same as Shipping address",
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.normal),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Checkbox(
-                                            value: useAnotherAddressForBilling,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                useAnotherAddressForBilling =
-                                                    value!;
-                                              });
-                                            },
-                                          ),
-                                          Text(
-                                            "Use Another Address for Billing",
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.normal),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 20,
-                                ),
-
-                                //oreder summary box
-                                Container(
-                                  // height: 500,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 15),
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border.all(
-                                          color: Colors.grey.shade200)),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Order Summary",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20),
-                                          ),
-                                          //progress indicator
-                                          SizedBox(
-                                            width: 200,
-                                            child: LinearPercentIndicator(
-                                              lineHeight: 4.0,
-                                              percent: 0.2,
-                                              backgroundColor:
-                                                  Colors.grey.shade300,
-                                              progressColor: Colors.orange,
+                                      //fields column
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Shipment Address",
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20),
                                             ),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      //price
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Items(2):",
-                                            style: TextStyle(
-                                                color: Colors.grey.shade600,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 16),
-                                          ),
-                                          SizedBox(
-                                            width: 300,
-                                          ),
-                                          Text(
-                                            "₹11.07",
-                                            style: TextStyle(
-                                                color: Colors.grey.shade600,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 16),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                      //shippingprice
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Shipping & handling:",
-                                            style: TextStyle(
-                                                color: Colors.grey.shade600,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 16),
-                                          ),
-                                          SizedBox(
-                                            width: 220,
-                                          ),
-                                          Text(
-                                            "₹4.95",
-                                            style: TextStyle(
-                                                color: Colors.grey.shade600,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 16),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      SizedBox(
-                                        width: 420,
-                                        child: Divider(
-                                          color: Colors.grey.shade300,
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: Customtextformfield(
+                                                      hintText: "First Name",
+                                                      controller: fname),
+                                                ),
+                                                SizedBox(
+                                                  width: 20,
+                                                ),
+                                                Expanded(
+                                                  child: Customtextformfield(
+                                                      hintText: "Last Name",
+                                                      controller: lname),
+                                                )
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 20,
+                                            ),
+                                            Customtextformfield(
+                                                hintText: "Street Address",
+                                                controller: address),
+                                            SizedBox(
+                                              height: 20,
+                                            ),
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: Customtextformfield(
+                                                      hintText: "Mobile",
+                                                      controller: mobile),
+                                                ),
+                                                SizedBox(
+                                                  width: 20,
+                                                ),
+                                                Expanded(
+                                                  child: Customtextformfield(
+                                                      hintText: "Email",
+                                                      controller: email),
+                                                )
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 20,
+                                            ),
+                                            Row(
+                                              children: [
+                                                SizedBox(
+                                                  width: 250,
+                                                  child: Customtextformfield(
+                                                      hintText: "State",
+                                                      controller: state),
+                                                ),
+                                                SizedBox(
+                                                  width: 20,
+                                                ),
+                                                SizedBox(
+                                                  width: 250,
+                                                  child: Customtextformfield(
+                                                      hintText: "EirCode",
+                                                      controller: eirCode),
+                                                )
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 20,
+                                            ),
+                                            //save button
+                                            Container(
+                                              height: 50,
+                                              alignment: Alignment.center,
+                                              width: 150,
+                                              child: Text(
+                                                "Save this Address",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                              decoration: BoxDecoration(
+                                                  color: Colors.orange,
+                                                  borderRadius:
+                                                      BorderRadius.circular(8)),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            //checkboxes
+                                            Row(
+                                              children: [
+                                                Checkbox(
+                                                  activeColor: Colors.green,
+                                                  value:
+                                                      isBillingSameAsShipping,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      isBillingSameAsShipping =
+                                                          value!;
+                                                    });
+                                                  },
+                                                ),
+                                                Text(
+                                                  "Billing same as Shipping address",
+                                                  style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.normal),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Checkbox(
+                                                  activeColor: Colors.green,
+                                                  value:
+                                                      useAnotherAddressForBilling,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      useAnotherAddressForBilling =
+                                                          value!;
+                                                    });
+                                                  },
+                                                ),
+                                                Text(
+                                                  "Use Another Address for Billing",
+                                                  style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.normal),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       SizedBox(
-                                        height: 15,
+                                        width: 20,
                                       ),
-                                      //total
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Total:",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                          SizedBox(
-                                            width: 320,
-                                          ),
-                                          Text(
-                                            "₹16.02",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 25,
-                                      ),
-                                      Text(
-                                        "Do not refresh this page until payment complete",
-                                        style: TextStyle(
-                                            color: Colors.grey.shade600,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 15),
-                                      ),
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                      Text(
-                                        "Complete shipping address for Payment",
-                                        style: TextStyle(
-                                            color: Colors.grey.shade600,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 17),
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      //place order buttons
+
+                                      //order summary box
                                       Container(
-                                        height: 40,
-                                        alignment: Alignment.center,
-                                        width: 420,
-                                        child: Text(
-                                          "Place Order via Online",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w600),
-                                        ),
+                                        // height: 500,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 15),
                                         decoration: BoxDecoration(
-                                            color: Colors.blue,
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                      ),
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                      Container(
-                                        height: 40,
-                                        alignment: Alignment.center,
-                                        width: 420,
-                                        child: Text(
-                                          "Place Order Cash On Delivery",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w600),
+                                            color: Colors.white,
+                                            border: Border.all(
+                                                color: Colors.grey.shade200)),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "Order Summary",
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20),
+                                                ),
+                                                //progress indicator
+                                                SizedBox(
+                                                  width: 200,
+                                                  child: LinearPercentIndicator(
+                                                    lineHeight: 4.0,
+                                                    percent: 0.2,
+                                                    backgroundColor:
+                                                        Colors.grey.shade300,
+                                                    progressColor:
+                                                        Colors.orange,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 20,
+                                            ),
+                                            //price
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "Items(2):",
+                                                  style: TextStyle(
+                                                      color:
+                                                          Colors.grey.shade600,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 16),
+                                                ),
+                                                SizedBox(
+                                                  width: 300,
+                                                ),
+                                                Text(
+                                                  "₹11.07",
+                                                  style: TextStyle(
+                                                      color:
+                                                          Colors.grey.shade600,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 16),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 15,
+                                            ),
+                                            //shippingprice
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "Shipping & handling:",
+                                                  style: TextStyle(
+                                                      color:
+                                                          Colors.grey.shade600,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 16),
+                                                ),
+                                                SizedBox(
+                                                  width: 220,
+                                                ),
+                                                Text(
+                                                  "₹4.95",
+                                                  style: TextStyle(
+                                                      color:
+                                                          Colors.grey.shade600,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 16),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 20,
+                                            ),
+                                            SizedBox(
+                                              width: 420,
+                                              child: Divider(
+                                                color: Colors.grey.shade300,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 15,
+                                            ),
+                                            //total
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "Total:",
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16),
+                                                ),
+                                                SizedBox(
+                                                  width: 320,
+                                                ),
+                                                Text(
+                                                  "₹16.02",
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 25,
+                                            ),
+                                            Text(
+                                              "Do not refresh this page until payment complete",
+                                              style: TextStyle(
+                                                  color: Colors.grey.shade600,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 15),
+                                            ),
+                                            SizedBox(
+                                              height: 15,
+                                            ),
+                                            Text(
+                                              "Complete shipping address for Payment",
+                                              style: TextStyle(
+                                                  color: Colors.grey.shade600,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 17),
+                                            ),
+                                            SizedBox(
+                                              height: 20,
+                                            ),
+                                            //place order buttons
+                                            Container(
+                                              height: 40,
+                                              alignment: Alignment.center,
+                                              width: 420,
+                                              child: Text(
+                                                "Place Order via Online",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                              decoration: BoxDecoration(
+                                                  color: Colors.blue,
+                                                  borderRadius:
+                                                      BorderRadius.circular(8)),
+                                            ),
+                                            SizedBox(
+                                              height: 15,
+                                            ),
+                                            Container(
+                                              height: 40,
+                                              alignment: Alignment.center,
+                                              width: 420,
+                                              child: Text(
+                                                "Place Order Cash On Delivery",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                              decoration: BoxDecoration(
+                                                  color: Colors.green,
+                                                  borderRadius:
+                                                      BorderRadius.circular(8)),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              "By Placing your order your agree to our company Privacy-policy",
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 15,
+                                                  fontWeight:
+                                                      FontWeight.normal),
+                                            ),
+                                          ],
                                         ),
-                                        decoration: BoxDecoration(
-                                            color: Colors.green,
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        "By Placing your order your agree to our company Privacy-policy",
-                                        style: TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.normal),
-                                      ),
+                                      )
                                     ],
-                                  ),
-                                )
-                              ],
-                            )
+                                  )
+                                : //other devices
+                                Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: isTablet ? 25 : 5),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        //textfields
+                                        Text(
+                                          "Shipment Address",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        isTablet
+                                            ? Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: Customtextformfield(
+                                                        hintText: "First Name",
+                                                        controller: fname),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 20,
+                                                  ),
+                                                  Expanded(
+                                                    child: Customtextformfield(
+                                                        hintText: "Last Name",
+                                                        controller: lname),
+                                                  )
+                                                ],
+                                              )
+                                            : //mobile
+                                            Column(
+                                                children: [
+                                                  Customtextformfield(
+                                                      hintText: "First Name",
+                                                      controller: fname),
+                                                  SizedBox(
+                                                    height: 20,
+                                                  ),
+                                                  Customtextformfield(
+                                                      hintText: "Last Name",
+                                                      controller: lname)
+                                                ],
+                                              ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Customtextformfield(
+                                            hintText: "Street Address",
+                                            controller: address),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        isTablet
+                                            ? Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: Customtextformfield(
+                                                        hintText: "Mobile",
+                                                        controller: mobile),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 20,
+                                                  ),
+                                                  Expanded(
+                                                    child: Customtextformfield(
+                                                        hintText: "Email",
+                                                        controller: email),
+                                                  )
+                                                ],
+                                              )
+                                            : //mobile
+                                            Column(
+                                                children: [
+                                                  Customtextformfield(
+                                                      hintText: "Mobile",
+                                                      controller: mobile),
+                                                  SizedBox(
+                                                    height: 20,
+                                                  ),
+                                                  Customtextformfield(
+                                                      hintText: "Email",
+                                                      controller: email),
+                                                ],
+                                              ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        isTablet
+                                            ? Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 250,
+                                                    child: Customtextformfield(
+                                                        hintText: "State",
+                                                        controller: state),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 20,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 250,
+                                                    child: Customtextformfield(
+                                                        hintText: "EirCode",
+                                                        controller: eirCode),
+                                                  )
+                                                ],
+                                              )
+                                            : //mobile
+                                            Column(
+                                                children: [
+                                                  Customtextformfield(
+                                                      hintText: "State",
+                                                      controller: state),
+                                                  SizedBox(
+                                                    height: 20,
+                                                  ),
+                                                  Customtextformfield(
+                                                      hintText: "EirCode",
+                                                      controller: eirCode),
+                                                ],
+                                              ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        //save button
+                                        Container(
+                                          height: 50,
+                                          alignment: Alignment.center,
+                                          width: 150,
+                                          child: Text(
+                                            "Save this Address",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          decoration: BoxDecoration(
+                                              color: Colors.orange,
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        //checkboxes
+                                        Row(
+                                          children: [
+                                            Checkbox(
+                                              activeColor: Colors.green,
+                                              value: isBillingSameAsShipping,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  isBillingSameAsShipping =
+                                                      value!;
+                                                });
+                                              },
+                                            ),
+                                            Text(
+                                              "Billing same as Shipping address",
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 15,
+                                                  fontWeight:
+                                                      FontWeight.normal),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Checkbox(
+                                              activeColor: Colors.green,
+                                              value:
+                                                  useAnotherAddressForBilling,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  useAnotherAddressForBilling =
+                                                      value!;
+                                                });
+                                              },
+                                            ),
+                                            Text(
+                                              "Use Another Address for Billing",
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 15,
+                                                  fontWeight:
+                                                      FontWeight.normal),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        //order summary box
+                                        Container(
+                                          width: double.infinity,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 15),
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              border: Border.all(
+                                                  color: Colors.grey.shade200)),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Order Summary",
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 20),
+                                                  ),
+                                                  //progress indicator
+                                                  SizedBox(
+                                                    width: isTablet ? 400 : 180,
+                                                    child:
+                                                        LinearPercentIndicator(
+                                                      lineHeight: 4.0,
+                                                      percent: 0.2,
+                                                      backgroundColor:
+                                                          Colors.grey.shade300,
+                                                      progressColor:
+                                                          Colors.orange,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              //price
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    "Items(2):",
+                                                    style: TextStyle(
+                                                        color: Colors
+                                                            .grey.shade600,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize:
+                                                            isTablet ? 18 : 16),
+                                                  ),
+                                                  Text(
+                                                    "₹11.07",
+                                                    style: TextStyle(
+                                                        color: Colors
+                                                            .grey.shade600,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize:
+                                                            isTablet ? 18 : 16),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              //shippingprice
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    "Shipping & handling:",
+                                                    style: TextStyle(
+                                                        color: Colors
+                                                            .grey.shade600,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize:
+                                                            isTablet ? 18 : 16),
+                                                  ),
+                                                  Text(
+                                                    "₹4.95",
+                                                    style: TextStyle(
+                                                        color: Colors
+                                                            .grey.shade600,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize:
+                                                            isTablet ? 18 : 16),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              SizedBox(
+                                                width: 420,
+                                                child: Divider(
+                                                  color: Colors.grey.shade300,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              //total
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    "Total:",
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize:
+                                                            isTablet ? 18 : 16),
+                                                  ),
+                                                  Text(
+                                                    "₹16.02",
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize:
+                                                            isTablet ? 18 : 16),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 25,
+                                              ),
+                                              Text(
+                                                "Do not refresh this page until payment complete",
+                                                style: TextStyle(
+                                                    color: Colors.grey.shade600,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 15),
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Text(
+                                                "Complete shipping address for Payment",
+                                                style: TextStyle(
+                                                    color: Colors.grey.shade600,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 17),
+                                              ),
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              //place order buttons
+                                              Container(
+                                                height: 40,
+                                                alignment: Alignment.center,
+                                                width: double.infinity,
+                                                child: Text(
+                                                  "Place Order via Online",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.blue,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Container(
+                                                height: 40,
+                                                alignment: Alignment.center,
+                                                width: double.infinity,
+                                                child: Text(
+                                                  "Place Order Cash On Delivery",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.green,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              isTablet
+                                                  ? Row(
+                                                      children: [
+                                                        Text(
+                                                          "By Placing your order your agree to our company",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.grey,
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal),
+                                                        ),
+                                                        SizedBox(
+                                                          width: 5,
+                                                        ),
+                                                        Text(
+                                                          "Privacy-policy",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.green,
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  : //mobile
+                                                  Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          "By Placing your order your agree to our company",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.grey,
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          "Privacy-policy",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.green,
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal),
+                                                        ),
+                                                      ],
+                                                    ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )
 
                             //end of main part
                           ],
