@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:gomart_wahy/view/all_products/all_productscreen.dart';
+import 'package:gomart_wahy/view/checkout/checkout_page.dart';
 import 'package:gomart_wahy/view/floatingactionbutton/custom_floatingbutton.dart';
 import 'package:gomart_wahy/view/homescreen/drawerscreen/drawer_screen.dart';
 import 'package:gomart_wahy/view/homescreen/home_screen.dart';
 import 'package:gomart_wahy/view/homescreen/widget/header_greencard.dart';
 import 'package:gomart_wahy/view/homescreen/widget/header_whitebox.dart';
+import 'package:gomart_wahy/view/homescreen/widget/homepage.dart';
 
 class CartitemsPage extends StatefulWidget {
   const CartitemsPage({super.key});
@@ -567,64 +570,89 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                                   ),
                                                   Row(
                                                     children: [
-                                                      Container(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Text(
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          "Confirm Order",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 15,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
+                                                      //confirm button
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        CheckoutPage(),
+                                                              ));
+                                                        },
+                                                        child: Container(
+                                                          alignment:
+                                                              Alignment.center,
+                                                          child: Text(
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            "Confirm Order",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          height: screenHeight *
+                                                              0.06,
+                                                          width: screenWidth *
+                                                              0.09,
+                                                          decoration: BoxDecoration(
+                                                              color: Color(
+                                                                  0xFF03AC13),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5)),
                                                         ),
-                                                        height:
-                                                            screenHeight * 0.06,
-                                                        width:
-                                                            screenWidth * 0.09,
-                                                        decoration: BoxDecoration(
-                                                            color: Color(
-                                                                0xFF03AC13),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        5)),
                                                       ),
                                                       SizedBox(
                                                         width: 15,
                                                       ),
-                                                      Container(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Text(
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          "Continue Shopping",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.orange,
-                                                              fontSize: 15,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                        height:
-                                                            screenHeight * 0.06,
-                                                        width:
-                                                            screenWidth * 0.095,
-                                                        decoration: BoxDecoration(
-                                                            color: Colors.white,
-                                                            border: Border.all(
+                                                      //continue button
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        AllProductscreen(),
+                                                              ));
+                                                        },
+                                                        child: Container(
+                                                          alignment:
+                                                              Alignment.center,
+                                                          child: Text(
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            "Continue Shopping",
+                                                            style: TextStyle(
                                                                 color: Colors
-                                                                    .orange),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        5)),
+                                                                    .orange,
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          height: screenHeight *
+                                                              0.06,
+                                                          width: screenWidth *
+                                                              0.095,
+                                                          decoration: BoxDecoration(
+                                                              color:
+                                                                  Colors.white,
+                                                              border: Border.all(
+                                                                  color: Colors
+                                                                      .orange),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5)),
+                                                        ),
                                                       ),
                                                     ],
                                                   )
@@ -967,48 +995,78 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                               ),
                                               Row(
                                                 children: [
-                                                  Container(
-                                                    alignment: Alignment.center,
-                                                    child: Text(
-                                                      "Confirm Order",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 15,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                  //confirm button
+
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                CheckoutPage(),
+                                                          ));
+                                                    },
+                                                    child: Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        "Confirm Order",
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      height:
+                                                          screenHeight * 0.05,
+                                                      width: 120,
+                                                      decoration: BoxDecoration(
+                                                          color:
+                                                              Color(0xFF03AC13),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5)),
                                                     ),
-                                                    height: screenHeight * 0.05,
-                                                    width: 120,
-                                                    decoration: BoxDecoration(
-                                                        color:
-                                                            Color(0xFF03AC13),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(5)),
                                                   ),
                                                   SizedBox(
                                                     width: 15,
                                                   ),
-                                                  Container(
-                                                    alignment: Alignment.center,
-                                                    child: Text(
-                                                      "Continue Shopping",
-                                                      style: TextStyle(
-                                                          color: Colors.orange,
-                                                          fontSize: 15,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    height: screenHeight * 0.05,
-                                                    width: 150,
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        border: Border.all(
+                                                  //continue button
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                AllProductscreen(),
+                                                          ));
+                                                    },
+                                                    child: Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        "Continue Shopping",
+                                                        style: TextStyle(
                                                             color:
-                                                                Colors.orange),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(5)),
+                                                                Colors.orange,
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      height:
+                                                          screenHeight * 0.05,
+                                                      width: 150,
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.white,
+                                                          border: Border.all(
+                                                              color: Colors
+                                                                  .orange),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5)),
+                                                    ),
                                                   ),
                                                 ],
                                               )
@@ -1092,22 +1150,32 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                             border: InputBorder.none),
                                       ),
                                     ),
-                                    Container(
-                                      width: 150,
-                                      child: Center(
-                                        child: Text(
-                                          "Subscribe Now",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => Homepage(),
+                                            ));
+                                      },
+                                      child: Container(
+                                        width: 150,
+                                        child: Center(
+                                          child: Text(
+                                            "Subscribe Now",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18),
+                                          ),
                                         ),
+                                        decoration: BoxDecoration(
+                                            color: Colors.green,
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(5),
+                                                bottomRight:
+                                                    Radius.circular(5))),
                                       ),
-                                      decoration: BoxDecoration(
-                                          color: Colors.green,
-                                          borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(5),
-                                              bottomRight: Radius.circular(5))),
                                     )
                                   ],
                                 ),

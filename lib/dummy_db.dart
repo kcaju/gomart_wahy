@@ -61,6 +61,13 @@ class DummyDb {
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThZoVGhMjNZtn5qNsap7QgDmtFf3k3EA1BkA&s"
     },
   ];
+  static List clientsimage = [
+    "assets/png/client1.png",
+    "assets/png/client-2.png",
+    "assets/png/client3.png",
+    "assets/png/client4.png",
+    "assets/png/client5.png",
+  ];
 
   static List<Map> draweritems = [
     {

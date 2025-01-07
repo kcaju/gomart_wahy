@@ -5,6 +5,7 @@ import 'package:gomart_wahy/view/homescreen/drawerscreen/drawer_screen.dart';
 import 'package:gomart_wahy/view/homescreen/home_screen.dart';
 import 'package:gomart_wahy/view/homescreen/widget/header_greencard.dart';
 import 'package:gomart_wahy/view/homescreen/widget/header_whitebox.dart';
+import 'package:gomart_wahy/view/homescreen/widget/homepage.dart';
 import 'package:gomart_wahy/view/homescreen/widget/shop_and_about_button.dart';
 
 class AboutusPage extends StatefulWidget {
@@ -2087,22 +2088,32 @@ class _AboutusPageState extends State<AboutusPage> {
                                             border: InputBorder.none),
                                       ),
                                     ),
-                                    Container(
-                                      width: 150,
-                                      child: Center(
-                                        child: Text(
-                                          "Subscribe Now",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => Homepage(),
+                                            ));
+                                      },
+                                      child: Container(
+                                        width: 150,
+                                        child: Center(
+                                          child: Text(
+                                            "Subscribe Now",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18),
+                                          ),
                                         ),
+                                        decoration: BoxDecoration(
+                                            color: Colors.green,
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(5),
+                                                bottomRight:
+                                                    Radius.circular(5))),
                                       ),
-                                      decoration: BoxDecoration(
-                                          color: Colors.green,
-                                          borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(5),
-                                              bottomRight: Radius.circular(5))),
                                     )
                                   ],
                                 ),

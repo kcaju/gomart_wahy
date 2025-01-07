@@ -10,6 +10,7 @@ import 'package:gomart_wahy/view/homescreen/drawerscreen/category_drawerscreen.d
 import 'package:gomart_wahy/view/homescreen/drawerscreen/drawer_screen.dart';
 import 'package:gomart_wahy/view/homescreen/widget/header_greencard.dart';
 import 'package:gomart_wahy/view/homescreen/widget/header_whitebox.dart';
+import 'package:gomart_wahy/view/homescreen/widget/homepage.dart';
 import 'package:gomart_wahy/view/homescreen/widget/new_and_organic_items_card.dart';
 import 'package:gomart_wahy/view/homescreen/widget/shop_and_about_button.dart';
 import 'package:gomart_wahy/view/homescreen/widget/topoffer_card.dart';
@@ -1302,6 +1303,91 @@ class HomeScreen extends StatelessWidget {
                                       ],
                                     ),
                                   ),
+                            SizedBox(
+                              height: 80,
+                            ),
+                            //what our clients say
+
+                            Center(
+                              child: Text(
+                                "What Our Clients Say",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 30),
+                              ),
+                            ),
+
+                            CarouselSlider(
+                              items: List.generate(
+                                DummyDb.clientsimage.length,
+                                (index) {
+                                  return CircleAvatar(
+                                    radius: screenWidth * 0.1,
+                                    child: Image.asset(
+                                      DummyDb.clientsimage[index],
+                                    ),
+                                  );
+                                },
+                              ),
+                              options: CarouselOptions(
+                                height: isMobile
+                                    ? screenHeight * 0.3
+                                    : screenHeight * 0.2,
+                                reverse: true,
+                                autoPlay: true,
+                                scrollPhysics: ClampingScrollPhysics(),
+                                enlargeCenterPage: true,
+                                autoPlayInterval: Duration(seconds: 3),
+                                // aspectRatio: 16 / 9,
+                                viewportFraction: isMobile
+                                    ? 0.2
+                                    : isTablet
+                                        ? 0.1
+                                        : 0.05,
+                              ),
+                            ),
+                            //clients review slider
+                            CarouselSlider(
+                              items: List.generate(
+                                5,
+                                (index) {
+                                  return Column(
+                                    children: [
+                                      Text(
+                                        textAlign: TextAlign.center,
+                                        "\"Distinctively unleash business technologies without backend metrics. Conveniently network distributed core competencies. Continually integrate backward-compatible information and backward-compatible.\"",
+                                        style: TextStyle(
+                                            color: Colors.grey.shade600,
+                                            fontSize: 16),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        "Rasmus Geisler",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                            color: Colors.black),
+                                      )
+                                    ],
+                                  );
+                                },
+                              ),
+                              options: CarouselOptions(
+                                height: isMobile
+                                    ? screenHeight * 0.3
+                                    : screenHeight * 0.2,
+                                autoPlay: true,
+                                enlargeCenterPage: true,
+                                scrollPhysics: ClampingScrollPhysics(),
+                                autoPlayInterval: Duration(seconds: 3),
+                                // aspectRatio: 16 / 9,
+                                viewportFraction: 1.0,
+                              ),
+                            ),
+
                             //newproducts & organic best seller
                             SizedBox(
                               height: 80,
@@ -2308,22 +2394,33 @@ class HomeScreen extends StatelessWidget {
                                             border: InputBorder.none),
                                       ),
                                     ),
-                                    Container(
-                                      width: 150,
-                                      child: Center(
-                                        child: Text(
-                                          "Subscribe Now",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18),
+                                    //subscribe button
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => Homepage(),
+                                            ));
+                                      },
+                                      child: Container(
+                                        width: 150,
+                                        child: Center(
+                                          child: Text(
+                                            "Subscribe Now",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18),
+                                          ),
                                         ),
+                                        decoration: BoxDecoration(
+                                            color: Colors.green,
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(5),
+                                                bottomRight:
+                                                    Radius.circular(5))),
                                       ),
-                                      decoration: BoxDecoration(
-                                          color: Colors.green,
-                                          borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(5),
-                                              bottomRight: Radius.circular(5))),
                                     )
                                   ],
                                 ),

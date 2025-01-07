@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gomart_wahy/view/about_us_page/aboutus_page.dart';
 import 'package:gomart_wahy/view/all_products/all_productscreen.dart';
 import 'package:gomart_wahy/view/homescreen/widget/homepage.dart';
 import 'package:gomart_wahy/view/quick_enquiry/quick_enquiryscreen.dart';
@@ -97,21 +98,31 @@ class DrawerScreen extends StatelessWidget {
                         SizedBox(
                           height: 15,
                         ),
-                        Container(
-                          // height: 40,
-                          width: 100,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 15),
-                          decoration: BoxDecoration(
-                              color: Color(0xFF03AC13),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Center(
-                            child: Text(
-                              "About Us",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold),
+                        //about button
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AboutusPage(),
+                                ));
+                          },
+                          child: Container(
+                            // height: 40,
+                            width: 100,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 15),
+                            decoration: BoxDecoration(
+                                color: Color(0xFF03AC13),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Center(
+                              child: Text(
+                                "About Us",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
                         ),

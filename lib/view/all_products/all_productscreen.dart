@@ -4,6 +4,7 @@ import 'package:gomart_wahy/view/homescreen/drawerscreen/drawer_screen.dart';
 import 'package:gomart_wahy/view/homescreen/home_screen.dart';
 import 'package:gomart_wahy/view/homescreen/widget/header_greencard.dart';
 import 'package:gomart_wahy/view/homescreen/widget/header_whitebox.dart';
+import 'package:gomart_wahy/view/homescreen/widget/homepage.dart';
 import 'package:gomart_wahy/view/homescreen/widget/trendingproducts_card.dart';
 import 'package:gomart_wahy/view/shopbycategory_screen/category_screen.dart';
 import 'package:gomart_wahy/view/wishlist_page/wish_listpage.dart';
@@ -182,25 +183,36 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                                               InputBorder.none),
                                                     ),
                                                   ),
-                                                  Container(
-                                                    width: 40,
-                                                    height: 50,
-                                                    child: Center(
-                                                      child: Icon(
-                                                        Icons.search,
-                                                        color: Colors.white,
+                                                  //search button
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                AllProductscreen(),
+                                                          ));
+                                                    },
+                                                    child: Container(
+                                                      width: 40,
+                                                      height: 50,
+                                                      child: Center(
+                                                        child: Icon(
+                                                          Icons.search,
+                                                          color: Colors.white,
+                                                        ),
                                                       ),
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.orange,
+                                                          borderRadius:
+                                                              BorderRadius.only(
+                                                                  topRight: Radius
+                                                                      .circular(
+                                                                          5),
+                                                                  bottomRight:
+                                                                      Radius.circular(
+                                                                          5))),
                                                     ),
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.orange,
-                                                        borderRadius:
-                                                            BorderRadius.only(
-                                                                topRight: Radius
-                                                                    .circular(
-                                                                        5),
-                                                                bottomRight: Radius
-                                                                    .circular(
-                                                                        5))),
                                                   )
                                                 ],
                                               ),
@@ -676,25 +688,36 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                                                 .none),
                                                       ),
                                                     ),
-                                                    Container(
-                                                      width: 40,
-                                                      height: 50,
-                                                      child: Center(
-                                                        child: Icon(
-                                                          Icons.search,
-                                                          color: Colors.white,
+                                                    //search button
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  AllProductscreen(),
+                                                            ));
+                                                      },
+                                                      child: Container(
+                                                        width: 40,
+                                                        height: 50,
+                                                        child: Center(
+                                                          child: Icon(
+                                                            Icons.search,
+                                                            color: Colors.white,
+                                                          ),
                                                         ),
+                                                        decoration: BoxDecoration(
+                                                            color:
+                                                                Colors.orange,
+                                                            borderRadius: BorderRadius.only(
+                                                                topRight: Radius
+                                                                    .circular(
+                                                                        5),
+                                                                bottomRight: Radius
+                                                                    .circular(
+                                                                        5))),
                                                       ),
-                                                      decoration: BoxDecoration(
-                                                          color: Colors.orange,
-                                                          borderRadius:
-                                                              BorderRadius.only(
-                                                                  topRight: Radius
-                                                                      .circular(
-                                                                          5),
-                                                                  bottomRight:
-                                                                      Radius.circular(
-                                                                          5))),
                                                     )
                                                   ],
                                                 ),
@@ -771,14 +794,26 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      Text(
-                                                        brands[index],
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal,
-                                                            fontSize: 16),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        CategoryScreen(),
+                                                              ));
+                                                        },
+                                                        child: Text(
+                                                          brands[index],
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                              fontSize: 16),
+                                                        ),
                                                       ),
                                                       SizedBox(
                                                         height: 15,
@@ -1282,22 +1317,32 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                             border: InputBorder.none),
                                       ),
                                     ),
-                                    Container(
-                                      width: 150,
-                                      child: Center(
-                                        child: Text(
-                                          "Subscribe Now",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => Homepage(),
+                                            ));
+                                      },
+                                      child: Container(
+                                        width: 150,
+                                        child: Center(
+                                          child: Text(
+                                            "Subscribe Now",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18),
+                                          ),
                                         ),
+                                        decoration: BoxDecoration(
+                                            color: Colors.green,
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(5),
+                                                bottomRight:
+                                                    Radius.circular(5))),
                                       ),
-                                      decoration: BoxDecoration(
-                                          color: Colors.green,
-                                          borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(5),
-                                              bottomRight: Radius.circular(5))),
                                     )
                                   ],
                                 ),
