@@ -8,6 +8,29 @@ class OrderhistoryBox extends StatefulWidget {
 }
 
 class _OrderhistoryBoxState extends State<OrderhistoryBox> {
+  final List<Map<String, String>> orders = const [
+    {
+      'Order Number#': '12345',
+      'Placed on': 'Jan 5, 2025',
+      'Method': 'Credit Card',
+      'Total': '\$100.00',
+      'Action': 'status'
+    },
+    {
+      'Order Number#': '12346',
+      'Placed on': 'Jan 4, 2025',
+      'Method': 'PayPal',
+      'Total': '\$200.00',
+      'Action': 'status'
+    },
+    {
+      'Order Number#': '12347',
+      'Placed on': 'Jan 3, 2025',
+      'Method': 'Cash',
+      'Total': '\$300.00',
+      'Action': 'status'
+    },
+  ];
   @override
   Widget build(BuildContext context) {
     // Use MediaQuery to get screen width and height
@@ -33,215 +56,195 @@ class _OrderhistoryBoxState extends State<OrderhistoryBox> {
           SizedBox(
             height: 15,
           ),
-          isMobile
-              ? SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Order Number#",
+
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              columns: const [
+                DataColumn(
+                    label: Text(
+                  'Order Number#',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16),
+                )),
+                DataColumn(
+                    label: Text(
+                  'Placed on',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16),
+                )),
+                DataColumn(
+                    label: Text(
+                  'Method',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16),
+                )),
+                DataColumn(
+                    label: Text(
+                  'Total',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16),
+                )),
+                DataColumn(
+                    label: Text(
+                  'Action',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16),
+                )),
+              ],
+              rows: List.generate(
+                orders.length,
+                (index) {
+                  final order = orders[index];
+                  return DataRow(
+                    cells: [
+                      DataCell(Text(
+                        order['Order Number#']!,
                         style: TextStyle(
                             color: Colors.grey.shade800,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 18),
-                      ),
-                      SizedBox(
-                        width: 50,
-                      ),
-                      Text(
-                        "Placed On",
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16),
+                      )),
+                      DataCell(Text(
+                        order['Placed on']!,
                         style: TextStyle(
                             color: Colors.grey.shade800,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 18),
-                      ),
-                      SizedBox(
-                        width: 50,
-                      ),
-                      Text(
-                        "Method",
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16),
+                      )),
+                      DataCell(Text(
+                        order['Method']!,
                         style: TextStyle(
                             color: Colors.grey.shade800,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 18),
-                      ),
-                      SizedBox(
-                        width: 50,
-                      ),
-                      Text(
-                        "Total",
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16),
+                      )),
+                      DataCell(Text(
+                        order['Total']!,
                         style: TextStyle(
                             color: Colors.grey.shade800,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 18),
-                      ),
-                      SizedBox(
-                        width: 50,
-                      ),
-                      Text(
-                        "Action",
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16),
+                      )),
+                      DataCell(Text(
+                        order['Action']!,
                         style: TextStyle(
                             color: Colors.grey.shade800,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 18),
-                      ),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16),
+                      )),
                     ],
-                  ),
-                )
-              : //other devices
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Order Number#",
-                      style: TextStyle(
-                          color: Colors.grey.shade800,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 18),
-                    ),
-                    Text(
-                      "Placed On",
-                      style: TextStyle(
-                          color: Colors.grey.shade800,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 18),
-                    ),
-                    Text(
-                      "Method",
-                      style: TextStyle(
-                          color: Colors.grey.shade800,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 18),
-                    ),
-                    Text(
-                      "Total",
-                      style: TextStyle(
-                          color: Colors.grey.shade800,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 18),
-                    ),
-                    Text(
-                      "Action",
-                      style: TextStyle(
-                          color: Colors.grey.shade800,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 18),
-                    ),
-                    SizedBox()
-                  ],
-                ),
-          SizedBox(
-            height: 15,
-          ),
-          //order lists
-          ListView.separated(
-              shrinkWrap: true,
-              physics: ScrollPhysics(),
-              itemBuilder: (context, index) {
-                return isMobile
-                    ? SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Order Number",
-                              style: TextStyle(
-                                  color: Colors.grey.shade800,
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 18),
-                            ),
-                            SizedBox(
-                              width: 70,
-                            ),
-                            Text(
-                              "Date",
-                              style: TextStyle(
-                                  color: Colors.grey.shade800,
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 18),
-                            ),
-                            SizedBox(
-                              width: 80,
-                            ),
-                            Text(
-                              "Online",
-                              style: TextStyle(
-                                  color: Colors.grey.shade800,
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 18),
-                            ),
-                            SizedBox(
-                              width: 50,
-                            ),
-                            Text(
-                              "₹",
-                              style: TextStyle(
-                                  color: Colors.grey.shade800,
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 18),
-                            ),
-                            SizedBox(
-                              width: 50,
-                            ),
-                            Text(
-                              "status",
-                              style: TextStyle(
-                                  color: Colors.grey.shade800,
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 18),
-                            ),
-                          ],
-                        ),
-                      )
-                    : //other devices
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Order Number",
-                            style: TextStyle(
-                                color: Colors.grey.shade800,
-                                fontWeight: FontWeight.w900,
-                                fontSize: 18),
-                          ),
-                          Text(
-                            "Date",
-                            style: TextStyle(
-                                color: Colors.grey.shade800,
-                                fontWeight: FontWeight.w900,
-                                fontSize: 18),
-                          ),
-                          Text(
-                            "Online",
-                            style: TextStyle(
-                                color: Colors.grey.shade800,
-                                fontWeight: FontWeight.w900,
-                                fontSize: 18),
-                          ),
-                          Text(
-                            "₹",
-                            style: TextStyle(
-                                color: Colors.grey.shade800,
-                                fontWeight: FontWeight.w900,
-                                fontSize: 18),
-                          ),
-                          Text(
-                            "status",
-                            style: TextStyle(
-                                color: Colors.grey.shade800,
-                                fontWeight: FontWeight.w900,
-                                fontSize: 18),
-                          ),
-                          SizedBox()
-                        ],
-                      );
-              },
-              separatorBuilder: (context, index) => SizedBox(
-                    height: 10,
-                  ),
-              itemCount: 2)
+                  );
+                },
+              ),
+            ),
+          )
+
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     Text(
+          //       "Order Number#",
+          //       style: TextStyle(
+          //           color: Colors.grey.shade800,
+          //           fontWeight: FontWeight.w900,
+          //           fontSize: 18),
+          //     ),
+          //     Text(
+          //       "Placed On",
+          //       style: TextStyle(
+          //           color: Colors.grey.shade800,
+          //           fontWeight: FontWeight.w900,
+          //           fontSize: 18),
+          //     ),
+          //     Text(
+          //       "Method",
+          //       style: TextStyle(
+          //           color: Colors.grey.shade800,
+          //           fontWeight: FontWeight.w900,
+          //           fontSize: 18),
+          //     ),
+          //     Text(
+          //       "Total",
+          //       style: TextStyle(
+          //           color: Colors.grey.shade800,
+          //           fontWeight: FontWeight.w900,
+          //           fontSize: 18),
+          //     ),
+          //     Text(
+          //       "Action",
+          //       style: TextStyle(
+          //           color: Colors.grey.shade800,
+          //           fontWeight: FontWeight.w900,
+          //           fontSize: 18),
+          //     ),
+          //     SizedBox()
+          //   ],
+          // ),
+          // SizedBox(
+          //   height: 15,
+          // ),
+          // //order lists
+          // ListView.separated(
+          //     shrinkWrap: true,
+          //     physics: ScrollPhysics(),
+          //     itemBuilder: (context, index) {
+          //       return Row(
+          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //         children: [
+          //           Text(
+          //             "Order Number",
+          //             style: TextStyle(
+          //                 color: Colors.grey.shade800,
+          //                 fontWeight: FontWeight.w900,
+          //                 fontSize: 18),
+          //           ),
+          //           Text(
+          //             "Date",
+          //             style: TextStyle(
+          //                 color: Colors.grey.shade800,
+          //                 fontWeight: FontWeight.w900,
+          //                 fontSize: 18),
+          //           ),
+          //           Text(
+          //             "Online",
+          //             style: TextStyle(
+          //                 color: Colors.grey.shade800,
+          //                 fontWeight: FontWeight.w900,
+          //                 fontSize: 18),
+          //           ),
+          //           Text(
+          //             "₹",
+          //             style: TextStyle(
+          //                 color: Colors.grey.shade800,
+          //                 fontWeight: FontWeight.w900,
+          //                 fontSize: 18),
+          //           ),
+          //           Text(
+          //             "status",
+          //             style: TextStyle(
+          //                 color: Colors.grey.shade800,
+          //                 fontWeight: FontWeight.w900,
+          //                 fontSize: 18),
+          //           ),
+          //           SizedBox()
+          //         ],
+          //       );
+          //     },
+          //     separatorBuilder: (context, index) => SizedBox(
+          //           height: 10,
+          //         ),
+          //     itemCount: 2)
         ],
       ),
     );
