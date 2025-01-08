@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gomart_wahy/view/account_page/account_page.dart';
 import 'package:gomart_wahy/view/splashscreen/splash_screen.dart';
 
 void main() {
@@ -13,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AccountPage(),
+      home: SplashScreen(),
     );
   }
 }

@@ -2,9 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:gomart_wahy/view/homescreen/widget/customtextformfield.dart';
 import 'package:gomart_wahy/view/signin/signin_screen.dart';
 
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
+  @override
+  State<SignupScreen> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+  final signupFormKey = GlobalKey<FormState>();
+  TextEditingController name = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController mobile = TextEditingController();
+  TextEditingController password = TextEditingController();
   @override
   Widget build(BuildContext context) {
     // Use MediaQuery to get screen width and height
@@ -16,12 +26,8 @@ class SignupScreen extends StatelessWidget {
     bool isTablet = screenWidth >= 600 && screenWidth < 1024;
     bool isDesktop = screenWidth >= 1024;
 
-    final signupFormKey = GlobalKey<FormState>();
-    TextEditingController name = TextEditingController();
-    TextEditingController email = TextEditingController();
-    TextEditingController mobile = TextEditingController();
-    TextEditingController password = TextEditingController();
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white.withAlpha(240),
       body: Padding(
         padding: EdgeInsets.symmetric(
@@ -216,149 +222,149 @@ class SignupScreen extends StatelessWidget {
                       ],
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.white),
-                  child: Form(
-                    key: signupFormKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              "Go",
-                              style: TextStyle(
-                                  color: Colors.orange,
-                                  fontSize: 50,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "mart",
-                              style: TextStyle(
-                                  color: Color(0xFF03AC13),
-                                  fontSize: 50,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              "Already have an account?",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.normal),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            InkWell(
-                              onTap: () {
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: signupFormKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "Go",
+                                style: TextStyle(
+                                    color: Colors.orange,
+                                    fontSize: 50,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "mart",
+                                style: TextStyle(
+                                    color: Color(0xFF03AC13),
+                                    fontSize: 50,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "Already have an account?",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SigninScreen(),
+                                      ));
+                                },
+                                child: Text(
+                                  "Sign in",
+                                  style: TextStyle(
+                                      color: Colors.orange,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Customtextformfield(
+                              controller: name, hintText: "Fullname"),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Customtextformfield(
+                              controller: email, hintText: "Email address"),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Customtextformfield(
+                              controller: mobile, hintText: "Mobile Number"),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Customtextformfield(
+                            controller: password,
+                            hintText: "Password",
+                            isPassword: true,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          //create account button
+                          GestureDetector(
+                            onTap: () {
+                              if (signupFormKey.currentState!.validate()) {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => SigninScreen(),
                                     ));
-                              },
-                              child: Text(
-                                "Sign in",
-                                style: TextStyle(
-                                    color: Colors.orange,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Customtextformfield(
-                            controller: name, hintText: "Fullname"),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Customtextformfield(
-                            controller: email, hintText: "Email address"),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Customtextformfield(
-                            controller: mobile, hintText: "Mobile Number"),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Customtextformfield(
-                          controller: password,
-                          hintText: "Password",
-                          isPassword: true,
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        //create account button
-                        GestureDetector(
-                          onTap: () {
-                            if (signupFormKey.currentState!.validate()) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => SigninScreen(),
-                                  ));
-                            }
-                          },
-                          child: Container(
-                            height: isTablet ? 60 : 50,
-                            width: isTablet ? 300 : double.infinity,
-                            child: Center(
-                              child: Text(
-                                "Create account",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                            decoration: BoxDecoration(
-                                color: Color(0xFF03AC13),
-                                borderRadius: BorderRadius.circular(5)),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-
-                        isTablet
-                            ? Center(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "By signing up, I agree to",
-                                      style: TextStyle(
-                                          color: Colors.black.withAlpha(150),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      "Terms of Use and Privacy Policy",
-                                      style: TextStyle(
-                                          color: Colors.black.withAlpha(150),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ],
+                              }
+                            },
+                            child: Container(
+                              height: isTablet ? 60 : 50,
+                              width: isTablet ? 300 : double.infinity,
+                              child: Center(
+                                child: Text(
+                                  "Create account",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500),
                                 ),
-                              )
-                            : Column(
-                                children: [
-                                  Row(
+                              ),
+                              decoration: BoxDecoration(
+                                  color: Color(0xFF03AC13),
+                                  borderRadius: BorderRadius.circular(5)),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+
+                          isTablet
+                              ? Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "By signing up, I agree to",
+                                        style: TextStyle(
+                                            color: Colors.black.withAlpha(150),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        "Terms of Use and Privacy Policy",
+                                        style: TextStyle(
+                                            color: Colors.black.withAlpha(150),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              : Center(
+                                  child: Column(
                                     children: [
                                       Text(
                                         "By signing up, I agree to",
@@ -367,28 +373,18 @@ class SignupScreen extends StatelessWidget {
                                             fontSize: 11,
                                             fontWeight: FontWeight.w500),
                                       ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
                                       Text(
-                                        "Terms of Use and Privacy",
+                                        "Terms of Use and Privacy Policy",
                                         style: TextStyle(
                                             color: Colors.black.withAlpha(150),
                                             fontSize: 11,
                                             fontWeight: FontWeight.bold),
-                                      )
+                                      ),
                                     ],
                                   ),
-                                  Text(
-                                    "Policy",
-                                    style: TextStyle(
-                                        color: Colors.black.withAlpha(150),
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ),
-                      ],
+                                ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

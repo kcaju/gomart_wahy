@@ -1136,7 +1136,7 @@ class _AboutusPageState extends State<AboutusPage> {
                                           height: 15,
                                         ),
                                         SizedBox(
-                                          height: isTablet ? 230 : 300,
+                                          height: isTablet ? 230 : 350,
                                           child: PageView.builder(
                                             controller: _pageController,
                                             itemCount: testimonials.length,
@@ -2033,28 +2033,48 @@ class _AboutusPageState extends State<AboutusPage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Subscribe to the GOMART",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    "New Arrivals",
-                                    style: TextStyle(
-                                        color: Colors.orange,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
+                              isMobile
+                                  ? Column(
+                                      children: [
+                                        Text(
+                                          "Subscribe to the GOMART",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          "New Arrivals",
+                                          style: TextStyle(
+                                              color: Colors.orange,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    )
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Subscribe to the GOMART",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          "New Arrivals",
+                                          style: TextStyle(
+                                              color: Colors.orange,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
