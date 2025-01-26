@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:gomart_wahy/view/account_page/account_page.dart';
 import 'package:gomart_wahy/view/all_products/all_productscreen.dart';
 import 'package:gomart_wahy/view/cartpage/cartitems_page.dart';
 import 'package:gomart_wahy/view/homescreen/widget/category_popup.dart';
 import 'package:gomart_wahy/view/homescreen/widget/homepage.dart';
 import 'package:gomart_wahy/view/quick_enquiry/quick_enquiryscreen.dart';
-import 'package:gomart_wahy/view/sign_up/signup_screen.dart';
-import 'package:gomart_wahy/view/signin/signin_screen.dart';
+import 'package:gomart_wahy/view/wishlist_page/wish_listpage.dart';
 
 class HeaderWhitebox extends StatelessWidget {
   const HeaderWhitebox({super.key});
@@ -219,17 +219,27 @@ class HeaderWhitebox extends StatelessWidget {
                   onSelected: (value) {
                     // Handle any selection if required
                     if (value == 1) {
-                      //Navigate to the Sign In screen
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SigninScreen()),
+                        MaterialPageRoute(builder: (context) => AccountPage()),
                       );
                     } else if (value == 2) {
-                      // Navigate to the Sign Up screen
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SignupScreen()),
+                        MaterialPageRoute(
+                            builder: (context) => CartitemsPage()),
                       );
+                    } else if (value == 3) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => WishListpage()),
+                      );
+                    } else if (value == 4) {
+                      //logout
+                      //  Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => CartitemsPage()),
+                      // );
                     }
                   },
                   itemBuilder: (context) => [
@@ -238,14 +248,14 @@ class HeaderWhitebox extends StatelessWidget {
                       child: Row(
                         children: [
                           Icon(
-                            Icons.login,
+                            Icons.person,
                             color: Colors.grey,
                           ),
                           SizedBox(
                             width: 10,
                           ),
                           Text(
-                            "Sign In",
+                            "My Account",
                             style: TextStyle(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.bold),
@@ -258,14 +268,54 @@ class HeaderWhitebox extends StatelessWidget {
                       child: Row(
                         children: [
                           Icon(
-                            Icons.login,
+                            Icons.sell,
                             color: Colors.grey,
                           ),
                           SizedBox(
                             width: 10,
                           ),
                           Text(
-                            "Sign Up",
+                            "My Cart",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: 3,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.favorite,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "My Wishlist",
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: 4,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.logout,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "Sign Out",
                             style: TextStyle(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.bold),

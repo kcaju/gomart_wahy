@@ -12,8 +12,9 @@ class TrendingproductsCard extends StatelessWidget {
       required this.count,
       this.isProducts = false,
       this.addToCartTap,
-      this.addToFavourite});
-  final String url, title, name, oldRate, newRate, count;
+      this.addToFavourite,
+      required this.maxcount});
+  final String url, title, name, oldRate, newRate, count, maxcount;
   final bool isProducts;
   final void Function()? addToCartTap;
   final VoidCallback? addToFavourite;
@@ -105,7 +106,7 @@ class TrendingproductsCard extends StatelessWidget {
                     width: 10,
                   ),
                   Text(
-                    "$count/10",
+                    "$count/$maxcount",
                     style: TextStyle(
                         color: Colors.orange,
                         fontSize: 16,

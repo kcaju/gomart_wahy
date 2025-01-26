@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gomart_wahy/view/floatingactionbutton/custom_floatingbutton.dart';
 import 'package:gomart_wahy/view/homescreen/drawerscreen/drawer_screen.dart';
@@ -18,22 +19,56 @@ class AllProductscreen extends StatefulWidget {
 }
 
 class _AllProductscreenState extends State<AllProductscreen> {
+  // Firebase Firestore instance
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
   String? selectedValue;
-  List brands = [
-    "Curry Powders",
-    "Fruits",
-    "Fruit & Vegetables",
-    "Fish & Meats",
-    "Dairy Products",
-    "Rice, Atta & Flours",
-    "Lentils & Pulses",
-    "Oil & Ghee",
-    "Frozen Foods",
-    "Ready to Eat",
-    "Beverages",
-    "Home & Kitchen",
-    "Deli",
-  ];
+  List countries = [];
+  // Fetch country from Firestore
+  Future<void> fetchCountries() async {
+    try {
+      QuerySnapshot snapshot = await firestore
+          .collection('Countries')
+          .where('status', isEqualTo: 'Active') // Only fetch active categories
+          .get();
+
+      setState(() {
+        countries = snapshot.docs
+            .map((doc) =>
+                doc['countryName'] as String) // Extract the 'name' field
+            .toList();
+      });
+    } catch (e) {
+      print("Error fetching categories: $e");
+    }
+  }
+
+  List brands = [];
+  // Fetch BRANDS from Firestore
+  Future<void> fetchBrands() async {
+    try {
+      QuerySnapshot snapshot = await firestore
+          .collection('Brands')
+          .where('status', isEqualTo: 'Active') // Only fetch active categories
+          .get();
+
+      setState(() {
+        brands = snapshot.docs
+            .map(
+                (doc) => doc['brandName'] as String) // Extract the 'name' field
+            .toList();
+      });
+    } catch (e) {
+      print("Error fetching categories: $e");
+    }
+  }
+
+  @override
+  void initState() {
+    fetchBrands();
+    fetchCountries();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     // Use MediaQuery to get screen width and height
@@ -244,6 +279,33 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                                   ),
                                                 ),
                                               ],
+                                            ),
+                                            SizedBox(
+                                              height: 15,
+                                            ),
+                                            //list of country
+                                            ListView.builder(
+                                              shrinkWrap: true,
+                                              itemCount: countries.length,
+                                              itemBuilder: (context, index) {
+                                                return Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      countries[index],
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                          fontSize: 16),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 15,
+                                                    )
+                                                  ],
+                                                );
+                                              },
                                             ),
                                             //brands
                                             SizedBox(
@@ -572,36 +634,71 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                             ),
                                             //list of products
 
-                                            GridView.builder(
-                                              itemCount: 5,
-                                              shrinkWrap: true,
-                                              gridDelegate:
-                                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                                      crossAxisCount: 3,
-                                                      crossAxisSpacing: 10,
-                                                      mainAxisSpacing: 10,
-                                                      mainAxisExtent: 600),
-                                              itemBuilder: (context, index) {
-                                                return TrendingproductsCard(
-                                                    addToFavourite: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                WishListpage(),
-                                                          ));
-                                                    },
-                                                    addToCartTap: () {
-                                                      //cart page navigation
-                                                    },
-                                                    isProducts: true,
-                                                    url:
-                                                        "https://cdn.pixabay.com/photo/2010/12/10/08/chicken-1140_1280.jpg",
-                                                    title: "Fresh Organic",
-                                                    name: "Chicken",
-                                                    oldRate: "\$ 5.5",
-                                                    newRate: "\$ 6.77",
-                                                    count: "18");
+                                            StreamBuilder<QuerySnapshot>(
+                                              stream: firestore
+                                                  .collection("Products")
+                                                  .snapshots(),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return const Center(
+                                                      child:
+                                                          CircularProgressIndicator());
+                                                }
+
+                                                if (!snapshot.hasData ||
+                                                    snapshot
+                                                        .data!.docs.isEmpty) {
+                                                  return const Center(
+                                                      child: Text(
+                                                          "No Brands found."));
+                                                }
+
+                                                final List<
+                                                        QueryDocumentSnapshot>
+                                                    documents =
+                                                    snapshot.data!.docs;
+                                                return GridView.builder(
+                                                  itemCount: documents.length,
+                                                  shrinkWrap: true,
+                                                  gridDelegate:
+                                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                                          crossAxisCount: 3,
+                                                          crossAxisSpacing: 10,
+                                                          mainAxisSpacing: 10,
+                                                          mainAxisExtent: 600),
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    final product = documents[
+                                                        index]; // Access each product as a map
+                                                    return TrendingproductsCard(
+                                                        addToFavourite: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        WishListpage(),
+                                                              ));
+                                                        },
+                                                        addToCartTap: () {},
+                                                        isProducts: true,
+                                                        url: product[
+                                                            'productUrl'],
+                                                        maxcount: product[
+                                                            'openstock'],
+                                                        title: product[
+                                                            'productName'],
+                                                        name:
+                                                            product['category'],
+                                                        oldRate: product[
+                                                            'originalPrice'],
+                                                        newRate:
+                                                            product['ourPrice'],
+                                                        count: product[
+                                                            'currentstock']);
+                                                  },
+                                                );
                                               },
                                             )
                                           ],
@@ -1186,64 +1283,145 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                         //list of products
 
                                         isTablet
-                                            ? GridView.builder(
-                                                itemCount: 5,
-                                                shrinkWrap: true,
-                                                gridDelegate:
-                                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                                        crossAxisCount: 2,
-                                                        crossAxisSpacing: 10,
-                                                        mainAxisSpacing: 10,
-                                                        mainAxisExtent: 600),
-                                                itemBuilder: (context, index) {
-                                                  return TrendingproductsCard(
-                                                      addToFavourite: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  WishListpage(),
-                                                            ));
-                                                      },
-                                                      isProducts: true,
-                                                      url:
-                                                          "https://cdn.pixabay.com/photo/2010/12/10/08/chicken-1140_1280.jpg",
-                                                      title: "Fresh Organic",
-                                                      name: "Chicken",
-                                                      oldRate: "\$ 5.5",
-                                                      newRate: "\$ 6.77",
-                                                      count: "18");
+                                            ? StreamBuilder<QuerySnapshot>(
+                                                stream: firestore
+                                                    .collection("Products")
+                                                    .snapshots(),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot
+                                                          .connectionState ==
+                                                      ConnectionState.waiting) {
+                                                    return const Center(
+                                                        child:
+                                                            CircularProgressIndicator());
+                                                  }
+
+                                                  if (!snapshot.hasData ||
+                                                      snapshot
+                                                          .data!.docs.isEmpty) {
+                                                    return const Center(
+                                                        child: Text(
+                                                            "No Brands found."));
+                                                  }
+
+                                                  final List<
+                                                          QueryDocumentSnapshot>
+                                                      documents =
+                                                      snapshot.data!.docs;
+                                                  return GridView.builder(
+                                                    itemCount: documents.length,
+                                                    shrinkWrap: true,
+                                                    gridDelegate:
+                                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                                            crossAxisCount: 3,
+                                                            crossAxisSpacing:
+                                                                10,
+                                                            mainAxisSpacing: 10,
+                                                            mainAxisExtent:
+                                                                600),
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      final product = documents[
+                                                          index]; // Access each product as a map
+                                                      return TrendingproductsCard(
+                                                          addToFavourite: () {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          WishListpage(),
+                                                                ));
+                                                          },
+                                                          addToCartTap: () {},
+                                                          isProducts: true,
+                                                          url: product[
+                                                              'productUrl'],
+                                                          maxcount: product[
+                                                              'openstock'],
+                                                          title: product[
+                                                              'productName'],
+                                                          name: product[
+                                                              'category'],
+                                                          oldRate: product[
+                                                              'originalPrice'],
+                                                          newRate: product[
+                                                              'ourPrice'],
+                                                          count: product[
+                                                              'currentstock']);
+                                                    },
+                                                  );
                                                 },
                                               )
                                             : //mobile
-                                            ListView.separated(
-                                                shrinkWrap: true,
-                                                physics: ScrollPhysics(),
-                                                itemBuilder: (context, index) {
-                                                  return TrendingproductsCard(
-                                                      addToFavourite: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  WishListpage(),
-                                                            ));
+                                            StreamBuilder<QuerySnapshot>(
+                                                stream: firestore
+                                                    .collection("Products")
+                                                    .snapshots(),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot
+                                                          .connectionState ==
+                                                      ConnectionState.waiting) {
+                                                    return const Center(
+                                                        child:
+                                                            CircularProgressIndicator());
+                                                  }
+
+                                                  if (!snapshot.hasData ||
+                                                      snapshot
+                                                          .data!.docs.isEmpty) {
+                                                    return const Center(
+                                                        child: Text(
+                                                            "No Brands found."));
+                                                  }
+
+                                                  final List<
+                                                          QueryDocumentSnapshot>
+                                                      documents =
+                                                      snapshot.data!.docs;
+                                                  return ListView.separated(
+                                                      shrinkWrap: true,
+                                                      physics: ScrollPhysics(),
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        final product = documents[
+                                                            index]; // Access each product as a map
+                                                        return TrendingproductsCard(
+                                                            addToFavourite: () {
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            WishListpage(),
+                                                                  ));
+                                                            },
+                                                            addToCartTap: () {},
+                                                            isProducts: true,
+                                                            url: product[
+                                                                'productUrl'],
+                                                            maxcount: product[
+                                                                'openstock'],
+                                                            title: product[
+                                                                'productName'],
+                                                            name: product[
+                                                                'category'],
+                                                            oldRate: product[
+                                                                'originalPrice'],
+                                                            newRate: product[
+                                                                'ourPrice'],
+                                                            count: product[
+                                                                'currentstock']);
                                                       },
-                                                      isProducts: true,
-                                                      url:
-                                                          "https://cdn.pixabay.com/photo/2010/12/10/08/chicken-1140_1280.jpg",
-                                                      title: "Fresh Organic",
-                                                      name: "Chicken",
-                                                      oldRate: "\$ 5.5",
-                                                      newRate: "\$ 6.77",
-                                                      count: "18");
+                                                      separatorBuilder:
+                                                          (context, index) =>
+                                                              SizedBox(
+                                                                height: 10,
+                                                              ),
+                                                      itemCount:
+                                                          documents.length);
                                                 },
-                                                separatorBuilder:
-                                                    (context, index) =>
-                                                        SizedBox(
-                                                          height: 10,
-                                                        ),
-                                                itemCount: 5)
+                                              )
                                       ],
                                     ),
                                   ),

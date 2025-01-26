@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gomart_wahy/view/floatingactionbutton/custom_floatingbutton.dart';
 import 'package:gomart_wahy/view/homescreen/drawerscreen/drawer_screen.dart';
@@ -10,42 +11,64 @@ import 'package:gomart_wahy/view/wishlist_page/wish_listpage.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class CategoryScreen extends StatefulWidget {
-  const CategoryScreen({super.key});
+  const CategoryScreen({super.key, this.products});
+  final List? products;
 
   @override
   State<CategoryScreen> createState() => _CategoryScreenState();
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
+  // Firebase Firestore instance
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
   String? selectedValue;
-  List brands = [
-    "Eastern Condiments",
-    "Nirapara",
-    "Kitchen Treasures",
-    "Double Horse",
-    "Melam",
-    "Priyom",
-    "Amul",
-    "Nestle",
-    "Saras",
-    "Tasty Nibbles",
-    "Brahmins",
-    "Aashirvad",
-    "Viswas",
-    "East End",
-    "Nirmal",
-    "Mayil",
-    "Delicious Delight",
-    "Periyar",
-    "Daily Delight",
-    "India Gate",
-    "Heera",
-    "Nithya",
-    "MDH",
-    "Aachi",
-    "Jacme",
-    "Pavizham"
-  ];
+  List countries = [];
+  // Fetch country from Firestore
+  Future<void> fetchCountries() async {
+    try {
+      QuerySnapshot snapshot = await firestore
+          .collection('Countries')
+          .where('status', isEqualTo: 'Active') // Only fetch active categories
+          .get();
+
+      setState(() {
+        countries = snapshot.docs
+            .map((doc) =>
+                doc['countryName'] as String) // Extract the 'name' field
+            .toList();
+      });
+    } catch (e) {
+      print("Error fetching categories: $e");
+    }
+  }
+
+  List brands = [];
+  // Fetch BRANDS from Firestore
+  Future<void> fetchBrands() async {
+    try {
+      QuerySnapshot snapshot = await firestore
+          .collection('Brands')
+          .where('status', isEqualTo: 'Active') // Only fetch active categories
+          .get();
+
+      setState(() {
+        brands = snapshot.docs
+            .map(
+                (doc) => doc['brandName'] as String) // Extract the 'name' field
+            .toList();
+      });
+    } catch (e) {
+      print("Error fetching categories: $e");
+    }
+  }
+
+  @override
+  void initState() {
+    fetchCountries();
+    fetchBrands();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     // Use MediaQuery to get screen width and height
@@ -254,6 +277,33 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                   ),
                                                 ),
                                               ],
+                                            ),
+                                            SizedBox(
+                                              height: 15,
+                                            ),
+                                            //list of country
+                                            ListView.builder(
+                                              shrinkWrap: true,
+                                              itemCount: countries.length,
+                                              itemBuilder: (context, index) {
+                                                return Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      countries[index],
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                          fontSize: 16),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 15,
+                                                    )
+                                                  ],
+                                                );
+                                              },
                                             ),
                                             //brands
                                             SizedBox(
@@ -572,7 +622,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                             //list of products
 
                                             GridView.builder(
-                                              itemCount: 5,
+                                              itemCount:
+                                                  widget.products!.length,
                                               shrinkWrap: true,
                                               gridDelegate:
                                                   SliverGridDelegateWithFixedCrossAxisCount(
@@ -581,6 +632,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                       mainAxisSpacing: 10,
                                                       mainAxisExtent: 600),
                                               itemBuilder: (context, index) {
+                                                final product = widget
+                                                        .products![
+                                                    index]; // Access each product as a map
                                                 return TrendingproductsCard(
                                                     addToFavourite: () {
                                                       Navigator.push(
@@ -591,13 +645,18 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                           ));
                                                     },
                                                     isProducts: true,
-                                                    url:
-                                                        "https://cdn.pixabay.com/photo/2010/12/10/08/chicken-1140_1280.jpg",
-                                                    title: "Fresh Organic",
-                                                    name: "Chicken",
-                                                    oldRate: "\$ 5.5",
-                                                    newRate: "\$ 6.77",
-                                                    count: "18");
+                                                    url: product['productUrl'],
+                                                    maxcount:
+                                                        product['openstock'],
+                                                    title:
+                                                        product['productName'],
+                                                    name: product['category'],
+                                                    oldRate: product[
+                                                        'originalPrice'],
+                                                    newRate:
+                                                        product['ourPrice'],
+                                                    count: product[
+                                                        'currentstock']);
                                               },
                                             )
                                           ],
@@ -746,6 +805,35 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                     ),
                                                   ),
                                                 ],
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              //list of country
+                                              ListView.builder(
+                                                shrinkWrap: true,
+                                                itemCount: countries.length,
+                                                itemBuilder: (context, index) {
+                                                  return Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        countries[index],
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal,
+                                                            fontSize: 16),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 15,
+                                                      )
+                                                    ],
+                                                  );
+                                                },
                                               ),
                                               //brands
                                               SizedBox(
@@ -1171,16 +1259,19 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
                                         isTablet
                                             ? GridView.builder(
-                                                itemCount: 5,
+                                                itemCount:
+                                                    widget.products!.length,
                                                 shrinkWrap: true,
-                                                physics: ScrollPhysics(),
                                                 gridDelegate:
                                                     SliverGridDelegateWithFixedCrossAxisCount(
-                                                        crossAxisCount: 2,
+                                                        crossAxisCount: 3,
                                                         crossAxisSpacing: 10,
                                                         mainAxisSpacing: 10,
                                                         mainAxisExtent: 600),
                                                 itemBuilder: (context, index) {
+                                                  final product = widget
+                                                          .products![
+                                                      index]; // Access each product as a map
                                                   return TrendingproductsCard(
                                                       addToFavourite: () {
                                                         Navigator.push(
@@ -1192,12 +1283,18 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                       },
                                                       isProducts: true,
                                                       url:
-                                                          "https://cdn.pixabay.com/photo/2010/12/10/08/chicken-1140_1280.jpg",
-                                                      title: "Fresh Organic",
-                                                      name: "Chicken",
-                                                      oldRate: "\$ 5.5",
-                                                      newRate: "\$ 6.77",
-                                                      count: "18");
+                                                          product['productUrl'],
+                                                      maxcount:
+                                                          product['openstock'],
+                                                      title: product[
+                                                          'productName'],
+                                                      name: product['category'],
+                                                      oldRate: product[
+                                                          'originalPrice'],
+                                                      newRate:
+                                                          product['ourPrice'],
+                                                      count: product[
+                                                          'currentstock']);
                                                 },
                                               )
                                             : //mobile
@@ -1205,6 +1302,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                 shrinkWrap: true,
                                                 physics: ScrollPhysics(),
                                                 itemBuilder: (context, index) {
+                                                  final product = widget
+                                                          .products![
+                                                      index]; // Access each product as a map
                                                   return TrendingproductsCard(
                                                       addToFavourite: () {
                                                         Navigator.push(
@@ -1216,19 +1316,26 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                       },
                                                       isProducts: true,
                                                       url:
-                                                          "https://cdn.pixabay.com/photo/2010/12/10/08/chicken-1140_1280.jpg",
-                                                      title: "Fresh Organic",
-                                                      name: "Chicken",
-                                                      oldRate: "\$ 5.5",
-                                                      newRate: "\$ 6.77",
-                                                      count: "18");
+                                                          product['productUrl'],
+                                                      maxcount:
+                                                          product['openstock'],
+                                                      title: product[
+                                                          'productName'],
+                                                      name: product['category'],
+                                                      oldRate: product[
+                                                          'originalPrice'],
+                                                      newRate:
+                                                          product['ourPrice'],
+                                                      count: product[
+                                                          'currentstock']);
                                                 },
                                                 separatorBuilder:
                                                     (context, index) =>
                                                         SizedBox(
                                                           height: 10,
                                                         ),
-                                                itemCount: 5)
+                                                itemCount:
+                                                    widget.products!.length)
                                       ],
                                     ),
                                   ),

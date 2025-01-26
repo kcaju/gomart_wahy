@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gomart_wahy/view/floatingactionbutton/custom_floatingbutton.dart';
 import 'package:gomart_wahy/view/homescreen/drawerscreen/drawer_screen.dart';
@@ -6,6 +7,7 @@ import 'package:gomart_wahy/view/homescreen/widget/header_greencard.dart';
 import 'package:gomart_wahy/view/homescreen/widget/header_whitebox.dart';
 import 'package:gomart_wahy/view/homescreen/widget/homepage.dart';
 import 'package:gomart_wahy/view/homescreen/widget/trendingproducts_card.dart';
+import 'package:gomart_wahy/view/wishlist_page/wish_listpage.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class ProductDetailspage extends StatelessWidget {
@@ -13,6 +15,8 @@ class ProductDetailspage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Firebase Firestore instance
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
     // Use MediaQuery to get screen width and height
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -725,31 +729,62 @@ class ProductDetailspage extends StatelessWidget {
                               height: 50,
                             ),
                             //sliding items
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: isTablet ? 20 : 5),
-                                child: Row(
-                                  children: List.generate(
-                                    15,
-                                    (index) {
-                                      return Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 15),
-                                        child: TrendingproductsCard(
-                                            url:
-                                                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSst97F9tKVR5PMzMf1z1IzGIKY2OTJCaAPaA&s",
-                                            title: "Fresh Organic",
-                                            name: "Chicken",
-                                            oldRate: "\$ 5.5",
-                                            newRate: "\$ 6.77",
-                                            count: "18"),
-                                      );
-                                    },
+                            StreamBuilder<QuerySnapshot>(
+                              stream:
+                                  firestore.collection("Products").snapshots(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                      child: CircularProgressIndicator());
+                                }
+
+                                if (!snapshot.hasData ||
+                                    snapshot.data!.docs.isEmpty) {
+                                  return const Center(
+                                      child: Text("No Brands found."));
+                                }
+
+                                final List<QueryDocumentSnapshot> documents =
+                                    snapshot.data!.docs;
+                                return SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: isTablet ? 20 : 5),
+                                    child: Row(
+                                      children: List.generate(
+                                        documents.length,
+                                        (index) {
+                                          final product = documents[index];
+                                          return Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 15),
+                                            child: TrendingproductsCard(
+                                                addToFavourite: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            WishListpage(),
+                                                      ));
+                                                },
+                                                isProducts: true,
+                                                url: product['productUrl'],
+                                                maxcount: product['openstock'],
+                                                title: product['productName'],
+                                                name: product['category'],
+                                                oldRate:
+                                                    product['originalPrice'],
+                                                newRate: product['ourPrice'],
+                                                count: product['currentstock']),
+                                          );
+                                        },
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
+                                );
+                              },
                             )
                           ],
                         ),

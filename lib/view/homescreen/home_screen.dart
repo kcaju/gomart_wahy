@@ -1,8 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:gomart_wahy/dummy_db.dart';
 import 'package:gomart_wahy/view/about_us_page/aboutus_page.dart';
+import 'package:gomart_wahy/view/account_page/account_page.dart';
 import 'package:gomart_wahy/view/all_products/all_productscreen.dart';
 import 'package:gomart_wahy/view/cartpage/cartitems_page.dart';
 import 'package:gomart_wahy/view/floatingactionbutton/custom_floatingbutton.dart';
@@ -17,7 +19,6 @@ import 'package:gomart_wahy/view/homescreen/widget/topoffer_card.dart';
 import 'package:gomart_wahy/view/homescreen/widget/trendingproducts_card.dart';
 import 'package:gomart_wahy/view/product_details/product_detailspage.dart';
 import 'package:gomart_wahy/view/shopbycategory_screen/category_screen.dart';
-import 'package:gomart_wahy/view/signin/signin_screen.dart';
 import 'package:gomart_wahy/view/wishlist_page/wish_listpage.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -33,6 +34,9 @@ class HomeScreen extends StatelessWidget {
     bool isMobile = screenWidth < 600;
     bool isTablet = screenWidth >= 600 && screenWidth <= 1024;
     bool isDesktop = screenWidth > 1024;
+
+    // Get Firestore instance
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
     return Scaffold(
       drawer: CategoryDrawerscreen(),
       endDrawer: DrawerScreen(),
@@ -89,14 +93,14 @@ class HomeScreen extends StatelessWidget {
                                               height: 15,
                                             ),
                                             Text(
-                                              "Online Fresh",
+                                              "Online Home",
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 35,
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
-                                              "Vegetables",
+                                              "Requirements",
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 35,
@@ -106,7 +110,7 @@ class HomeScreen extends StatelessWidget {
                                               height: 15,
                                             ),
                                             Text(
-                                              "Assertively target market-driven intellectual capital with worldwide human capital holistic.",
+                                              "Empower global human capital with innovative, market-focused solutions for seamless home requirements.",
                                               style: TextStyle(
                                                   color: Colors.grey.shade700,
                                                   fontSize: 20,
@@ -157,7 +161,7 @@ class HomeScreen extends StatelessWidget {
                                       //changing image
                                       Expanded(
                                         child: Image.asset(
-                                          "assets/png/vegbag.png",
+                                          "assets/png/home-appliances.jpg",
                                           height: 400,
                                         ),
                                       ),
@@ -184,14 +188,14 @@ class HomeScreen extends StatelessWidget {
                                           height: 15,
                                         ),
                                         Text(
-                                          "Online Fresh",
+                                          "Online Home",
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 35,
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(
-                                          "Vegetables",
+                                          "Requirements",
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 35,
@@ -201,7 +205,7 @@ class HomeScreen extends StatelessWidget {
                                           height: 15,
                                         ),
                                         Text(
-                                          "Assertively target market-driven intellectual capital with worldwide human capital holistic.",
+                                          "Empower global human capital with innovative, market-focused solutions for seamless home requirements.",
                                           style: TextStyle(
                                               color: Colors.grey.shade700,
                                               fontSize: 20,
@@ -251,12 +255,12 @@ class HomeScreen extends StatelessWidget {
                                         isTablet
                                             ? Center(
                                                 child: Image.asset(
-                                                  "assets/png/vegbag.png",
+                                                  "assets/png/home-appliances.jpg",
                                                   height: 500,
                                                 ),
                                               )
                                             : Image.asset(
-                                                "assets/png/vegbag.png",
+                                                "assets/png/home-appliances.jpg",
                                                 height: 400,
                                               ),
                                       ],
@@ -288,98 +292,139 @@ class HomeScreen extends StatelessWidget {
                                     SizedBox(
                                       height: 10,
                                     ),
-                                    CarouselSlider(
-                                      items: List.generate(
-                                        4,
-                                        (index) {
-                                          return SingleChildScrollView(
-                                            scrollDirection: Axis.horizontal,
-                                            child: Row(
-                                              children: List.generate(
-                                                5,
-                                                (index) {
-                                                  return Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            right: 15),
-                                                    child: GestureDetector(
-                                                      onTap: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  CategoryScreen(),
-                                                            ));
-                                                      },
-                                                      child: Container(
-                                                        width: 250,
+                                    StreamBuilder<QuerySnapshot>(
+                                      stream: firestore
+                                          .collection("Categories")
+                                          .snapshots(),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return const Center(
+                                              child:
+                                                  CircularProgressIndicator());
+                                        }
+
+                                        if (!snapshot.hasData ||
+                                            snapshot.data!.docs.isEmpty) {
+                                          return const Center(
+                                              child:
+                                                  Text("No Categories found."));
+                                        }
+
+                                        final List<QueryDocumentSnapshot>
+                                            documents = snapshot.data!.docs;
+
+                                        return CarouselSlider(
+                                          items: List.generate(
+                                            4,
+                                            (index) {
+                                              return SingleChildScrollView(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                child: Row(
+                                                  children: List.generate(
+                                                    documents.length,
+                                                    (index) {
+                                                      final categories =
+                                                          documents[index];
+                                                      final products =
+                                                          categories[
+                                                              'products'];
+                                                      return Padding(
                                                         padding:
-                                                            EdgeInsets.all(20),
-                                                        child: Column(
-                                                          children: [
-                                                            Container(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(8),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                shape: BoxShape
-                                                                    .circle,
-                                                                border: Border.all(
-                                                                    color: Colors
-                                                                        .green,
-                                                                    width: 2),
-                                                              ),
-                                                              child:
-                                                                  CircleAvatar(
-                                                                radius: 70,
-                                                                backgroundImage:
-                                                                    AssetImage(
-                                                                        "assets/png/vegbag.png"),
-                                                              ),
-                                                            ),
-                                                            Text(
-                                                              "Vegetables",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize: 16,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                                border:
-                                                                    Border.all(
-                                                                  color: Colors
-                                                                      .grey
-                                                                      .shade300,
+                                                            const EdgeInsets
+                                                                .only(
+                                                                right: 15),
+                                                        child: GestureDetector(
+                                                          onTap: () {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          CategoryScreen(
+                                                                    products:
+                                                                        products,
+                                                                  ),
+                                                                ));
+                                                          },
+                                                          child: Container(
+                                                            width: 250,
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    20),
+                                                            child: Column(
+                                                              children: [
+                                                                Container(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .all(
+                                                                              8),
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    shape: BoxShape
+                                                                        .circle,
+                                                                    border: Border.all(
+                                                                        color: Colors
+                                                                            .green,
+                                                                        width:
+                                                                            2),
+                                                                  ),
+                                                                  child:
+                                                                      CircleAvatar(
+                                                                    radius: 70,
+                                                                    backgroundImage:
+                                                                        NetworkImage(
+                                                                            categories['categoryUrl']),
+                                                                  ),
                                                                 ),
-                                                                color: Colors
-                                                                    .white,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
+                                                                Text(
+                                                                  categories[
+                                                                      'categoryName'],
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                    border:
+                                                                        Border
+                                                                            .all(
+                                                                      color: Colors
+                                                                          .grey
+                                                                          .shade300,
+                                                                    ),
+                                                                    color: Colors
+                                                                        .white,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
                                                                             10)),
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                      options: CarouselOptions(
-                                        height: 240,
-                                        autoPlay: true,
-                                        autoPlayInterval: Duration(seconds: 5),
-                                        // aspectRatio: 2.0,
-                                        viewportFraction: 1.0,
-                                      ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                          options: CarouselOptions(
+                                            height: 240,
+                                            autoPlay: true,
+                                            autoPlayInterval:
+                                                Duration(seconds: 5),
+                                            // aspectRatio: 2.0,
+                                            viewportFraction: 1.0,
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ],
                                 ),
@@ -426,52 +471,85 @@ class HomeScreen extends StatelessWidget {
                                     SizedBox(
                                       height: 20,
                                     ),
-                                    CarouselSlider(
-                                      items: List.generate(
-                                        4,
-                                        (index) {
-                                          return SingleChildScrollView(
-                                            scrollDirection: Axis.horizontal,
-                                            child: Row(
-                                              children: List.generate(
-                                                5,
-                                                (index) {
-                                                  return Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            right: 15),
-                                                    child: Container(
-                                                      width: 250,
-                                                      padding:
-                                                          EdgeInsets.all(20),
-                                                      child: Image.asset(
-                                                        "assets/png/dh.png",
-                                                      ),
-                                                      decoration: BoxDecoration(
-                                                          border: Border.all(
-                                                            color: Colors
-                                                                .grey.shade300,
+                                    StreamBuilder<QuerySnapshot>(
+                                      stream: firestore
+                                          .collection("Brands")
+                                          .snapshots(),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return const Center(
+                                              child:
+                                                  CircularProgressIndicator());
+                                        }
+
+                                        if (!snapshot.hasData ||
+                                            snapshot.data!.docs.isEmpty) {
+                                          return const Center(
+                                              child: Text("No Brands found."));
+                                        }
+
+                                        final List<QueryDocumentSnapshot>
+                                            documents = snapshot.data!.docs;
+                                        return CarouselSlider(
+                                          items: List.generate(
+                                            4,
+                                            (index) {
+                                              return SingleChildScrollView(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                child: Row(
+                                                  children: List.generate(
+                                                    documents.length,
+                                                    (index) {
+                                                      final brands =
+                                                          documents[index];
+                                                      return Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                                right: 15),
+                                                        child: Container(
+                                                          width: 250,
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  20),
+                                                          child: Image.network(
+                                                            brands['brandUrl'],
+                                                            height: 150,
                                                           ),
-                                                          color: Colors.white,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      10)),
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                      options: CarouselOptions(
-                                        height: 240,
-                                        autoPlay: true,
-                                        autoPlayInterval: Duration(seconds: 5),
-                                        // aspectRatio: 2.0,
-                                        viewportFraction: 1.0,
-                                      ),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  border: Border
+                                                                      .all(
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .shade300,
+                                                                  ),
+                                                                  color: Colors
+                                                                      .white,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10)),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                          options: CarouselOptions(
+                                            height: 240,
+                                            autoPlay: true,
+                                            autoPlayInterval:
+                                                Duration(seconds: 5),
+                                            // aspectRatio: 2.0,
+                                            viewportFraction: 1.0,
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ],
                                 ),
@@ -493,66 +571,94 @@ class HomeScreen extends StatelessWidget {
                             SizedBox(
                               height: 50,
                             ),
-                            CarouselSlider(
-                              items: List.generate(
-                                4,
-                                (index) {
-                                  return SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      children: List.generate(
-                                        5,
-                                        (index) {
-                                          return Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 15),
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          ProductDetailspage(),
-                                                    ));
-                                              },
-                                              child: TrendingproductsCard(
-                                                  addToFavourite: () {
+                            StreamBuilder<QuerySnapshot>(
+                              stream:
+                                  firestore.collection("Products").snapshots(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                      child: CircularProgressIndicator());
+                                }
+
+                                if (!snapshot.hasData ||
+                                    snapshot.data!.docs.isEmpty) {
+                                  return const Center(
+                                      child: Text("No Brands found."));
+                                }
+
+                                final List<QueryDocumentSnapshot> documents =
+                                    snapshot.data!.docs;
+                                return CarouselSlider(
+                                  items: List.generate(
+                                    4,
+                                    (index) {
+                                      return SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Row(
+                                          children: List.generate(
+                                            documents.length,
+                                            (index) {
+                                              final product = documents[index];
+                                              return Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 15),
+                                                child: GestureDetector(
+                                                  onTap: () {
                                                     Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
                                                           builder: (context) =>
-                                                              WishListpage(),
+                                                              ProductDetailspage(),
                                                         ));
                                                   },
-                                                  count: "9",
-                                                  url:
-                                                      "https://rukminim2.flixcart.com/image/720/864/l1nwnm80/spice-masala/m/h/z/100-sambar-powder-1-pouch-kitchen-treasures-powder-original-imagd6knzpdyhnwp.jpeg?q=60&crop=false",
-                                                  title: "Fresh Oragnic",
-                                                  name: "Sambar Powder",
-                                                  oldRate: "\$ 3.55",
-                                                  newRate: "\$ 3.69"),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                              options: CarouselOptions(
-                                height: 570,
-                                autoPlay: true,
-                                autoPlayInterval: Duration(seconds: 5),
-                                // aspectRatio: 2.0,
-                                viewportFraction: 1.0,
-                              ),
+                                                  child: TrendingproductsCard(
+                                                      addToFavourite: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  WishListpage(),
+                                                            ));
+                                                      },
+                                                      isProducts: true,
+                                                      url:
+                                                          product['productUrl'],
+                                                      maxcount:
+                                                          product['openstock'],
+                                                      title: product[
+                                                          'productName'],
+                                                      name: product['category'],
+                                                      oldRate: product[
+                                                          'originalPrice'],
+                                                      newRate:
+                                                          product['ourPrice'],
+                                                      count: product[
+                                                          'currentstock']),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  options: CarouselOptions(
+                                    height: 570,
+                                    autoPlay: true,
+                                    autoPlayInterval: Duration(seconds: 5),
+                                    // aspectRatio: 2.0,
+                                    viewportFraction: 1.0,
+                                  ),
+                                );
+                              },
                             ),
                             SizedBox(
                               height: 100,
                             ),
                             //fresh vegetables
                             Text(
-                              "Fresh Vegetables",
+                              "Our Products",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.black,
@@ -563,66 +669,94 @@ class HomeScreen extends StatelessWidget {
                             SizedBox(
                               height: 50,
                             ),
-                            CarouselSlider(
-                              items: List.generate(
-                                4,
-                                (index) {
-                                  return SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      children: List.generate(
-                                        5,
-                                        (index) {
-                                          return Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 15),
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          ProductDetailspage(),
-                                                    ));
-                                              },
-                                              child: TrendingproductsCard(
-                                                  addToFavourite: () {
+                            StreamBuilder<QuerySnapshot>(
+                              stream:
+                                  firestore.collection("Products").snapshots(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                      child: CircularProgressIndicator());
+                                }
+
+                                if (!snapshot.hasData ||
+                                    snapshot.data!.docs.isEmpty) {
+                                  return const Center(
+                                      child: Text("No Brands found."));
+                                }
+
+                                final List<QueryDocumentSnapshot> documents =
+                                    snapshot.data!.docs;
+                                return CarouselSlider(
+                                  items: List.generate(
+                                    4,
+                                    (index) {
+                                      return SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Row(
+                                          children: List.generate(
+                                            documents.length,
+                                            (index) {
+                                              final product = documents[index];
+                                              return Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 15),
+                                                child: GestureDetector(
+                                                  onTap: () {
                                                     Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
                                                           builder: (context) =>
-                                                              WishListpage(),
+                                                              ProductDetailspage(),
                                                         ));
                                                   },
-                                                  url:
-                                                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdxHhS9OGZcFxxbP5-0Gfb-DMs3QKi9QaGRw&s",
-                                                  title: "Fresh Organic",
-                                                  name: "Brinjal",
-                                                  oldRate: "\$ 2.5",
-                                                  newRate: "\$ 3.08",
-                                                  count: "10"),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                              options: CarouselOptions(
-                                height: 570,
-                                autoPlay: true,
-                                autoPlayInterval: Duration(seconds: 5),
-                                // aspectRatio: 2.0,
-                                viewportFraction: 1.0,
-                              ),
+                                                  child: TrendingproductsCard(
+                                                      addToFavourite: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  WishListpage(),
+                                                            ));
+                                                      },
+                                                      isProducts: true,
+                                                      url:
+                                                          product['productUrl'],
+                                                      maxcount:
+                                                          product['openstock'],
+                                                      title: product[
+                                                          'productName'],
+                                                      name: product['category'],
+                                                      oldRate: product[
+                                                          'originalPrice'],
+                                                      newRate:
+                                                          product['ourPrice'],
+                                                      count: product[
+                                                          'currentstock']),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  options: CarouselOptions(
+                                    height: 570,
+                                    autoPlay: true,
+                                    autoPlayInterval: Duration(seconds: 5),
+                                    // aspectRatio: 2.0,
+                                    viewportFraction: 1.0,
+                                  ),
+                                );
+                              },
                             ),
                             SizedBox(
                               height: 100,
                             ),
                             //fresh meats
                             Text(
-                              "Fresh Meats",
+                              "Random Products",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.black,
@@ -633,58 +767,89 @@ class HomeScreen extends StatelessWidget {
                             SizedBox(
                               height: 50,
                             ),
-                            CarouselSlider(
-                              items: List.generate(
-                                4,
-                                (index) {
-                                  return SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      children: List.generate(
-                                        5,
-                                        (index) {
-                                          return Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 15),
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ProductDetailspage(),
-                                                      ));
-                                                },
-                                                child: TrendingproductsCard(
-                                                    addToFavourite: () {
+                            StreamBuilder<QuerySnapshot>(
+                              stream:
+                                  firestore.collection("Products").snapshots(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                      child: CircularProgressIndicator());
+                                }
+
+                                if (!snapshot.hasData ||
+                                    snapshot.data!.docs.isEmpty) {
+                                  return const Center(
+                                      child: Text("No Brands found."));
+                                }
+
+                                final List<QueryDocumentSnapshot> documents =
+                                    snapshot.data!.docs;
+                                return CarouselSlider(
+                                  items: List.generate(
+                                    4,
+                                    (index) {
+                                      return SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Row(
+                                          children: List.generate(
+                                            documents.length,
+                                            (index) {
+                                              final product = documents[index];
+                                              return Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 15),
+                                                  child: GestureDetector(
+                                                    onTap: () {
                                                       Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
                                                             builder: (context) =>
-                                                                WishListpage(),
+                                                                ProductDetailspage(),
                                                           ));
                                                     },
-                                                    url:
-                                                        "https://cdn.pixabay.com/photo/2010/12/10/08/chicken-1140_1280.jpg",
-                                                    title: "Fresh Organic",
-                                                    name: "Chicken",
-                                                    oldRate: "\$ 5.5",
-                                                    newRate: "\$ 6.77",
-                                                    count: "18"),
-                                              ));
-                                        },
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                              options: CarouselOptions(
-                                height: 570,
-                                autoPlay: true,
-                                autoPlayInterval: Duration(seconds: 5),
-                                // aspectRatio: 2.0,
-                                viewportFraction: 1.0,
-                              ),
+                                                    child: TrendingproductsCard(
+                                                        addToFavourite: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        WishListpage(),
+                                                              ));
+                                                        },
+                                                        isProducts: true,
+                                                        url: product[
+                                                            'productUrl'],
+                                                        maxcount: product[
+                                                            'openstock'],
+                                                        title: product[
+                                                            'productName'],
+                                                        name:
+                                                            product['category'],
+                                                        oldRate: product[
+                                                            'originalPrice'],
+                                                        newRate:
+                                                            product['ourPrice'],
+                                                        count: product[
+                                                            'currentstock']),
+                                                  ));
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  options: CarouselOptions(
+                                    height: 570,
+                                    autoPlay: true,
+                                    autoPlayInterval: Duration(seconds: 5),
+                                    // aspectRatio: 2.0,
+                                    viewportFraction: 1.0,
+                                  ),
+                                );
+                              },
                             ),
                             SizedBox(
                               height: 100,
@@ -2645,11 +2810,10 @@ class HomeScreen extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () {
-                            //open signin screen
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => SigninScreen(),
+                                  builder: (context) => AccountPage(),
                                 ));
                           },
                           child: Column(
