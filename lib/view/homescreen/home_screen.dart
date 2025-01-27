@@ -656,7 +656,7 @@ class HomeScreen extends StatelessWidget {
                             SizedBox(
                               height: 100,
                             ),
-                            //fresh vegetables
+                            //our products
                             Text(
                               "Our Products",
                               textAlign: TextAlign.center,
@@ -682,7 +682,7 @@ class HomeScreen extends StatelessWidget {
                                 if (!snapshot.hasData ||
                                     snapshot.data!.docs.isEmpty) {
                                   return const Center(
-                                      child: Text("No Brands found."));
+                                      child: Text("No Products found."));
                                 }
 
                                 final List<QueryDocumentSnapshot> documents =
@@ -754,7 +754,7 @@ class HomeScreen extends StatelessWidget {
                             SizedBox(
                               height: 100,
                             ),
-                            //fresh meats
+                            //random products
                             Text(
                               "Random Products",
                               textAlign: TextAlign.center,
@@ -780,7 +780,7 @@ class HomeScreen extends StatelessWidget {
                                 if (!snapshot.hasData ||
                                     snapshot.data!.docs.isEmpty) {
                                   return const Center(
-                                      child: Text("No Brands found."));
+                                      child: Text("No products found."));
                                 }
 
                                 final List<QueryDocumentSnapshot> documents =
@@ -859,21 +859,101 @@ class HomeScreen extends StatelessWidget {
                                 ? SingleChildScrollView(
                                     scrollDirection: Axis.horizontal,
                                     child: Row(
-                                      children: List.generate(
-                                        DummyDb.items.length,
-                                        (index) {
-                                          return Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 25),
-                                              child: TopofferCard(
-                                                  offer: DummyDb.items[index]
-                                                      ['offer'],
-                                                  url: DummyDb.items[index]
-                                                      ['image'],
-                                                  color: DummyDb.items[index]
-                                                      ['color']));
-                                        },
-                                      ),
+                                      children: [
+                                        StreamBuilder<QuerySnapshot>(
+                                          stream: firestore
+                                              .collection("Poster1")
+                                              .snapshots(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return const Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            }
+
+                                            if (!snapshot.hasData ||
+                                                snapshot.data!.docs.isEmpty) {
+                                              return const Center(
+                                                  child:
+                                                      Text("No poster found."));
+                                            }
+
+                                            final poster =
+                                                snapshot.data!.docs.first;
+                                            return TopofferCard(
+                                                heading1: poster['heading1'],
+                                                heading2: poster['heading2'],
+                                                offer: "Top offers",
+                                                url: poster['posterUrl'],
+                                                color: Colors.orange);
+                                          },
+                                        ),
+                                        SizedBox(
+                                          width: 15,
+                                        ),
+                                        StreamBuilder<QuerySnapshot>(
+                                          stream: firestore
+                                              .collection("Poster2")
+                                              .snapshots(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return const Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            }
+
+                                            if (!snapshot.hasData ||
+                                                snapshot.data!.docs.isEmpty) {
+                                              return const Center(
+                                                  child:
+                                                      Text("No poster found."));
+                                            }
+
+                                            final poster =
+                                                snapshot.data!.docs.first;
+                                            return TopofferCard(
+                                                heading1: poster['heading1'],
+                                                heading2: poster['heading2'],
+                                                offer: "Weekly offers",
+                                                url: poster['posterUrl'],
+                                                color: Colors.green);
+                                          },
+                                        ),
+                                        SizedBox(
+                                          width: 15,
+                                        ),
+                                        StreamBuilder<QuerySnapshot>(
+                                          stream: firestore
+                                              .collection("Poster3")
+                                              .snapshots(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return const Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            }
+
+                                            if (!snapshot.hasData ||
+                                                snapshot.data!.docs.isEmpty) {
+                                              return const Center(
+                                                  child:
+                                                      Text("No poster found."));
+                                            }
+
+                                            final poster =
+                                                snapshot.data!.docs.first;
+                                            return TopofferCard(
+                                                heading1: poster['heading1'],
+                                                heading2: poster['heading2'],
+                                                offer: "Top offers",
+                                                url: poster['posterUrl'],
+                                                color: Colors.red);
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   )
                                 //other devices
@@ -881,25 +961,101 @@ class HomeScreen extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 15),
                                     child: Column(
-                                      children: List.generate(
-                                        DummyDb.items.length,
-                                        (index) {
-                                          return Column(
-                                            children: [
-                                              TopofferCard(
-                                                  offer: DummyDb.items[index]
-                                                      ['offer'],
-                                                  url: DummyDb.items[index]
-                                                      ['image'],
-                                                  color: DummyDb.items[index]
-                                                      ['color']),
-                                              SizedBox(
-                                                height: 20,
-                                              )
-                                            ],
-                                          );
-                                        },
-                                      ),
+                                      children: [
+                                        StreamBuilder<QuerySnapshot>(
+                                          stream: firestore
+                                              .collection("Poster1")
+                                              .snapshots(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return const Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            }
+
+                                            if (!snapshot.hasData ||
+                                                snapshot.data!.docs.isEmpty) {
+                                              return const Center(
+                                                  child:
+                                                      Text("No poster found."));
+                                            }
+
+                                            final poster =
+                                                snapshot.data!.docs.first;
+                                            return TopofferCard(
+                                                heading1: poster['heading1'],
+                                                heading2: poster['heading2'],
+                                                offer: "Top offers",
+                                                url: poster['posterUrl'],
+                                                color: Colors.orange);
+                                          },
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        StreamBuilder<QuerySnapshot>(
+                                          stream: firestore
+                                              .collection("Poster2")
+                                              .snapshots(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return const Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            }
+
+                                            if (!snapshot.hasData ||
+                                                snapshot.data!.docs.isEmpty) {
+                                              return const Center(
+                                                  child:
+                                                      Text("No poster found."));
+                                            }
+
+                                            final poster =
+                                                snapshot.data!.docs.first;
+                                            return TopofferCard(
+                                                heading1: poster['heading1'],
+                                                heading2: poster['heading2'],
+                                                offer: "Weekly offers",
+                                                url: poster['posterUrl'],
+                                                color: Colors.green);
+                                          },
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        StreamBuilder<QuerySnapshot>(
+                                          stream: firestore
+                                              .collection("Poster3")
+                                              .snapshots(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return const Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            }
+
+                                            if (!snapshot.hasData ||
+                                                snapshot.data!.docs.isEmpty) {
+                                              return const Center(
+                                                  child:
+                                                      Text("No poster found."));
+                                            }
+
+                                            final poster =
+                                                snapshot.data!.docs.first;
+                                            return TopofferCard(
+                                                heading1: poster['heading1'],
+                                                heading2: poster['heading2'],
+                                                offer: "Top offers",
+                                                url: poster['posterUrl'],
+                                                color: Colors.red);
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ),
                             SizedBox(
@@ -911,9 +1067,28 @@ class HomeScreen extends StatelessWidget {
                                     scrollDirection: Axis.horizontal,
                                     child: Row(
                                       children: [
-                                        Stack(
-                                          children: [
-                                            Container(
+                                        StreamBuilder<QuerySnapshot>(
+                                          stream: firestore
+                                              .collection("Poster4")
+                                              .snapshots(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return const Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            }
+
+                                            if (!snapshot.hasData ||
+                                                snapshot.data!.docs.isEmpty) {
+                                              return const Center(
+                                                  child:
+                                                      Text("No poster found."));
+                                            }
+
+                                            final poster =
+                                                snapshot.data!.docs.first;
+                                            return Container(
                                               padding: EdgeInsets.symmetric(
                                                   horizontal: 20, vertical: 50),
                                               height: screenHeight * 0.5,
@@ -923,7 +1098,7 @@ class HomeScreen extends StatelessWidget {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    "100% Oraginc Vegetables",
+                                                    poster['subtitle'],
                                                     style: TextStyle(
                                                         color: Colors.orange,
                                                         fontSize: 14,
@@ -931,7 +1106,7 @@ class HomeScreen extends StatelessWidget {
                                                             FontWeight.bold),
                                                   ),
                                                   Text(
-                                                    "Vegetable",
+                                                    poster['heading1'],
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 16,
@@ -939,7 +1114,7 @@ class HomeScreen extends StatelessWidget {
                                                             FontWeight.bold),
                                                   ),
                                                   Text(
-                                                    "Fresh & Healthy",
+                                                    poster['heading2'],
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 20,
@@ -990,18 +1165,15 @@ class HomeScreen extends StatelessWidget {
                                               ),
                                               decoration: BoxDecoration(
                                                   color: Colors.greenAccent,
+                                                  image: DecorationImage(
+                                                      fit: BoxFit.fill,
+                                                      image: NetworkImage(
+                                                          poster['posterUrl'])),
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           10)),
-                                            ),
-                                            Positioned(
-                                                bottom: 0,
-                                                right: 0,
-                                                left: 0,
-                                                child: Image.asset(
-                                                  "assets/png/vegie.png",
-                                                ))
-                                          ],
+                                            );
+                                          },
                                         ),
                                         SizedBox(
                                           width: 50,
@@ -1246,9 +1418,28 @@ class HomeScreen extends StatelessWidget {
                                           height: 20,
                                         ),
                                         //vegetable fresh healthy card
-                                        Stack(
-                                          children: [
-                                            Container(
+                                        StreamBuilder<QuerySnapshot>(
+                                          stream: firestore
+                                              .collection("Poster4")
+                                              .snapshots(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return const Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            }
+
+                                            if (!snapshot.hasData ||
+                                                snapshot.data!.docs.isEmpty) {
+                                              return const Center(
+                                                  child:
+                                                      Text("No poster found."));
+                                            }
+
+                                            final poster =
+                                                snapshot.data!.docs.first;
+                                            return Container(
                                               padding: EdgeInsets.symmetric(
                                                   horizontal: 20, vertical: 50),
                                               height: isTablet
@@ -1260,7 +1451,7 @@ class HomeScreen extends StatelessWidget {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    "100% Oraginc Vegetables",
+                                                    poster['subtitle'],
                                                     style: TextStyle(
                                                         color: Colors.orange,
                                                         fontSize: 14,
@@ -1268,7 +1459,7 @@ class HomeScreen extends StatelessWidget {
                                                             FontWeight.bold),
                                                   ),
                                                   Text(
-                                                    "Vegetable",
+                                                    poster['heading1'],
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 16,
@@ -1276,7 +1467,7 @@ class HomeScreen extends StatelessWidget {
                                                             FontWeight.bold),
                                                   ),
                                                   Text(
-                                                    "Fresh & Healthy",
+                                                    poster['heading2'],
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 20,
@@ -1317,18 +1508,15 @@ class HomeScreen extends StatelessWidget {
                                               ),
                                               decoration: BoxDecoration(
                                                   color: Colors.greenAccent,
+                                                  image: DecorationImage(
+                                                      fit: BoxFit.fill,
+                                                      image: NetworkImage(
+                                                          poster['posterUrl'])),
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           10)),
-                                            ),
-                                            Positioned(
-                                                bottom: 0,
-                                                right: 0,
-                                                left: 0,
-                                                child: Image.asset(
-                                                  "assets/png/vegie.png",
-                                                ))
-                                          ],
+                                            );
+                                          },
                                         ),
                                       ],
                                     ),
@@ -1342,61 +1530,106 @@ class HomeScreen extends StatelessWidget {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 30, vertical: 50),
-                                        child: //shopnow button
-                                            Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          CategoryScreen(),
-                                                    ));
-                                              },
-                                              child: ShopAndAboutButton(
-                                                text: "Shop Now",
-                                                buttonColor: Colors.orange,
-                                                isWidth: true,
-                                              ),
+                                      StreamBuilder<QuerySnapshot>(
+                                        stream: firestore
+                                            .collection("Poster5")
+                                            .snapshots(),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return const Center(
+                                                child:
+                                                    CircularProgressIndicator());
+                                          }
+
+                                          if (!snapshot.hasData ||
+                                              snapshot.data!.docs.isEmpty) {
+                                            return const Center(
+                                                child:
+                                                    Text("No poster found."));
+                                          }
+
+                                          final poster =
+                                              snapshot.data!.docs.first;
+                                          return Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 30, vertical: 50),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              CategoryScreen(),
+                                                        ));
+                                                  },
+                                                  child: ShopAndAboutButton(
+                                                    text: "Shop Now",
+                                                    buttonColor: Colors.orange,
+                                                    isWidth: true,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
-                                        height: screenHeight * 0.4,
-                                        width: screenWidth * 0.6,
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: NetworkImage(
-                                                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp-bMTYWe_eXzepxjrftkRxy8BWGBqNdlrUA&s")),
-                                          color: Colors.black,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
+                                            height: screenHeight * 0.4,
+                                            width: screenWidth * 0.6,
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                  fit: BoxFit.fill,
+                                                  image: NetworkImage(
+                                                      poster['posterUrl'])),
+                                              color: Colors.black,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                          );
+                                        },
                                       ),
                                       SizedBox(
                                         width: 25,
                                       ),
                                       //ads box
-                                      Container(
-                                        height: screenHeight * 0.4,
-                                        width: screenWidth * 0.25,
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: Colors.grey.shade400),
-                                          image: DecorationImage(
-                                              image: NetworkImage(
-                                                  "https://m.media-amazon.com/images/I/516Z+cZy+vL._AC_UF1000,1000_QL80_.jpg")),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
+                                      StreamBuilder<QuerySnapshot>(
+                                        stream: firestore
+                                            .collection("Poster6")
+                                            .snapshots(),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return const Center(
+                                                child:
+                                                    CircularProgressIndicator());
+                                          }
+
+                                          if (!snapshot.hasData ||
+                                              snapshot.data!.docs.isEmpty) {
+                                            return const Center(
+                                                child:
+                                                    Text("No poster found."));
+                                          }
+
+                                          final poster =
+                                              snapshot.data!.docs.first;
+                                          return Container(
+                                            height: screenHeight * 0.4,
+                                            width: screenWidth * 0.25,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: Colors.grey.shade400),
+                                              image: DecorationImage(
+                                                  image: NetworkImage(
+                                                      poster['posterUrl'])),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                          );
+                                        },
                                       ),
                                     ],
                                   )
@@ -1407,63 +1640,111 @@ class HomeScreen extends StatelessWidget {
                                     child: Column(
                                       children: [
                                         //dum biriani card
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 30, vertical: 50),
-                                          child: //shopnow button
-                                              Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            CategoryScreen(),
-                                                      ));
-                                                },
-                                                child: ShopAndAboutButton(
-                                                  text: "Shop Now",
-                                                  buttonColor: Colors.orange,
-                                                  isWidth: true,
-                                                ),
+                                        StreamBuilder<QuerySnapshot>(
+                                          stream: firestore
+                                              .collection("Poster5")
+                                              .snapshots(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return const Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            }
+
+                                            if (!snapshot.hasData ||
+                                                snapshot.data!.docs.isEmpty) {
+                                              return const Center(
+                                                  child:
+                                                      Text("No poster found."));
+                                            }
+
+                                            final poster =
+                                                snapshot.data!.docs.first;
+                                            return Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 30, vertical: 50),
+                                              child: //shopnow button
+                                                  Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                CategoryScreen(),
+                                                          ));
+                                                    },
+                                                    child: ShopAndAboutButton(
+                                                      text: "Shop Now",
+                                                      buttonColor:
+                                                          Colors.orange,
+                                                      isWidth: true,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                          height: screenHeight *
-                                              (isTablet ? 0.25 : 0.3),
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                fit: BoxFit.cover,
-                                                image: NetworkImage(
-                                                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp-bMTYWe_eXzepxjrftkRxy8BWGBqNdlrUA&s")),
-                                            color: Colors.black,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
+                                              height: screenHeight *
+                                                  (isTablet ? 0.25 : 0.3),
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                    fit: BoxFit.cover,
+                                                    image: NetworkImage(
+                                                        poster['posterUrl'])),
+                                                color: Colors.black,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                            );
+                                          },
                                         ),
                                         SizedBox(
                                           height: 15,
                                         ),
                                         //gulab jamun ads box
-                                        Container(
-                                          height: screenHeight *
-                                              (isTablet ? 0.25 : 0.3),
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: Colors.grey.shade400),
-                                            image: DecorationImage(
-                                                image: NetworkImage(
-                                                    "https://m.media-amazon.com/images/I/516Z+cZy+vL._AC_UF1000,1000_QL80_.jpg")),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
+                                        StreamBuilder<QuerySnapshot>(
+                                          stream: firestore
+                                              .collection("Poster6")
+                                              .snapshots(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return const Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            }
+
+                                            if (!snapshot.hasData ||
+                                                snapshot.data!.docs.isEmpty) {
+                                              return const Center(
+                                                  child:
+                                                      Text("No poster found."));
+                                            }
+
+                                            final poster =
+                                                snapshot.data!.docs.first;
+                                            return Container(
+                                              height: screenHeight *
+                                                  (isTablet ? 0.25 : 0.3),
+                                              width: double.infinity,
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color:
+                                                        Colors.grey.shade400),
+                                                image: DecorationImage(
+                                                    image: NetworkImage(
+                                                        poster['posterUrl'])),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                            );
+                                          },
                                         ),
                                       ],
                                     ),
@@ -1553,7 +1834,7 @@ class HomeScreen extends StatelessWidget {
                               ),
                             ),
 
-                            //newproducts & organic best seller
+                            //newproducts &  best seller
                             SizedBox(
                               height: 80,
                             ),
@@ -1619,47 +1900,78 @@ class HomeScreen extends StatelessWidget {
                                             SizedBox(
                                               height: 5,
                                             ),
-                                            ListView.separated(
-                                                shrinkWrap: true,
-                                                itemBuilder: (context, index) {
-                                                  return GestureDetector(
-                                                    onTap: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                ProductDetailspage(),
-                                                          ));
+                                            StreamBuilder<QuerySnapshot>(
+                                              stream: firestore
+                                                  .collection("Products")
+                                                  .limit(3)
+                                                  .snapshots(),
+                                              builder: (context, snapshot) {
+                                                // Fetch only the first 3 products
+                                                if (snapshot.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return const Center(
+                                                      child:
+                                                          CircularProgressIndicator());
+                                                }
+
+                                                if (!snapshot.hasData ||
+                                                    snapshot
+                                                        .data!.docs.isEmpty) {
+                                                  return const Center(
+                                                      child: Text(
+                                                          "No products available."));
+                                                }
+
+                                                final products =
+                                                    snapshot.data!.docs;
+                                                return ListView.separated(
+                                                    shrinkWrap: true,
+                                                    physics:
+                                                        NeverScrollableScrollPhysics(),
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      final product =
+                                                          products[index];
+                                                      return GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        ProductDetailspage(),
+                                                              ));
+                                                        },
+                                                        child:
+                                                            NewAndOrganicItemsCard(
+                                                                addToFavourite:
+                                                                    () {
+                                                                  Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                WishListpage(),
+                                                                      ));
+                                                                },
+                                                                oldrate: product[
+                                                                    'originalPrice'],
+                                                                url: product[
+                                                                    'productUrl'],
+                                                                title: product[
+                                                                    'productName'],
+                                                                rate: product[
+                                                                    'ourPrice']),
+                                                      );
                                                     },
-                                                    child:
-                                                        NewAndOrganicItemsCard(
-                                                            addToFavourite: () {
-                                                              Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            WishListpage(),
-                                                                  ));
-                                                            },
-                                                            url: DummyDb
-                                                                    .products[
-                                                                index]['image'],
-                                                            title: DummyDb
-                                                                    .products[
-                                                                index]['name'],
-                                                            rate: DummyDb
-                                                                    .products[
-                                                                index]['rate']),
-                                                  );
-                                                },
-                                                separatorBuilder:
-                                                    (context, index) =>
-                                                        SizedBox(
-                                                          height: 8,
-                                                        ),
-                                                itemCount:
-                                                    DummyDb.products.length)
+                                                    separatorBuilder:
+                                                        (context, index) =>
+                                                            SizedBox(
+                                                              height: 8,
+                                                            ),
+                                                    itemCount: products.length);
+                                              },
+                                            )
                                           ],
                                         ),
                                         decoration: BoxDecoration(
@@ -1678,7 +1990,7 @@ class HomeScreen extends StatelessWidget {
                                                   MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Text(
-                                                  "Organic Bestseller",
+                                                  "Bestseller",
                                                   style: TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 20,
@@ -1720,177 +2032,242 @@ class HomeScreen extends StatelessWidget {
                                             SizedBox(
                                               height: 5,
                                             ),
-                                            ListView.separated(
-                                                shrinkWrap: true,
-                                                itemBuilder: (context, index) {
-                                                  return GestureDetector(
-                                                    onTap: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                ProductDetailspage(),
-                                                          ));
+                                            StreamBuilder<QuerySnapshot>(
+                                              stream: firestore
+                                                  .collection("Products")
+                                                  .limit(3)
+                                                  .snapshots(),
+                                              builder: (context, snapshot) {
+                                                // Fetch only the first 3 products
+                                                if (snapshot.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return const Center(
+                                                      child:
+                                                          CircularProgressIndicator());
+                                                }
+
+                                                if (!snapshot.hasData ||
+                                                    snapshot
+                                                        .data!.docs.isEmpty) {
+                                                  return const Center(
+                                                      child: Text(
+                                                          "No products available."));
+                                                }
+
+                                                final products =
+                                                    snapshot.data!.docs;
+                                                return ListView.separated(
+                                                    shrinkWrap: true,
+                                                    physics:
+                                                        NeverScrollableScrollPhysics(),
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      final product =
+                                                          products[index];
+                                                      return GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        ProductDetailspage(),
+                                                              ));
+                                                        },
+                                                        child:
+                                                            NewAndOrganicItemsCard(
+                                                                addToFavourite:
+                                                                    () {
+                                                                  Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                WishListpage(),
+                                                                      ));
+                                                                },
+                                                                oldrate: product[
+                                                                    'originalPrice'],
+                                                                url: product[
+                                                                    'productUrl'],
+                                                                title: product[
+                                                                    'productName'],
+                                                                rate: product[
+                                                                    'ourPrice']),
+                                                      );
                                                     },
-                                                    child:
-                                                        NewAndOrganicItemsCard(
-                                                            addToFavourite: () {
-                                                              Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            WishListpage(),
-                                                                  ));
-                                                            },
-                                                            url: DummyDb
-                                                                    .bestseller[
-                                                                index]['image'],
-                                                            title: DummyDb
-                                                                    .bestseller[
-                                                                index]['name'],
-                                                            rate: DummyDb
-                                                                    .bestseller[
-                                                                index]['rate']),
-                                                  );
-                                                },
-                                                separatorBuilder:
-                                                    (context, index) =>
-                                                        SizedBox(
-                                                          height: 8,
-                                                        ),
-                                                itemCount:
-                                                    DummyDb.bestseller.length)
+                                                    separatorBuilder:
+                                                        (context, index) =>
+                                                            SizedBox(
+                                                              height: 8,
+                                                            ),
+                                                    itemCount: products.length);
+                                              },
+                                            )
                                           ],
                                         ),
                                         decoration: BoxDecoration(
                                             border: Border.all(
                                                 color: Colors.grey.shade200)),
                                       ),
-                                      //fresh spice
+                                      //vaccumclnr
                                       Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceEvenly,
                                         children: [
-                                          Container(
-                                            width: screenWidth * 0.2,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
+                                          StreamBuilder<QuerySnapshot>(
+                                            stream: firestore
+                                                .collection("Poster7")
+                                                .snapshots(),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return const Center(
+                                                    child:
+                                                        CircularProgressIndicator());
+                                              }
+
+                                              if (!snapshot.hasData ||
+                                                  snapshot.data!.docs.isEmpty) {
+                                                return const Center(
+                                                    child: Text(
+                                                        "No poster found."));
+                                              }
+
+                                              final poster =
+                                                  snapshot.data!.docs.first;
+                                              return Container(
+                                                width: screenWidth * 0.2,
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
                                                       horizontal: 15,
                                                       vertical: 15),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  Text(
-                                                    "Fresh & Organic Spice",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  Row(
+                                                  child: Column(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
+                                                        MainAxisAlignment.end,
                                                     children: [
-                                                      Container(
-                                                        height: 30,
-                                                        width: 50,
-                                                        child: Center(
-                                                          child: Text(
-                                                            "Hot",
-                                                            style: TextStyle(
-                                                                fontSize: 16,
-                                                                color: Colors
-                                                                    .white,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                        ),
-                                                        decoration: BoxDecoration(
-                                                            color: Colors.red,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        5)),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10,
-                                                      ),
                                                       Text(
-                                                        "30% Off",
+                                                        poster['category'],
                                                         style: TextStyle(
-                                                            color: Colors.red,
-                                                            fontSize: 30,
+                                                            color: Colors.black,
+                                                            fontSize: 18,
                                                             fontWeight:
                                                                 FontWeight
                                                                     .bold),
                                                       ),
-                                                    ],
-                                                  ),
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                CategoryScreen(),
-                                                          ));
-                                                    },
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Text(
-                                                          "Shop Now",
-                                                          style: TextStyle(
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Container(
+                                                            height: 30,
+                                                            width: 50,
+                                                            child: Center(
+                                                              child: Text(
+                                                                "Top",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        16,
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                            ),
+                                                            decoration: BoxDecoration(
+                                                                color:
+                                                                    Colors.red,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5)),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 10,
+                                                          ),
+                                                          Text(
+                                                            "30% Off",
+                                                            style: TextStyle(
+                                                                color:
+                                                                    Colors.red,
+                                                                fontSize: 30,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        CategoryScreen(),
+                                                              ));
+                                                        },
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                              "Shop Now",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .green,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 5,
+                                                            ),
+                                                            Icon(
+                                                              Icons
+                                                                  .arrow_forward,
+                                                              size: 18,
                                                               color:
                                                                   Colors.green,
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
+                                                            )
+                                                          ],
                                                         ),
-                                                        SizedBox(
-                                                          width: 5,
-                                                        ),
-                                                        Icon(
-                                                          Icons.arrow_forward,
-                                                          size: 18,
-                                                          color: Colors.green,
-                                                        )
-                                                      ],
-                                                    ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 15,
+                                                      ),
+                                                      Container(
+                                                        height: 150,
+                                                        width: double.infinity,
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.amber,
+                                                            image: DecorationImage(
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                                image: NetworkImage(
+                                                                    poster[
+                                                                        'posterUrl'])),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10)),
+                                                      )
+                                                    ],
                                                   ),
-                                                  SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                  Container(
-                                                    height: 150,
-                                                    width: double.infinity,
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.amber,
-                                                        image: DecorationImage(
-                                                            fit: BoxFit.fill,
-                                                            image: NetworkImage(
-                                                                "https://www.thespicehouse.com/cdn/shop/articles/Tea_Spice_Blog_720x.jpg?v=1646086177")),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10)),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color: Colors.grey.shade200),
-                                              color: Colors.white,
-                                            ),
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color:
+                                                          Colors.grey.shade200),
+                                                  color: Colors.white,
+                                                ),
+                                              );
+                                            },
                                           ),
                                           SizedBox(
                                             height: 15,
@@ -2088,52 +2465,79 @@ class HomeScreen extends StatelessWidget {
                                               SizedBox(
                                                 height: 5,
                                               ),
-                                              ListView.separated(
-                                                  shrinkWrap: true,
-                                                  physics: ScrollPhysics(),
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    return GestureDetector(
-                                                      onTap: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  ProductDetailspage(),
-                                                            ));
-                                                      },
-                                                      child:
-                                                          NewAndOrganicItemsCard(
-                                                              addToFavourite:
-                                                                  () {
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
+                                              StreamBuilder<QuerySnapshot>(
+                                                stream: firestore
+                                                    .collection("Products")
+                                                    .limit(3)
+                                                    .snapshots(),
+                                                builder: (context, snapshot) {
+                                                  // Fetch only the first 3 products
+                                                  if (snapshot
+                                                          .connectionState ==
+                                                      ConnectionState.waiting) {
+                                                    return const Center(
+                                                        child:
+                                                            CircularProgressIndicator());
+                                                  }
+
+                                                  if (!snapshot.hasData ||
+                                                      snapshot
+                                                          .data!.docs.isEmpty) {
+                                                    return const Center(
+                                                        child: Text(
+                                                            "No products available."));
+                                                  }
+
+                                                  final products =
+                                                      snapshot.data!.docs;
+                                                  return ListView.separated(
+                                                      shrinkWrap: true,
+                                                      physics:
+                                                          NeverScrollableScrollPhysics(),
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        final product =
+                                                            products[index];
+                                                        return GestureDetector(
+                                                          onTap: () {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          ProductDetailspage(),
+                                                                ));
+                                                          },
+                                                          child:
+                                                              NewAndOrganicItemsCard(
+                                                                  addToFavourite:
+                                                                      () {
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                          builder: (context) =>
                                                                               WishListpage(),
-                                                                    ));
-                                                              },
-                                                              url: DummyDb
-                                                                          .products[
-                                                                      index]
-                                                                  ['image'],
-                                                              title:
-                                                                  DummyDb.products[
-                                                                          index]
-                                                                      ['name'],
-                                                              rate: DummyDb
-                                                                      .products[
-                                                                  index]['rate']),
-                                                    );
-                                                  },
-                                                  separatorBuilder:
-                                                      (context, index) =>
-                                                          SizedBox(
-                                                            height: 8,
-                                                          ),
-                                                  itemCount:
-                                                      DummyDb.products.length)
+                                                                        ));
+                                                                  },
+                                                                  oldrate: product[
+                                                                      'originalPrice'],
+                                                                  url: product[
+                                                                      'productUrl'],
+                                                                  title: product[
+                                                                      'productName'],
+                                                                  rate: product[
+                                                                      'ourPrice']),
+                                                        );
+                                                      },
+                                                      separatorBuilder:
+                                                          (context, index) =>
+                                                              SizedBox(
+                                                                height: 8,
+                                                              ),
+                                                      itemCount:
+                                                          products.length);
+                                                },
+                                              )
                                             ],
                                           ),
                                           decoration: BoxDecoration(
@@ -2143,7 +2547,7 @@ class HomeScreen extends StatelessWidget {
                                         SizedBox(
                                           height: 15,
                                         ),
-                                        //organic best seller
+                                        // best seller
                                         Container(
                                           width: double.infinity,
                                           padding: EdgeInsets.symmetric(
@@ -2156,7 +2560,7 @@ class HomeScreen extends StatelessWidget {
                                                         .spaceEvenly,
                                                 children: [
                                                   Text(
-                                                    "Organic Bestseller",
+                                                    "Bestseller",
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 20,
@@ -2198,52 +2602,79 @@ class HomeScreen extends StatelessWidget {
                                               SizedBox(
                                                 height: 5,
                                               ),
-                                              ListView.separated(
-                                                  shrinkWrap: true,
-                                                  physics: ScrollPhysics(),
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    return GestureDetector(
-                                                      onTap: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  ProductDetailspage(),
-                                                            ));
-                                                      },
-                                                      child:
-                                                          NewAndOrganicItemsCard(
-                                                              addToFavourite:
-                                                                  () {
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
+                                              StreamBuilder<QuerySnapshot>(
+                                                stream: firestore
+                                                    .collection("Products")
+                                                    .limit(3)
+                                                    .snapshots(),
+                                                builder: (context, snapshot) {
+                                                  // Fetch only the first 3 products
+                                                  if (snapshot
+                                                          .connectionState ==
+                                                      ConnectionState.waiting) {
+                                                    return const Center(
+                                                        child:
+                                                            CircularProgressIndicator());
+                                                  }
+
+                                                  if (!snapshot.hasData ||
+                                                      snapshot
+                                                          .data!.docs.isEmpty) {
+                                                    return const Center(
+                                                        child: Text(
+                                                            "No products available."));
+                                                  }
+
+                                                  final products =
+                                                      snapshot.data!.docs;
+                                                  return ListView.separated(
+                                                      shrinkWrap: true,
+                                                      physics:
+                                                          NeverScrollableScrollPhysics(),
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        final product =
+                                                            products[index];
+                                                        return GestureDetector(
+                                                          onTap: () {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          ProductDetailspage(),
+                                                                ));
+                                                          },
+                                                          child:
+                                                              NewAndOrganicItemsCard(
+                                                                  addToFavourite:
+                                                                      () {
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                          builder: (context) =>
                                                                               WishListpage(),
-                                                                    ));
-                                                              },
-                                                              url: DummyDb
-                                                                          .bestseller[
-                                                                      index]
-                                                                  ['image'],
-                                                              title:
-                                                                  DummyDb.bestseller[
-                                                                          index]
-                                                                      ['name'],
-                                                              rate: DummyDb
-                                                                      .bestseller[
-                                                                  index]['rate']),
-                                                    );
-                                                  },
-                                                  separatorBuilder:
-                                                      (context, index) =>
-                                                          SizedBox(
-                                                            height: 8,
-                                                          ),
-                                                  itemCount:
-                                                      DummyDb.bestseller.length)
+                                                                        ));
+                                                                  },
+                                                                  oldrate: product[
+                                                                      'originalPrice'],
+                                                                  url: product[
+                                                                      'productUrl'],
+                                                                  title: product[
+                                                                      'productName'],
+                                                                  rate: product[
+                                                                      'ourPrice']),
+                                                        );
+                                                      },
+                                                      separatorBuilder:
+                                                          (context, index) =>
+                                                              SizedBox(
+                                                                height: 8,
+                                                              ),
+                                                      itemCount:
+                                                          products.length);
+                                                },
+                                              )
                                             ],
                                           ),
                                           decoration: BoxDecoration(
@@ -2253,121 +2684,154 @@ class HomeScreen extends StatelessWidget {
                                         SizedBox(
                                           height: 15,
                                         ),
-                                        //fresh spice
-                                        Container(
-                                          width: screenWidth *
-                                              (isMobile ? 0.8 : 0.5),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 15, vertical: 15),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Text(
-                                                  "Fresh & Organic Spice",
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                Row(
+                                        //vaccumclnr
+                                        StreamBuilder<QuerySnapshot>(
+                                          stream: firestore
+                                              .collection("Poster7")
+                                              .snapshots(),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return const Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            }
+
+                                            if (!snapshot.hasData ||
+                                                snapshot.data!.docs.isEmpty) {
+                                              return const Center(
+                                                  child:
+                                                      Text("No poster found."));
+                                            }
+
+                                            final poster =
+                                                snapshot.data!.docs.first;
+                                            return Container(
+                                              width: screenWidth *
+                                                  (isMobile ? 0.8 : 0.5),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 15,
+                                                        vertical: 15),
+                                                child: Column(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment.center,
+                                                      MainAxisAlignment.end,
                                                   children: [
-                                                    Container(
-                                                      height: 30,
-                                                      width: 50,
-                                                      child: Center(
-                                                        child: Text(
-                                                          "Hot",
+                                                    Text(
+                                                      poster['category'],
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Container(
+                                                          height: 30,
+                                                          width: 50,
+                                                          child: Center(
+                                                            child: Text(
+                                                              "Top",
+                                                              style: TextStyle(
+                                                                  fontSize: 16,
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                          decoration: BoxDecoration(
+                                                              color: Colors.red,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5)),
+                                                        ),
+                                                        SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Text(
+                                                          "30% Off",
                                                           style: TextStyle(
-                                                              fontSize: 16,
-                                                              color:
-                                                                  Colors.white,
+                                                              color: Colors.red,
+                                                              fontSize: 30,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold),
                                                         ),
+                                                      ],
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  CategoryScreen(),
+                                                            ));
+                                                      },
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            "Shop Now",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .green,
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 5,
+                                                          ),
+                                                          Icon(
+                                                            Icons.arrow_forward,
+                                                            size: 18,
+                                                            color: Colors.green,
+                                                          )
+                                                        ],
                                                       ),
-                                                      decoration: BoxDecoration(
-                                                          color: Colors.red,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(5)),
                                                     ),
                                                     SizedBox(
-                                                      width: 10,
+                                                      height: 15,
                                                     ),
-                                                    Text(
-                                                      "30% Off",
-                                                      style: TextStyle(
-                                                          color: Colors.red,
-                                                          fontSize: 30,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
+                                                    Container(
+                                                      height:
+                                                          isMobile ? 150 : 200,
+                                                      width: double.infinity,
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.amber,
+                                                          image: DecorationImage(
+                                                              fit: BoxFit.fill,
+                                                              image: NetworkImage(
+                                                                  poster[
+                                                                      'posterUrl'])),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10)),
+                                                    )
                                                   ],
                                                 ),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              CategoryScreen(),
-                                                        ));
-                                                  },
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Text(
-                                                        "Shop Now",
-                                                        style: TextStyle(
-                                                            color: Colors.green,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 5,
-                                                      ),
-                                                      Icon(
-                                                        Icons.arrow_forward,
-                                                        size: 18,
-                                                        color: Colors.green,
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
-                                                Container(
-                                                  height: isMobile ? 150 : 200,
-                                                  width: double.infinity,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.amber,
-                                                      image: DecorationImage(
-                                                          fit: BoxFit.fill,
-                                                          image: NetworkImage(
-                                                              "https://www.thespicehouse.com/cdn/shop/articles/Tea_Spice_Blog_720x.jpg?v=1646086177")),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10)),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: Colors.grey.shade200),
-                                            color: Colors.white,
-                                          ),
+                                              ),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color:
+                                                        Colors.grey.shade200),
+                                                color: Colors.white,
+                                              ),
+                                            );
+                                          },
                                         ),
                                         SizedBox(
                                           height: 15,

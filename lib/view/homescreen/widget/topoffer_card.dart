@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 
 class TopofferCard extends StatelessWidget {
   const TopofferCard(
-      {super.key, required this.offer, required this.url, required this.color});
-  final String offer, url;
+      {super.key,
+      required this.offer,
+      required this.url,
+      required this.color,
+      required this.heading1,
+      required this.heading2});
+  final String offer, url, heading1, heading2;
   final Color color;
 
   @override
@@ -37,12 +42,12 @@ class TopofferCard extends StatelessWidget {
             height: 10,
           ),
           Text(
-            "Fresh Fruits",
+            heading1,
             style: TextStyle(
                 color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
           ),
           Text(
-            "Healthy Juice",
+            heading2,
             style: TextStyle(
                 color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
           ),
