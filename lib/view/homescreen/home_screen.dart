@@ -254,9 +254,13 @@ class HomeScreen extends StatelessWidget {
                                         ),
                                         isTablet
                                             ? Center(
-                                                child: Image.asset(
-                                                  "assets/png/home-appliances.jpg",
-                                                  height: 500,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      10.0),
+                                                  child: Image.asset(
+                                                    "assets/png/home-appliances.jpg",
+                                                    height: 500,
+                                                  ),
                                                 ),
                                               )
                                             : Image.asset(
@@ -292,108 +296,241 @@ class HomeScreen extends StatelessWidget {
                                     SizedBox(
                                       height: 10,
                                     ),
-                                    StreamBuilder<QuerySnapshot>(
-                                      stream: firestore
-                                          .collection("Categories")
-                                          .snapshots(),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return const Center(
-                                              child:
-                                                  CircularProgressIndicator());
-                                        }
+                                    isMobile
+                                        ? StreamBuilder<QuerySnapshot>(
+                                            stream: firestore
+                                                .collection("Categories")
+                                                .snapshots(),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return const Center(
+                                                    child:
+                                                        CircularProgressIndicator());
+                                              }
 
-                                        if (!snapshot.hasData ||
-                                            snapshot.data!.docs.isEmpty) {
-                                          return const Center(
-                                              child:
-                                                  Text("No Categories found."));
-                                        }
+                                              if (!snapshot.hasData ||
+                                                  snapshot.data!.docs.isEmpty) {
+                                                return const Center(
+                                                    child: Text(
+                                                        "No Categories found."));
+                                              }
 
-                                        final List<QueryDocumentSnapshot>
-                                            documents = snapshot.data!.docs;
+                                              final List<QueryDocumentSnapshot>
+                                                  documents =
+                                                  snapshot.data!.docs;
 
-                                        return CarouselSlider(
-                                          items: List.generate(
-                                            4,
-                                            (index) {
-                                              return SingleChildScrollView(
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                child: Row(
-                                                  children: List.generate(
-                                                    documents.length,
-                                                    (index) {
-                                                      final categories =
-                                                          documents[index];
-                                                      final products =
-                                                          categories[
-                                                              'products'];
-                                                      return Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(
-                                                                right: 15),
-                                                        child: GestureDetector(
-                                                          onTap: () {
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          CategoryScreen(
-                                                                    products:
-                                                                        products,
-                                                                  ),
-                                                                ));
-                                                          },
-                                                          child: Container(
-                                                            width: 250,
+                                              return CarouselSlider(
+                                                items: documents
+                                                    .map((categoryDoc) {
+                                                  final categoryName =
+                                                      categoryDoc[
+                                                          'categoryName'];
+                                                  final categoryUrl =
+                                                      categoryDoc[
+                                                          'categoryUrl'];
+                                                  final products =
+                                                      categoryDoc['products'];
+
+                                                  return GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              CategoryScreen(
+                                                            products: products,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: Container(
+                                                      width: 250,
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              20),
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            color: Colors
+                                                                .grey.shade300),
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                      child: Column(
+                                                        children: [
+                                                          Container(
                                                             padding:
-                                                                EdgeInsets.all(
-                                                                    20),
-                                                            child: Column(
-                                                              children: [
-                                                                Container(
+                                                                const EdgeInsets
+                                                                    .all(8),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              border: Border.all(
+                                                                  color: Colors
+                                                                      .green,
+                                                                  width: 2),
+                                                            ),
+                                                            child: CircleAvatar(
+                                                              radius: 70,
+                                                              backgroundImage:
+                                                                  NetworkImage(
+                                                                      categoryUrl),
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 10),
+                                                          Text(
+                                                            categoryName,
+                                                            style:
+                                                                const TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                                }).toList(),
+                                                options: CarouselOptions(
+                                                  height: 300,
+                                                  autoPlay: true,
+                                                  autoPlayInterval:
+                                                      const Duration(
+                                                          seconds: 5),
+                                                  viewportFraction:
+                                                      0.8, // Adjust to show part of the next item
+                                                  enlargeCenterPage:
+                                                      true, // Makes the focused item larger
+                                                ),
+                                              );
+                                            },
+                                          )
+                                        : StreamBuilder<QuerySnapshot>(
+                                            stream: firestore
+                                                .collection("Categories")
+                                                .snapshots(),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return const Center(
+                                                    child:
+                                                        CircularProgressIndicator());
+                                              }
+
+                                              if (!snapshot.hasData ||
+                                                  snapshot.data!.docs.isEmpty) {
+                                                return const Center(
+                                                    child: Text(
+                                                        "No Categories found."));
+                                              }
+
+                                              final List<QueryDocumentSnapshot>
+                                                  documents =
+                                                  snapshot.data!.docs;
+
+                                              return CarouselSlider(
+                                                items: List.generate(
+                                                  documents
+                                                      .length, // Change this to documents.length to display all items
+                                                  (index) {
+                                                    final categories =
+                                                        documents[index];
+                                                    final products =
+                                                        categories['products'];
+                                                    return SingleChildScrollView(
+                                                      scrollDirection:
+                                                          Axis.horizontal,
+                                                      child: Row(
+                                                        children: List.generate(
+                                                          documents.length,
+                                                          (index) {
+                                                            final categories =
+                                                                documents[
+                                                                    index];
+                                                            final products =
+                                                                categories[
+                                                                    'products'];
+                                                            return Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      right:
+                                                                          15),
+                                                              child:
+                                                                  GestureDetector(
+                                                                onTap: () {
+                                                                  Navigator
+                                                                      .push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              CategoryScreen(
+                                                                        products:
+                                                                            products,
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  width: 250,
                                                                   padding:
                                                                       EdgeInsets
                                                                           .all(
-                                                                              8),
+                                                                              20),
+                                                                  child: Column(
+                                                                    children: [
+                                                                      Container(
+                                                                        padding:
+                                                                            EdgeInsets.all(8),
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          shape:
+                                                                              BoxShape.circle,
+                                                                          border:
+                                                                              Border.all(
+                                                                            color:
+                                                                                Colors.green,
+                                                                            width:
+                                                                                2,
+                                                                          ),
+                                                                        ),
+                                                                        child:
+                                                                            CircleAvatar(
+                                                                          radius:
+                                                                              70,
+                                                                          backgroundImage:
+                                                                              NetworkImage(
+                                                                            categories['categoryUrl'],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      Text(
+                                                                        categories[
+                                                                            'categoryName'],
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color:
+                                                                              Colors.black,
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
                                                                   decoration:
                                                                       BoxDecoration(
-                                                                    shape: BoxShape
-                                                                        .circle,
-                                                                    border: Border.all(
-                                                                        color: Colors
-                                                                            .green,
-                                                                        width:
-                                                                            2),
-                                                                  ),
-                                                                  child:
-                                                                      CircleAvatar(
-                                                                    radius: 70,
-                                                                    backgroundImage:
-                                                                        NetworkImage(
-                                                                            categories['categoryUrl']),
-                                                                  ),
-                                                                ),
-                                                                Text(
-                                                                  categories[
-                                                                      'categoryName'],
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontSize:
-                                                                          16,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            decoration:
-                                                                BoxDecoration(
                                                                     border:
                                                                         Border
                                                                             .all(
@@ -405,27 +542,27 @@ class HomeScreen extends StatelessWidget {
                                                                         .white,
                                                                     borderRadius:
                                                                         BorderRadius.circular(
-                                                                            10)),
-                                                          ),
+                                                                            10),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
                                                         ),
-                                                      );
-                                                    },
-                                                  ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                                options: CarouselOptions(
+                                                  height: 240,
+                                                  autoPlay: true,
+                                                  autoPlayInterval:
+                                                      Duration(seconds: 5),
+                                                  viewportFraction: 1.0,
                                                 ),
                                               );
                                             },
                                           ),
-                                          options: CarouselOptions(
-                                            height: 240,
-                                            autoPlay: true,
-                                            autoPlayInterval:
-                                                Duration(seconds: 5),
-                                            // aspectRatio: 2.0,
-                                            viewportFraction: 1.0,
-                                          ),
-                                        );
-                                      },
-                                    ),
                                   ],
                                 ),
                                 decoration: BoxDecoration(
@@ -609,7 +746,9 @@ class HomeScreen extends StatelessWidget {
                                                         context,
                                                         MaterialPageRoute(
                                                           builder: (context) =>
-                                                              ProductDetailspage(),
+                                                              ProductDetailspage(
+                                                            products: product,
+                                                          ),
                                                         ));
                                                   },
                                                   child: TrendingproductsCard(
@@ -707,7 +846,9 @@ class HomeScreen extends StatelessWidget {
                                                         context,
                                                         MaterialPageRoute(
                                                           builder: (context) =>
-                                                              ProductDetailspage(),
+                                                              ProductDetailspage(
+                                                            products: product,
+                                                          ),
                                                         ));
                                                   },
                                                   child: TrendingproductsCard(
@@ -806,7 +947,9 @@ class HomeScreen extends StatelessWidget {
                                                           context,
                                                           MaterialPageRoute(
                                                             builder: (context) =>
-                                                                ProductDetailspage(),
+                                                                ProductDetailspage(
+                                                              products: product,
+                                                            ),
                                                           ));
                                                     },
                                                     child: TrendingproductsCard(
@@ -1939,7 +2082,10 @@ class HomeScreen extends StatelessWidget {
                                                               MaterialPageRoute(
                                                                 builder:
                                                                     (context) =>
-                                                                        ProductDetailspage(),
+                                                                        ProductDetailspage(
+                                                                  products:
+                                                                      product,
+                                                                ),
                                                               ));
                                                         },
                                                         child:
@@ -2071,7 +2217,10 @@ class HomeScreen extends StatelessWidget {
                                                               MaterialPageRoute(
                                                                 builder:
                                                                     (context) =>
-                                                                        ProductDetailspage(),
+                                                                        ProductDetailspage(
+                                                                  products:
+                                                                      product,
+                                                                ),
                                                               ));
                                                         },
                                                         child:
@@ -2505,7 +2654,10 @@ class HomeScreen extends StatelessWidget {
                                                                 MaterialPageRoute(
                                                                   builder:
                                                                       (context) =>
-                                                                          ProductDetailspage(),
+                                                                          ProductDetailspage(
+                                                                    products:
+                                                                        product,
+                                                                  ),
                                                                 ));
                                                           },
                                                           child:
@@ -2642,7 +2794,10 @@ class HomeScreen extends StatelessWidget {
                                                                 MaterialPageRoute(
                                                                   builder:
                                                                       (context) =>
-                                                                          ProductDetailspage(),
+                                                                          ProductDetailspage(
+                                                                    products:
+                                                                        product,
+                                                                  ),
                                                                 ));
                                                           },
                                                           child:

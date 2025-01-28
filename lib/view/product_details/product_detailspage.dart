@@ -11,7 +11,8 @@ import 'package:gomart_wahy/view/wishlist_page/wish_listpage.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class ProductDetailspage extends StatelessWidget {
-  const ProductDetailspage({super.key});
+  const ProductDetailspage({super.key, required this.products});
+  final QueryDocumentSnapshot<Object?> products;
 
   @override
   Widget build(BuildContext context) {
@@ -103,9 +104,12 @@ class ProductDetailspage extends StatelessWidget {
                                         //image details
                                         Row(
                                           children: [
-                                            Image.asset(
-                                              "assets/png/masala.jpg",
+                                            Image.network(
+                                              products['productUrl'],
                                               height: 450,
+                                            ),
+                                            SizedBox(
+                                              width: 12,
                                             ),
                                             Expanded(
                                               child: Column(
@@ -115,7 +119,7 @@ class ProductDetailspage extends StatelessWidget {
                                                     MainAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    "Fish Curry Powder",
+                                                    products['productName'],
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontWeight:
@@ -126,7 +130,7 @@ class ProductDetailspage extends StatelessWidget {
                                                     height: 10,
                                                   ),
                                                   Text(
-                                                    "₹ 3.08",
+                                                    "₹ ${products['ourPrice']}",
                                                     style: TextStyle(
                                                         color: Colors.red,
                                                         fontWeight:
@@ -148,23 +152,25 @@ class ProductDetailspage extends StatelessWidget {
                                                       ),
                                                       //progress indicator
 
-                                                      SizedBox(
-                                                        width: 450,
-                                                        child:
-                                                            LinearPercentIndicator(
-                                                          lineHeight: 4.0,
-                                                          percent: 0.2,
-                                                          backgroundColor:
-                                                              Colors.grey
-                                                                  .shade300,
-                                                          progressColor:
-                                                              Colors.orange,
+                                                      Flexible(
+                                                        child: SizedBox(
+                                                          width: 450,
+                                                          child:
+                                                              LinearPercentIndicator(
+                                                            lineHeight: 4.0,
+                                                            percent: 0.2,
+                                                            backgroundColor:
+                                                                Colors.grey
+                                                                    .shade300,
+                                                            progressColor:
+                                                                Colors.orange,
+                                                          ),
                                                         ),
                                                       ),
                                                     ],
                                                   ),
                                                   Text(
-                                                    "A blend of spices specifically formulated for making fish curry. It may contain ingredients like coriander, cumin, turmeric, mustard seeds, fenugreek, and red chili.",
+                                                    products['description'],
                                                     style: TextStyle(
                                                         color: Colors.grey,
                                                         fontWeight:
@@ -175,7 +181,7 @@ class ProductDetailspage extends StatelessWidget {
                                                     height: 10,
                                                   ),
                                                   Text(
-                                                    "Weight:",
+                                                    "Stock:",
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontWeight:
@@ -188,7 +194,8 @@ class ProductDetailspage extends StatelessWidget {
                                                     width: 100,
                                                     child: Center(
                                                       child: Text(
-                                                        "100g",
+                                                        products[
+                                                            'currentstock'],
                                                         style: TextStyle(
                                                             color: Colors.grey,
                                                             fontWeight:
@@ -351,8 +358,9 @@ class ProductDetailspage extends StatelessWidget {
                                                                   fit: BoxFit
                                                                       .cover,
                                                                   image:
-                                                                      AssetImage(
-                                                                    "assets/png/masala.jpg",
+                                                                      NetworkImage(
+                                                                    products[
+                                                                        'productUrl'],
                                                                   )),
                                                           border: Border.all(
                                                               color: Colors.grey
@@ -389,8 +397,8 @@ class ProductDetailspage extends StatelessWidget {
                                         children: [
                                           //image
                                           Center(
-                                            child: Image.asset(
-                                              "assets/png/masala.jpg",
+                                            child: Image.network(
+                                              products['productUrl'],
                                               height: 550,
                                             ),
                                           ),
@@ -414,8 +422,9 @@ class ProductDetailspage extends StatelessWidget {
                                                                   fit: BoxFit
                                                                       .cover,
                                                                   image:
-                                                                      AssetImage(
-                                                                    "assets/png/masala.jpg",
+                                                                      NetworkImage(
+                                                                    products[
+                                                                        'productUrl'],
                                                                   )),
                                                           border: Border.all(
                                                               color: Colors.grey
@@ -434,7 +443,7 @@ class ProductDetailspage extends StatelessWidget {
                                           ),
 
                                           Text(
-                                            "Fish Curry Powder",
+                                            products['productName'],
                                             style: TextStyle(
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.bold,
@@ -444,7 +453,7 @@ class ProductDetailspage extends StatelessWidget {
                                             height: 10,
                                           ),
                                           Text(
-                                            "₹ 3.08",
+                                            "₹ ${products['ourPrice']}",
                                             style: TextStyle(
                                                 color: Colors.red,
                                                 fontWeight: FontWeight.bold,
@@ -477,7 +486,7 @@ class ProductDetailspage extends StatelessWidget {
                                             ],
                                           ),
                                           Text(
-                                            "A blend of spices specifically formulated for making fish curry. It may contain ingredients like coriander, cumin, turmeric, mustard seeds, fenugreek, and red chili.",
+                                            products['description'],
                                             style: TextStyle(
                                                 color: Colors.grey,
                                                 fontWeight: FontWeight.normal,
@@ -487,7 +496,7 @@ class ProductDetailspage extends StatelessWidget {
                                             height: 10,
                                           ),
                                           Text(
-                                            "Weight:",
+                                            "Stock:",
                                             style: TextStyle(
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.bold,
@@ -499,7 +508,7 @@ class ProductDetailspage extends StatelessWidget {
                                             width: 100,
                                             child: Center(
                                               child: Text(
-                                                "100g",
+                                                products['currentstock'],
                                                 style: TextStyle(
                                                     color: Colors.grey,
                                                     fontWeight: FontWeight.w600,

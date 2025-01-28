@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gomart_wahy/view/shopbycategory_screen/category_screen.dart';
 
@@ -14,123 +15,83 @@ class CategoryPopup extends StatelessWidget {
     bool isMobile = screenWidth < 600;
     bool isTablet = screenWidth >= 600 && screenWidth < 1024;
     bool isDesktop = screenWidth >= 1024;
-    List<Map> categories = [
-      {
-        "name": "Curry Powders",
-        "image":
-            "https://res.cloudinary.com/hz3gmuqw6/image/upload/c_fill,q_auto,w_750/f_auto/curry-powder-substitute-phpDKXwxs"
-      },
-      {
-        "name": "Fruits",
-        "image":
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMkBbQ_DxYAZu4rfOP4BgYo9NPektkMPob7Q&s"
-      },
-      {
-        "name": "Fruit & Vegetables",
-        "image":
-            "https://www.utphysicians.com/wp-content/uploads/2022/02/fruits-and-vegetables-rainbow.jpg"
-      },
-      {
-        "name": "Fish & Meats",
-        "image": "https://static.toiimg.com/photo/101288661.cms"
-      },
-      {
-        "name": "Dairy Products",
-        "image":
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUovqC7FkLgtVoa9JAZ7BNoTwClclPn2YAJw&s"
-      },
-      {
-        "name": "Rice, Atta & Flours",
-        "image":
-            "https://2.wlimg.com/product_images/bc-full/2023/3/664688/white-rice-flour-1678870310-6803650.jpeg"
-      },
-      {
-        "name": "Lentils & Pulses",
-        "image":
-            "https://www.healthifyme.com/blog/wp-content/uploads/2022/05/shutterstock_465983162-1-1024x682.jpg"
-      },
-      {
-        "name": "Oil & Ghee",
-        "image": "https://static.toiimg.com/photo/84068085.cms"
-      },
-      {
-        "name": "Frozen Foods",
-        "image":
-            "https://static.toiimg.com/thumb/resizemode-4,width-1280,height-720,msid-77315077/77315077.jpg"
-      },
-      {
-        "name": "Ready to Eat",
-        "image":
-            "https://5.imimg.com/data5/SELLER/Default/2023/12/368589178/UI/QM/XC/26500564/img-6053.jpeg"
-      },
-      {
-        "name": "Beverages",
-        "image":
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmrVyLmaUXJyc4aDTSFlqzdIUlgSNB92_HbQ&s"
-      },
-      {
-        "name": "Home & Kitchen",
-        "image":
-            "https://www.helpguide.org/wp-content/uploads/2023/02/Cooking-at-Home-1200x800.jpeg"
-      },
-      {
-        "name": "Deli",
-        "image":
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoJBBOqoVKwwhSEMDkuOWGFU1wiCAStZZBzA&s"
-      },
-    ];
-    return PopupMenuButton<int>(
-      child: Row(
-        children: [
-          Text(
-            "Browse Category",
-            style: TextStyle(
-                fontSize: isDesktop ? 16 : 18,
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection("Categories").snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return const Center(child: Text("No Categories found."));
+        }
+
+        final List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
+        // List of categories fetched from Firestore
+        List<Map<String, dynamic>> categories = snapshot.data!.docs.map((doc) {
+          return {
+            "name": doc["categoryName"],
+            "image": doc["categoryUrl"],
+            'products': doc['products']
+          };
+        }).toList();
+        return PopupMenuButton<int>(
+          child: Row(
+            children: [
+              Text(
+                "Browse Category",
+                style: TextStyle(
+                    fontSize: isDesktop ? 16 : 18,
+                    color: Colors.green,
+                    fontWeight: FontWeight.bold),
+              ),
+              Icon(
+                Icons.keyboard_arrow_down,
                 color: Colors.green,
-                fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
-          Icon(
-            Icons.keyboard_arrow_down,
-            color: Colors.green,
-          ),
-        ],
-      ),
-      onSelected: (value) {
-        // Navigate to the corresponding category page
-        final selectedCategory = categories[value];
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CategoryScreen(),
+          onSelected: (value) {
+            // Navigate to the corresponding category page
+            final selectedCategory = categories[value];
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CategoryScreen(
+                  products: selectedCategory['products'],
+                ),
+              ),
+            );
+          },
+          itemBuilder: (context) {
+            return List.generate(
+              documents.length,
+              (index) => PopupMenuItem(
+                value: index, // Pass the index as the value
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 15,
+                      backgroundImage: NetworkImage(categories[index]["image"]),
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      categories[index]["name"],
+                      style: TextStyle(
+                          color: Colors.grey, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+          offset: Offset(0, 50), // Adjusts the popup position
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
         );
       },
-      itemBuilder: (context) {
-        return List.generate(
-          categories.length,
-          (index) => PopupMenuItem(
-            value: index, // Pass the index as the value
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 15,
-                  backgroundImage: NetworkImage(categories[index]["image"]),
-                ),
-                SizedBox(width: 10),
-                Text(
-                  categories[index]["name"],
-                  style: TextStyle(
-                      color: Colors.grey, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-      offset: Offset(0, 50), // Adjusts the popup position
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
     );
   }
 }
