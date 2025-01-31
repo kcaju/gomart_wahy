@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gomart_wahy/view/account_page/account_page.dart';
 import 'package:gomart_wahy/view/all_products/all_productscreen.dart';
@@ -5,7 +6,9 @@ import 'package:gomart_wahy/view/cartpage/cartitems_page.dart';
 import 'package:gomart_wahy/view/homescreen/widget/category_popup.dart';
 import 'package:gomart_wahy/view/homescreen/widget/homepage.dart';
 import 'package:gomart_wahy/view/quick_enquiry/quick_enquiryscreen.dart';
+import 'package:gomart_wahy/view/signin/signin_screen.dart';
 import 'package:gomart_wahy/view/wishlist_page/wish_listpage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HeaderWhitebox extends StatelessWidget {
   const HeaderWhitebox({super.key});
@@ -216,7 +219,7 @@ class HeaderWhitebox extends StatelessWidget {
                     size: isDesktop ? 25 : 30,
                     color: Colors.grey,
                   ),
-                  onSelected: (value) {
+                  onSelected: (value) async {
                     // Handle any selection if required
                     if (value == 1) {
                       Navigator.push(
@@ -236,10 +239,23 @@ class HeaderWhitebox extends StatelessWidget {
                       );
                     } else if (value == 4) {
                       //logout
-                      //  Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => CartitemsPage()),
-                      // );
+                      await FirebaseAuth.instance.signOut();
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          backgroundColor: Colors.green,
+                          content: Text(
+                            "Signed Out Successfully",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18),
+                          )));
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SigninScreen(),
+                        ),
+                        (route) => false,
+                      );
                     }
                   },
                   itemBuilder: (context) => [

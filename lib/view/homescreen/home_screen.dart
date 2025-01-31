@@ -1281,21 +1281,21 @@ class HomeScreen extends StatelessWidget {
                                                   //shopnow button
                                                   GestureDetector(
                                                     onTap: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                CategoryScreen(),
-                                                          ));
+                                                      // Navigator.push(
+                                                      //     context,
+                                                      //     MaterialPageRoute(
+                                                      //       builder: (context) =>
+                                                      //           CategoryScreen(),
+                                                      //     ));
                                                     },
                                                     child: GestureDetector(
                                                       onTap: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  CategoryScreen(),
-                                                            ));
+                                                        // Navigator.push(
+                                                        //     context,
+                                                        //     MaterialPageRoute(
+                                                        //       builder: (context) =>
+                                                        //           CategoryScreen(),
+                                                        //     ));
                                                       },
                                                       child: ShopAndAboutButton(
                                                           isWidth: true,
@@ -1634,12 +1634,12 @@ class HomeScreen extends StatelessWidget {
                                                   //shopnow button
                                                   GestureDetector(
                                                     onTap: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                CategoryScreen(),
-                                                          ));
+                                                      // Navigator.push(
+                                                      //     context,
+                                                      //     MaterialPageRoute(
+                                                      //       builder: (context) =>
+                                                      //           CategoryScreen(),
+                                                      //     ));
                                                     },
                                                     child: ShopAndAboutButton(
                                                         isWidth: true,
@@ -1705,12 +1705,12 @@ class HomeScreen extends StatelessWidget {
                                               children: [
                                                 GestureDetector(
                                                   onTap: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              CategoryScreen(),
-                                                        ));
+                                                    // Navigator.push(
+                                                    //     context,
+                                                    //     MaterialPageRoute(
+                                                    //       builder: (context) =>
+                                                    //           CategoryScreen(),
+                                                    //     ));
                                                   },
                                                   child: ShopAndAboutButton(
                                                     text: "Shop Now",
@@ -1816,12 +1816,12 @@ class HomeScreen extends StatelessWidget {
                                                 children: [
                                                   GestureDetector(
                                                     onTap: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                CategoryScreen(),
-                                                          ));
+                                                      // Navigator.push(
+                                                      //     context,
+                                                      //     MaterialPageRoute(
+                                                      //       builder: (context) =>
+                                                      //           CategoryScreen(),
+                                                      //     ));
                                                     },
                                                     child: ShopAndAboutButton(
                                                       text: "Shop Now",
@@ -2351,13 +2351,13 @@ class HomeScreen extends StatelessWidget {
                                                       ),
                                                       GestureDetector(
                                                         onTap: () {
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        CategoryScreen(),
-                                                              ));
+                                                          // Navigator.push(
+                                                          //     context,
+                                                          //     MaterialPageRoute(
+                                                          //       builder:
+                                                          //           (context) =>
+                                                          //               CategoryScreen(),
+                                                          //     ));
                                                         },
                                                         child: Row(
                                                           mainAxisAlignment:
@@ -2924,12 +2924,12 @@ class HomeScreen extends StatelessWidget {
                                                     ),
                                                     GestureDetector(
                                                       onTap: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  CategoryScreen(),
-                                                            ));
+                                                        // Navigator.push(
+                                                        //     context,
+                                                        //     MaterialPageRoute(
+                                                        //       builder: (context) =>
+                                                        //           CategoryScreen(),
+                                                        //     ));
                                                       },
                                                       child: Row(
                                                         mainAxisAlignment:

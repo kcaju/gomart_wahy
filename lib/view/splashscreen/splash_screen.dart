@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gomart_wahy/view/homescreen/home_screen.dart';
+import 'package:gomart_wahy/view/intermediatescreen/intermediate_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
       (value) {
         Navigator.pushReplacement(context, MaterialPageRoute(
           builder: (context) {
-            return HomeScreen();
+            return IntermediateScreen();
           },
         ));
       },

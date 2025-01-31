@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gomart_wahy/view/account_page/widget/address_box.dart';
 import 'package:gomart_wahy/view/account_page/widget/orderhistory_box.dart';
@@ -9,6 +10,7 @@ import 'package:gomart_wahy/view/homescreen/drawerscreen/drawer_screen.dart';
 import 'package:gomart_wahy/view/homescreen/widget/header_greencard.dart';
 import 'package:gomart_wahy/view/homescreen/widget/header_whitebox.dart';
 import 'package:gomart_wahy/view/homescreen/widget/homepage.dart';
+import 'package:gomart_wahy/view/signin/signin_screen.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -247,25 +249,53 @@ class _AccountPageState extends State<AccountPage> {
                                             ),
 
                                             //logout
-                                            Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.grid_view,
-                                                  color: Colors.grey.shade600,
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text(
-                                                  "Logout",
-                                                  style: TextStyle(
-                                                      color:
-                                                          Colors.grey.shade600,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                      fontSize: 18),
-                                                ),
-                                              ],
+                                            GestureDetector(
+                                              onTap: () async {
+                                                await FirebaseAuth.instance
+                                                    .signOut();
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        backgroundColor:
+                                                            Colors.green,
+                                                        content: Text(
+                                                          "Signed Out Successfully",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 18),
+                                                        )));
+                                                Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SigninScreen(),
+                                                  ),
+                                                  (route) => false,
+                                                );
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.grid_view,
+                                                    color: Colors.grey.shade600,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Text(
+                                                    "Logout",
+                                                    style: TextStyle(
+                                                        color: Colors
+                                                            .grey.shade600,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                        fontSize: 18),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                             SizedBox(
                                               height: 5,
@@ -477,25 +507,54 @@ class _AccountPageState extends State<AccountPage> {
                                               ),
 
                                               //logout
-                                              Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.grid_view,
-                                                    color: Colors.grey.shade600,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  Text(
-                                                    "Logout",
-                                                    style: TextStyle(
-                                                        color: Colors
-                                                            .grey.shade600,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                        fontSize: 18),
-                                                  ),
-                                                ],
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  await FirebaseAuth.instance
+                                                      .signOut();
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                          backgroundColor:
+                                                              Colors.green,
+                                                          content: Text(
+                                                            "Signed Out Successfully",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 18),
+                                                          )));
+                                                  Navigator.pushAndRemoveUntil(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          SigninScreen(),
+                                                    ),
+                                                    (route) => false,
+                                                  );
+                                                },
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.grid_view,
+                                                      color:
+                                                          Colors.grey.shade600,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      "Logout",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .grey.shade600,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                          fontSize: 18),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                               SizedBox(
                                                 height: 5,

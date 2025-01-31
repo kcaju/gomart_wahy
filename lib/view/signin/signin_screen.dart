@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:gomart_wahy/controller/signin_screen_controller/signin_screen_controller.dart';
 import 'package:gomart_wahy/view/homescreen/home_screen.dart';
 import 'package:gomart_wahy/view/homescreen/widget/customtextformfield.dart';
 import 'package:gomart_wahy/view/sign_up/signup_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -14,6 +18,7 @@ class _SigninScreenState extends State<SigninScreen> {
   final signinFormKey = GlobalKey<FormState>();
   TextEditingController password = TextEditingController();
   TextEditingController email = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     // Use MediaQuery to get screen width and height
@@ -24,6 +29,7 @@ class _SigninScreenState extends State<SigninScreen> {
     bool isMobile = screenWidth < 600;
     bool isTablet = screenWidth >= 600 && screenWidth < 1024;
     bool isDesktop = screenWidth >= 1024;
+    final provOb = context.watch<SigninScreenController>();
 
     return Scaffold(
       backgroundColor: Colors.white.withAlpha(240),
@@ -150,36 +156,37 @@ class _SigninScreenState extends State<SigninScreen> {
                                     height: 20,
                                   ),
                                   //sign in button
-                                  GestureDetector(
-                                    onTap: () {
-                                      if (signinFormKey.currentState!
-                                          .validate()) {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  HomeScreen(),
-                                            ));
-                                      }
-                                    },
-                                    child: Container(
-                                      height: 40,
-                                      width: 200,
-                                      child: Center(
-                                        child: Text(
-                                          "Sign In",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w500),
+                                  provOb.isLoading
+                                      ? CircularProgressIndicator()
+                                      : GestureDetector(
+                                          onTap: () {
+                                            if (signinFormKey.currentState!
+                                                .validate()) {
+                                              provOb.onSignIn(
+                                                  email: email.text,
+                                                  pass: password.text,
+                                                  context: context);
+                                            }
+                                          },
+                                          child: Container(
+                                            height: 40,
+                                            width: 200,
+                                            child: Center(
+                                              child: Text(
+                                                "Sign In",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ),
+                                            decoration: BoxDecoration(
+                                                color: Color(0xFF03AC13),
+                                                borderRadius:
+                                                    BorderRadius.circular(5)),
+                                          ),
                                         ),
-                                      ),
-                                      decoration: BoxDecoration(
-                                          color: Color(0xFF03AC13),
-                                          borderRadius:
-                                              BorderRadius.circular(5)),
-                                    ),
-                                  ),
                                   SizedBox(
                                     height: 15,
                                   ),
@@ -331,33 +338,34 @@ class _SigninScreenState extends State<SigninScreen> {
                           height: 20,
                         ),
                         //sign in button
-                        GestureDetector(
-                          onTap: () {
-                            if (signinFormKey.currentState!.validate()) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => HomeScreen(),
-                                  ));
-                            }
-                          },
-                          child: Container(
-                            height: isTablet ? 60 : 50,
-                            width: isTablet ? 300 : double.infinity,
-                            child: Center(
-                              child: Text(
-                                "Sign In",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: isTablet ? 16 : 15,
-                                    fontWeight: FontWeight.bold),
+                        provOb.isLoading
+                            ? CircularProgressIndicator()
+                            : GestureDetector(
+                                onTap: () {
+                                  if (signinFormKey.currentState!.validate()) {
+                                    provOb.onSignIn(
+                                        email: email.text,
+                                        pass: password.text,
+                                        context: context);
+                                  }
+                                },
+                                child: Container(
+                                  height: isTablet ? 60 : 50,
+                                  width: isTablet ? 300 : double.infinity,
+                                  child: Center(
+                                    child: Text(
+                                      "Sign In",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: isTablet ? 16 : 15,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  decoration: BoxDecoration(
+                                      color: Color(0xFF03AC13),
+                                      borderRadius: BorderRadius.circular(5)),
+                                ),
                               ),
-                            ),
-                            decoration: BoxDecoration(
-                                color: Color(0xFF03AC13),
-                                borderRadius: BorderRadius.circular(5)),
-                          ),
-                        ),
                         SizedBox(
                           height: 15,
                         ),

@@ -1,7 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:gomart_wahy/controller/signin_screen_controller/signin_screen_controller.dart';
+import 'package:gomart_wahy/controller/signup_screen_controller/signup_screen_controller.dart';
 import 'package:gomart_wahy/firebase_options.dart';
 import 'package:gomart_wahy/view/splashscreen/splash_screen.dart';
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,9 +19,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => SignupScreenController(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => SigninScreenController(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: SplashScreen(),
+      ),
     );
   }
 }

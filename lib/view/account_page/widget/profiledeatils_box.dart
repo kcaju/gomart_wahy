@@ -1,7 +1,55 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfiledeatilsBox extends StatelessWidget {
+class ProfiledeatilsBox extends StatefulWidget {
   const ProfiledeatilsBox({super.key});
+
+  @override
+  State<ProfiledeatilsBox> createState() => _ProfiledeatilsBoxState();
+}
+
+class _ProfiledeatilsBoxState extends State<ProfiledeatilsBox> {
+  String? userName;
+  Map<String, dynamic>? userData;
+  bool isLoading = true;
+
+  Future<void> fetchUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedName =
+        prefs.getString('name'); // Retrieve name from local storage
+
+    if (savedName != null) {
+      try {
+        // Query Firestore to find user document where the name matches
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .where('name', isEqualTo: savedName)
+            .limit(1) // Limit to one document
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          setState(() {
+            userName = savedName;
+            userData = querySnapshot.docs.first.data() as Map<String, dynamic>;
+          });
+        } else {
+          print("No user found with name: $savedName");
+        }
+      } catch (e) {
+        print("Error fetching user data: $e");
+      }
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    fetchUserData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +61,7 @@ class ProfiledeatilsBox extends StatelessWidget {
     bool isMobile = screenWidth < 600;
     bool isTablet = screenWidth >= 600 && screenWidth <= 1024;
     bool isDesktop = screenWidth > 1024;
+
     return Container(
       child: isDesktop
           ? Row(
@@ -33,7 +82,7 @@ class ProfiledeatilsBox extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Name",
+                      userData?['name'] ?? "Name",
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -49,7 +98,7 @@ class ProfiledeatilsBox extends StatelessWidget {
                           width: 5,
                         ),
                         Text(
-                          "123456789",
+                          userData?['mobile'] ?? "#######",
                           style: TextStyle(
                               color: Colors.grey.shade600,
                               fontWeight: FontWeight.normal,
@@ -66,7 +115,7 @@ class ProfiledeatilsBox extends StatelessWidget {
                           width: 5,
                         ),
                         Text(
-                          "name@gmail.com",
+                          userData?['email'] ?? "#######",
                           style: TextStyle(
                               color: Colors.grey.shade600,
                               fontWeight: FontWeight.normal,

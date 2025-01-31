@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:gomart_wahy/controller/signup_screen_controller/signup_screen_controller.dart';
 import 'package:gomart_wahy/view/homescreen/widget/customtextformfield.dart';
 import 'package:gomart_wahy/view/signin/signin_screen.dart';
+import 'package:provider/provider.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -15,8 +18,11 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController email = TextEditingController();
   TextEditingController mobile = TextEditingController();
   TextEditingController password = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    final provOb = context.watch<SignupScreenController>();
+
     // Use MediaQuery to get screen width and height
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -137,35 +143,38 @@ class _SignupScreenState extends State<SignupScreen> {
                                   height: 20,
                                 ),
                                 //create account button
-                                GestureDetector(
-                                  onTap: () {
-                                    if (signupFormKey.currentState!
-                                        .validate()) {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                SigninScreen(),
-                                          ));
-                                    }
-                                  },
-                                  child: Container(
-                                    height: 40,
-                                    width: 240,
-                                    child: Center(
-                                      child: Text(
-                                        "Create account",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500),
+                                provOb.isLoading
+                                    ? CircularProgressIndicator()
+                                    : GestureDetector(
+                                        onTap: () {
+                                          if (signupFormKey.currentState!
+                                              .validate()) {
+                                            provOb.toSignUp(
+                                                email: email.text,
+                                                mobile: mobile.text,
+                                                name: name.text,
+                                                password: password.text,
+                                                context: context);
+                                          }
+                                        },
+                                        child: Container(
+                                          height: 40,
+                                          width: 240,
+                                          child: Center(
+                                            child: Text(
+                                              "Create account",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
+                                          decoration: BoxDecoration(
+                                              color: Color(0xFF03AC13),
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                        ),
                                       ),
-                                    ),
-                                    decoration: BoxDecoration(
-                                        color: Color(0xFF03AC13),
-                                        borderRadius: BorderRadius.circular(5)),
-                                  ),
-                                ),
                                 SizedBox(
                                   height: 15,
                                 ),
@@ -307,33 +316,37 @@ class _SignupScreenState extends State<SignupScreen> {
                             height: 20,
                           ),
                           //create account button
-                          GestureDetector(
-                            onTap: () {
-                              if (signupFormKey.currentState!.validate()) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => SigninScreen(),
-                                    ));
-                              }
-                            },
-                            child: Container(
-                              height: isTablet ? 60 : 50,
-                              width: isTablet ? 300 : double.infinity,
-                              child: Center(
-                                child: Text(
-                                  "Create account",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500),
+                          provOb.isLoading
+                              ? CircularProgressIndicator()
+                              : GestureDetector(
+                                  onTap: () {
+                                    if (signupFormKey.currentState!
+                                        .validate()) {
+                                      provOb.toSignUp(
+                                          email: email.text,
+                                          mobile: mobile.text,
+                                          name: name.text,
+                                          password: password.text,
+                                          context: context);
+                                    }
+                                  },
+                                  child: Container(
+                                    height: isTablet ? 60 : 50,
+                                    width: isTablet ? 300 : double.infinity,
+                                    child: Center(
+                                      child: Text(
+                                        "Create account",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: Color(0xFF03AC13),
+                                        borderRadius: BorderRadius.circular(5)),
+                                  ),
                                 ),
-                              ),
-                              decoration: BoxDecoration(
-                                  color: Color(0xFF03AC13),
-                                  borderRadius: BorderRadius.circular(5)),
-                            ),
-                          ),
                           SizedBox(
                             height: 15,
                           ),
