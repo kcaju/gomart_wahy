@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:gomart_wahy/controller/cartitem_controller/cartitem_controller.dart';
 import 'package:gomart_wahy/controller/signin_screen_controller/signin_screen_controller.dart';
 import 'package:gomart_wahy/controller/signup_screen_controller/signup_screen_controller.dart';
 import 'package:gomart_wahy/firebase_options.dart';
@@ -26,6 +27,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => SigninScreenController(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => CartitemController(),
         ),
       ],
       child: MaterialApp(

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gomart_wahy/view/floatingactionbutton/custom_floatingbutton.dart';
 import 'package:gomart_wahy/view/homescreen/drawerscreen/drawer_screen.dart';
@@ -7,6 +8,7 @@ import 'package:gomart_wahy/view/homescreen/widget/header_greencard.dart';
 import 'package:gomart_wahy/view/homescreen/widget/header_whitebox.dart';
 import 'package:gomart_wahy/view/homescreen/widget/homepage.dart';
 import 'package:gomart_wahy/view/homescreen/widget/trendingproducts_card.dart';
+import 'package:gomart_wahy/view/product_details/product_detailspage.dart';
 import 'package:gomart_wahy/view/wishlist_page/wish_listpage.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
@@ -60,6 +62,52 @@ class _CategoryScreenState extends State<CategoryScreen> {
     } catch (e) {
       print("Error fetching categories: $e");
     }
+  }
+
+  void addToCart(Map<String, dynamic> product) async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    User? user = auth.currentUser;
+    if (user == null) {
+      print("User not logged in");
+      return;
+    }
+
+    DocumentReference userRef = firestore.collection("users").doc(user.uid);
+
+    // Retrieve the current cart data
+    DocumentSnapshot userDoc = await userRef.get();
+    List<dynamic> cartItems = userDoc.get("cartItems") ?? [];
+
+    // Check if the product is already in the cart
+    int existingIndex = cartItems
+        .indexWhere((item) => item["productName"] == product["productName"]);
+
+    if (existingIndex != -1) {
+      // If product exists, update the quantity
+      cartItems[existingIndex]["quantity"] += 1;
+    } else {
+      // Otherwise, add as a new product
+      cartItems.add(product);
+    }
+
+    // Update Firestore document
+    await userRef.update({"cartItems": cartItems}).then((_) {
+      print("Product added to cart successfully");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text(
+            "Product added to cart successfully",
+            style: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+        ),
+      );
+    }).catchError((error) {
+      print("Failed to add product to cart: $error");
+    });
   }
 
   @override
@@ -635,28 +683,66 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                 final product = widget
                                                         .products![
                                                     index]; // Access each product as a map
-                                                return TrendingproductsCard(
-                                                    addToFavourite: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                WishListpage(),
-                                                          ));
-                                                    },
-                                                    isProducts: true,
-                                                    url: product['productUrl'],
-                                                    maxcount:
-                                                        product['openstock'],
-                                                    title:
-                                                        product['productName'],
-                                                    name: product['category'],
-                                                    oldRate: product[
-                                                        'originalPrice'],
-                                                    newRate:
-                                                        product['ourPrice'],
-                                                    count: product[
-                                                        'currentstock']);
+                                                return GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ProductDetailspage(
+                                                            product: product,
+                                                          ),
+                                                        ));
+                                                  },
+                                                  child: TrendingproductsCard(
+                                                      addToFavourite: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  WishListpage(),
+                                                            ));
+                                                      },
+                                                      addToCartTap: () {
+                                                        String productId = DateTime
+                                                                .now()
+                                                            .millisecondsSinceEpoch
+                                                            .toString();
+                                                        //add to cart
+                                                        addToCart({
+                                                          "productId":
+                                                              productId, // Store product ID
+                                                          "productUrl": product[
+                                                              'productUrl'],
+                                                          "productName": product[
+                                                              'productName'],
+                                                          "category": product[
+                                                              'category'],
+                                                          "originalPrice": product[
+                                                              'originalPrice'],
+                                                          "ourPrice": product[
+                                                              'ourPrice'],
+                                                          "currentstock": product[
+                                                              'currentstock'],
+                                                          "quantity":
+                                                              1 // Default quantity
+                                                        });
+                                                      },
+                                                      isProducts: true,
+                                                      url:
+                                                          product['productUrl'],
+                                                      maxcount:
+                                                          product['openstock'],
+                                                      title: product[
+                                                          'productName'],
+                                                      name: product['category'],
+                                                      oldRate: product[
+                                                          'originalPrice'],
+                                                      newRate:
+                                                          product['ourPrice'],
+                                                      count: product[
+                                                          'currentstock']),
+                                                );
                                               },
                                             )
                                           ],
@@ -1272,29 +1358,69 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                   final product = widget
                                                           .products![
                                                       index]; // Access each product as a map
-                                                  return TrendingproductsCard(
-                                                      addToFavourite: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  WishListpage(),
-                                                            ));
-                                                      },
-                                                      isProducts: true,
-                                                      url:
-                                                          product['productUrl'],
-                                                      maxcount:
-                                                          product['openstock'],
-                                                      title: product[
-                                                          'productName'],
-                                                      name: product['category'],
-                                                      oldRate: product[
-                                                          'originalPrice'],
-                                                      newRate:
-                                                          product['ourPrice'],
-                                                      count: product[
-                                                          'currentstock']);
+                                                  return GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                ProductDetailspage(
+                                                              product: product,
+                                                            ),
+                                                          ));
+                                                    },
+                                                    child: TrendingproductsCard(
+                                                        addToFavourite: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        WishListpage(),
+                                                              ));
+                                                        },
+                                                        addToCartTap: () {
+                                                          String productId =
+                                                              DateTime.now()
+                                                                  .millisecondsSinceEpoch
+                                                                  .toString();
+                                                          //add to cart
+                                                          addToCart({
+                                                            "productId":
+                                                                productId, // Store product ID
+                                                            "productUrl": product[
+                                                                'productUrl'],
+                                                            "productName": product[
+                                                                'productName'],
+                                                            "category": product[
+                                                                'category'],
+                                                            "originalPrice":
+                                                                product[
+                                                                    'originalPrice'],
+                                                            "ourPrice": product[
+                                                                'ourPrice'],
+                                                            "currentstock": product[
+                                                                'currentstock'],
+                                                            "quantity":
+                                                                1 // Default quantity
+                                                          });
+                                                        },
+                                                        isProducts: true,
+                                                        url: product[
+                                                            'productUrl'],
+                                                        maxcount: product[
+                                                            'openstock'],
+                                                        title: product[
+                                                            'productName'],
+                                                        name:
+                                                            product['category'],
+                                                        oldRate: product[
+                                                            'originalPrice'],
+                                                        newRate:
+                                                            product['ourPrice'],
+                                                        count: product[
+                                                            'currentstock']),
+                                                  );
                                                 },
                                               )
                                             : //mobile
@@ -1305,29 +1431,69 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                   final product = widget
                                                           .products![
                                                       index]; // Access each product as a map
-                                                  return TrendingproductsCard(
-                                                      addToFavourite: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  WishListpage(),
-                                                            ));
-                                                      },
-                                                      isProducts: true,
-                                                      url:
-                                                          product['productUrl'],
-                                                      maxcount:
-                                                          product['openstock'],
-                                                      title: product[
-                                                          'productName'],
-                                                      name: product['category'],
-                                                      oldRate: product[
-                                                          'originalPrice'],
-                                                      newRate:
-                                                          product['ourPrice'],
-                                                      count: product[
-                                                          'currentstock']);
+                                                  return GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                ProductDetailspage(
+                                                              product: product,
+                                                            ),
+                                                          ));
+                                                    },
+                                                    child: TrendingproductsCard(
+                                                        addToFavourite: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        WishListpage(),
+                                                              ));
+                                                        },
+                                                        addToCartTap: () {
+                                                          String productId =
+                                                              DateTime.now()
+                                                                  .millisecondsSinceEpoch
+                                                                  .toString();
+                                                          //add to cart
+                                                          addToCart({
+                                                            "productId":
+                                                                productId, // Store product ID
+                                                            "productUrl": product[
+                                                                'productUrl'],
+                                                            "productName": product[
+                                                                'productName'],
+                                                            "category": product[
+                                                                'category'],
+                                                            "originalPrice":
+                                                                product[
+                                                                    'originalPrice'],
+                                                            "ourPrice": product[
+                                                                'ourPrice'],
+                                                            "currentstock": product[
+                                                                'currentstock'],
+                                                            "quantity":
+                                                                1 // Default quantity
+                                                          });
+                                                        },
+                                                        isProducts: true,
+                                                        url: product[
+                                                            'productUrl'],
+                                                        maxcount: product[
+                                                            'openstock'],
+                                                        title: product[
+                                                            'productName'],
+                                                        name:
+                                                            product['category'],
+                                                        oldRate: product[
+                                                            'originalPrice'],
+                                                        newRate:
+                                                            product['ourPrice'],
+                                                        count: product[
+                                                            'currentstock']),
+                                                  );
                                                 },
                                                 separatorBuilder:
                                                     (context, index) =>

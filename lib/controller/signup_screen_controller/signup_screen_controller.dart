@@ -31,14 +31,15 @@ class SignupScreenController with ChangeNotifier {
                   fontWeight: FontWeight.bold,
                   fontSize: 18),
             )));
-        String username = name.trim().replaceAll(" ", "_");
+        String userid = credential.user!.uid;
 
         // Save user details in Firestore
-        FirebaseFirestore.instance.collection('users').doc(username).set({
+        FirebaseFirestore.instance.collection('users').doc(userid).set({
           'email': email,
           'name': name,
           'mobile': mobile,
           'uid': credential.user!.uid,
+          "cartItems": [],
           'lastLogin': FieldValue.serverTimestamp(),
         }, SetOptions(merge: true));
 

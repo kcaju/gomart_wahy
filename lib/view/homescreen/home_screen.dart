@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gomart_wahy/dummy_db.dart';
 import 'package:gomart_wahy/view/about_us_page/aboutus_page.dart';
@@ -37,6 +38,55 @@ class HomeScreen extends StatelessWidget {
 
     // Get Firestore instance
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    void addToCart(Map<String, dynamic> product) async {
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      User? user = auth.currentUser;
+      if (user == null) {
+        print("User not logged in");
+        return;
+      }
+
+      DocumentReference userRef = firestore.collection("users").doc(user.uid);
+
+      // Retrieve the current cart data
+      DocumentSnapshot userDoc = await userRef.get();
+      List<dynamic> cartItems = userDoc.get("cartItems") ?? [];
+
+      // Check if the product is already in the cart
+      int existingIndex = cartItems
+          .indexWhere((item) => item["productName"] == product["productName"]);
+
+      if (existingIndex != -1) {
+        // If product exists, update the quantity
+        cartItems[existingIndex]["quantity"] += 1;
+      } else {
+        // Otherwise, add as a new product
+        cartItems.add(product);
+      }
+
+      // Update Firestore document
+      await userRef.update({"cartItems": cartItems}).then((_) {
+        print("Product added to cart successfully");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.green,
+            content: Text(
+              "Product added to cart successfully",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18),
+            ),
+          ),
+        );
+      }).catchError((error) {
+        print("Failed to add product to cart: $error");
+      });
+    }
+
     return Scaffold(
       drawer: CategoryDrawerscreen(),
       endDrawer: DrawerScreen(),
@@ -721,7 +771,7 @@ class HomeScreen extends StatelessWidget {
                                 if (!snapshot.hasData ||
                                     snapshot.data!.docs.isEmpty) {
                                   return const Center(
-                                      child: Text("No Brands found."));
+                                      child: Text("No products found."));
                                 }
 
                                 final List<QueryDocumentSnapshot> documents =
@@ -759,6 +809,27 @@ class HomeScreen extends StatelessWidget {
                                                               builder: (context) =>
                                                                   WishListpage(),
                                                             ));
+                                                      },
+                                                      addToCartTap: () {
+                                                        //add to cart
+                                                        addToCart({
+                                                          "productId": product
+                                                              .id, // Store product ID
+                                                          "productUrl": product[
+                                                              'productUrl'],
+                                                          "productName": product[
+                                                              'productName'],
+                                                          "category": product[
+                                                              'category'],
+                                                          "originalPrice": product[
+                                                              'originalPrice'],
+                                                          "ourPrice": product[
+                                                              'ourPrice'],
+                                                          "currentstock": product[
+                                                              'currentstock'],
+                                                          "quantity":
+                                                              1 // Default quantity
+                                                        });
                                                       },
                                                       isProducts: true,
                                                       url:
@@ -860,6 +931,27 @@ class HomeScreen extends StatelessWidget {
                                                                   WishListpage(),
                                                             ));
                                                       },
+                                                      addToCartTap: () {
+                                                        //add to cart
+                                                        addToCart({
+                                                          "productId": product
+                                                              .id, // Store product ID
+                                                          "productUrl": product[
+                                                              'productUrl'],
+                                                          "productName": product[
+                                                              'productName'],
+                                                          "category": product[
+                                                              'category'],
+                                                          "originalPrice": product[
+                                                              'originalPrice'],
+                                                          "ourPrice": product[
+                                                              'ourPrice'],
+                                                          "currentstock": product[
+                                                              'currentstock'],
+                                                          "quantity":
+                                                              1 // Default quantity
+                                                        });
+                                                      },
                                                       isProducts: true,
                                                       url:
                                                           product['productUrl'],
@@ -876,108 +968,6 @@ class HomeScreen extends StatelessWidget {
                                                           'currentstock']),
                                                 ),
                                               );
-                                            },
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  options: CarouselOptions(
-                                    height: 570,
-                                    autoPlay: true,
-                                    autoPlayInterval: Duration(seconds: 5),
-                                    // aspectRatio: 2.0,
-                                    viewportFraction: 1.0,
-                                  ),
-                                );
-                              },
-                            ),
-                            SizedBox(
-                              height: 100,
-                            ),
-                            //random products
-                            Text(
-                              "Random Products",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 50,
-                            ),
-                            StreamBuilder<QuerySnapshot>(
-                              stream:
-                                  firestore.collection("Products").snapshots(),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return const Center(
-                                      child: CircularProgressIndicator());
-                                }
-
-                                if (!snapshot.hasData ||
-                                    snapshot.data!.docs.isEmpty) {
-                                  return const Center(
-                                      child: Text("No products found."));
-                                }
-
-                                final List<QueryDocumentSnapshot> documents =
-                                    snapshot.data!.docs;
-                                return CarouselSlider(
-                                  items: List.generate(
-                                    4,
-                                    (index) {
-                                      return SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: Row(
-                                          children: List.generate(
-                                            documents.length,
-                                            (index) {
-                                              final product = documents[index];
-                                              return Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 15),
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                ProductDetailspage(
-                                                              products: product,
-                                                            ),
-                                                          ));
-                                                    },
-                                                    child: TrendingproductsCard(
-                                                        addToFavourite: () {
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        WishListpage(),
-                                                              ));
-                                                        },
-                                                        isProducts: true,
-                                                        url: product[
-                                                            'productUrl'],
-                                                        maxcount: product[
-                                                            'openstock'],
-                                                        title: product[
-                                                            'productName'],
-                                                        name:
-                                                            product['category'],
-                                                        oldRate: product[
-                                                            'originalPrice'],
-                                                        newRate:
-                                                            product['ourPrice'],
-                                                        count: product[
-                                                            'currentstock']),
-                                                  ));
                                             },
                                           ),
                                         ),

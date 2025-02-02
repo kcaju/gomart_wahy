@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gomart_wahy/view/floatingactionbutton/custom_floatingbutton.dart';
 import 'package:gomart_wahy/view/homescreen/drawerscreen/drawer_screen.dart';
@@ -11,8 +12,9 @@ import 'package:gomart_wahy/view/wishlist_page/wish_listpage.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class ProductDetailspage extends StatelessWidget {
-  const ProductDetailspage({super.key, required this.products});
-  final QueryDocumentSnapshot<Object?> products;
+  const ProductDetailspage({super.key, this.products, this.product});
+  final QueryDocumentSnapshot<Object?>? products;
+  final Map? product;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,55 @@ class ProductDetailspage extends StatelessWidget {
     bool isMobile = screenWidth < 600;
     bool isTablet = screenWidth >= 600 && screenWidth <= 1024;
     bool isDesktop = screenWidth > 1024;
+
+    void addToCart(Map<String, dynamic> product) async {
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      User? user = auth.currentUser;
+      if (user == null) {
+        print("User not logged in");
+        return;
+      }
+
+      DocumentReference userRef = firestore.collection("users").doc(user.uid);
+
+      // Retrieve the current cart data
+      DocumentSnapshot userDoc = await userRef.get();
+      List<dynamic> cartItems = userDoc.get("cartItems") ?? [];
+
+      // Check if the product is already in the cart
+      int existingIndex = cartItems
+          .indexWhere((item) => item["productName"] == product["productName"]);
+
+      if (existingIndex != -1) {
+        // If product exists, update the quantity
+        cartItems[existingIndex]["quantity"] += 1;
+      } else {
+        // Otherwise, add as a new product
+        cartItems.add(product);
+      }
+
+      // Update Firestore document
+      await userRef.update({"cartItems": cartItems}).then((_) {
+        print("Product added to cart successfully");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.green,
+            content: Text(
+              "Product added to cart successfully",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18),
+            ),
+          ),
+        );
+      }).catchError((error) {
+        print("Failed to add product to cart: $error");
+      });
+    }
+
     return Scaffold(
       endDrawer: DrawerScreen(),
       floatingActionButton: CustomFloatingbutton(),
@@ -105,7 +156,8 @@ class ProductDetailspage extends StatelessWidget {
                                         Row(
                                           children: [
                                             Image.network(
-                                              products['productUrl'],
+                                              products?['productUrl'] ??
+                                                  product?['productUrl'],
                                               height: 450,
                                             ),
                                             SizedBox(
@@ -119,7 +171,8 @@ class ProductDetailspage extends StatelessWidget {
                                                     MainAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    products['productName'],
+                                                    products?['productName'] ??
+                                                        product?['productName'],
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontWeight:
@@ -130,7 +183,7 @@ class ProductDetailspage extends StatelessWidget {
                                                     height: 10,
                                                   ),
                                                   Text(
-                                                    "₹ ${products['ourPrice']}",
+                                                    "₹ ${products?['ourPrice'] ?? product?['ourPrice']}",
                                                     style: TextStyle(
                                                         color: Colors.red,
                                                         fontWeight:
@@ -170,7 +223,8 @@ class ProductDetailspage extends StatelessWidget {
                                                     ],
                                                   ),
                                                   Text(
-                                                    products['description'],
+                                                    products?['description'] ??
+                                                        product?['description'],
                                                     style: TextStyle(
                                                         color: Colors.grey,
                                                         fontWeight:
@@ -194,8 +248,10 @@ class ProductDetailspage extends StatelessWidget {
                                                     width: 100,
                                                     child: Center(
                                                       child: Text(
-                                                        products[
-                                                            'currentstock'],
+                                                        products?[
+                                                                'currentstock'] ??
+                                                            product?[
+                                                                'currentstock'],
                                                         style: TextStyle(
                                                             color: Colors.grey,
                                                             fontWeight:
@@ -286,44 +342,84 @@ class ProductDetailspage extends StatelessWidget {
                                                               width: 15,
                                                             ),
                                                             //add cart button
-                                                            Container(
-                                                              height: 50,
-                                                              width: 150,
-                                                              child: Center(
-                                                                child: Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .center,
-                                                                  children: [
-                                                                    Icon(
-                                                                      Icons
-                                                                          .shopping_bag,
-                                                                      color: Colors
-                                                                          .white,
-                                                                    ),
-                                                                    SizedBox(
-                                                                      width: 5,
-                                                                    ),
-                                                                    Text(
-                                                                      "Add to Cart",
-                                                                      style: TextStyle(
-                                                                          color: Colors
-                                                                              .white,
-                                                                          fontSize:
-                                                                              16,
-                                                                          fontWeight:
-                                                                              FontWeight.bold),
-                                                                    ),
-                                                                  ],
+                                                            GestureDetector(
+                                                              onTap: () {
+                                                                String
+                                                                    productId =
+                                                                    DateTime.now()
+                                                                        .millisecondsSinceEpoch
+                                                                        .toString();
+                                                                //add to cart
+                                                                addToCart({
+                                                                  "productId":
+                                                                      productId, // Store product ID
+                                                                  "productUrl": product?[
+                                                                          'productUrl'] ??
+                                                                      products?[
+                                                                          'productUrl'],
+                                                                  "productName": product?[
+                                                                          'productName'] ??
+                                                                      products?[
+                                                                          'productName'],
+                                                                  "category": product?[
+                                                                          'category'] ??
+                                                                      products?[
+                                                                          'category'],
+                                                                  "originalPrice": product?[
+                                                                          'originalPrice'] ??
+                                                                      products?[
+                                                                          'originalPrice'],
+                                                                  "ourPrice": product?[
+                                                                          'ourPrice'] ??
+                                                                      products?[
+                                                                          'ourPrice'],
+                                                                  "currentstock": product?[
+                                                                          'currentstock'] ??
+                                                                      products?[
+                                                                          'currentstock'],
+                                                                  "quantity":
+                                                                      1 // Default quantity
+                                                                });
+                                                              },
+                                                              child: Container(
+                                                                height: 50,
+                                                                width: 150,
+                                                                child: Center(
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      Icon(
+                                                                        Icons
+                                                                            .shopping_bag,
+                                                                        color: Colors
+                                                                            .white,
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            5,
+                                                                      ),
+                                                                      Text(
+                                                                        "Add to Cart",
+                                                                        style: TextStyle(
+                                                                            color: Colors
+                                                                                .white,
+                                                                            fontSize:
+                                                                                16,
+                                                                            fontWeight:
+                                                                                FontWeight.bold),
+                                                                      ),
+                                                                    ],
+                                                                  ),
                                                                 ),
+                                                                decoration: BoxDecoration(
+                                                                    color: Colors
+                                                                        .orange,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            5)),
                                                               ),
-                                                              decoration: BoxDecoration(
-                                                                  color: Colors
-                                                                      .orange,
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              5)),
                                                             )
                                                           ],
                                                         ),
@@ -359,8 +455,10 @@ class ProductDetailspage extends StatelessWidget {
                                                                       .cover,
                                                                   image:
                                                                       NetworkImage(
-                                                                    products[
-                                                                        'productUrl'],
+                                                                    products?[
+                                                                            'productUrl'] ??
+                                                                        product?[
+                                                                            'productUrl'],
                                                                   )),
                                                           border: Border.all(
                                                               color: Colors.grey
@@ -398,7 +496,8 @@ class ProductDetailspage extends StatelessWidget {
                                           //image
                                           Center(
                                             child: Image.network(
-                                              products['productUrl'],
+                                              products?['productUrl'] ??
+                                                  product?['productUrl'],
                                               height: 550,
                                             ),
                                           ),
@@ -423,8 +522,10 @@ class ProductDetailspage extends StatelessWidget {
                                                                       .cover,
                                                                   image:
                                                                       NetworkImage(
-                                                                    products[
-                                                                        'productUrl'],
+                                                                    products?[
+                                                                            'productUrl'] ??
+                                                                        product?[
+                                                                            'productUrl'],
                                                                   )),
                                                           border: Border.all(
                                                               color: Colors.grey
@@ -443,7 +544,8 @@ class ProductDetailspage extends StatelessWidget {
                                           ),
 
                                           Text(
-                                            products['productName'],
+                                            products?['productName'] ??
+                                                product?['productName'],
                                             style: TextStyle(
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.bold,
@@ -453,7 +555,7 @@ class ProductDetailspage extends StatelessWidget {
                                             height: 10,
                                           ),
                                           Text(
-                                            "₹ ${products['ourPrice']}",
+                                            "₹ ${products?['ourPrice'] ?? product?['ourPrice']}",
                                             style: TextStyle(
                                                 color: Colors.red,
                                                 fontWeight: FontWeight.bold,
@@ -486,7 +588,8 @@ class ProductDetailspage extends StatelessWidget {
                                             ],
                                           ),
                                           Text(
-                                            products['description'],
+                                            products?['description'] ??
+                                                product?['description'],
                                             style: TextStyle(
                                                 color: Colors.grey,
                                                 fontWeight: FontWeight.normal,
@@ -508,7 +611,8 @@ class ProductDetailspage extends StatelessWidget {
                                             width: 100,
                                             child: Center(
                                               child: Text(
-                                                products['currentstock'],
+                                                products?['currentstock'] ??
+                                                    product?['currentstock'],
                                                 style: TextStyle(
                                                     color: Colors.grey,
                                                     fontWeight: FontWeight.w600,
@@ -585,42 +689,84 @@ class ProductDetailspage extends StatelessWidget {
                                                       width: 15,
                                                     ),
                                                     //add cart button
-                                                    Container(
-                                                      height: 50,
-                                                      width: 150,
-                                                      child: Center(
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Icon(
-                                                              Icons
-                                                                  .shopping_bag,
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                            SizedBox(
-                                                              width: 5,
-                                                            ),
-                                                            Text(
-                                                              "Add to Cart",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 16,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                            ),
-                                                          ],
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        String productId = DateTime
+                                                                .now()
+                                                            .millisecondsSinceEpoch
+                                                            .toString();
+                                                        //add to cart
+                                                        addToCart({
+                                                          "productId":
+                                                              productId, // Store product ID
+                                                          "productUrl": product?[
+                                                                  'productUrl'] ??
+                                                              products?[
+                                                                  'productUrl'],
+                                                          "productName": product?[
+                                                                  'productName'] ??
+                                                              products?[
+                                                                  'productName'],
+                                                          "category": product?[
+                                                                  'category'] ??
+                                                              products?[
+                                                                  'category'],
+                                                          "originalPrice": product?[
+                                                                  'originalPrice'] ??
+                                                              products?[
+                                                                  'originalPrice'],
+                                                          "ourPrice": product?[
+                                                                  'ourPrice'] ??
+                                                              products?[
+                                                                  'ourPrice'],
+                                                          "currentstock": product?[
+                                                                  'currentstock'] ??
+                                                              products?[
+                                                                  'currentstock'],
+                                                          "quantity":
+                                                              1 // Default quantity
+                                                        });
+                                                      },
+                                                      child: Container(
+                                                        height: 50,
+                                                        width: 150,
+                                                        child: Center(
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Icon(
+                                                                Icons
+                                                                    .shopping_bag,
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                              SizedBox(
+                                                                width: 5,
+                                                              ),
+                                                              Text(
+                                                                "Add to Cart",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
+                                                        decoration: BoxDecoration(
+                                                            color:
+                                                                Colors.orange,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5)),
                                                       ),
-                                                      decoration: BoxDecoration(
-                                                          color: Colors.orange,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(5)),
                                                     )
                                                   ],
                                                 ),
@@ -751,7 +897,7 @@ class ProductDetailspage extends StatelessWidget {
                                 if (!snapshot.hasData ||
                                     snapshot.data!.docs.isEmpty) {
                                   return const Center(
-                                      child: Text("No Brands found."));
+                                      child: Text("No products found."));
                                 }
 
                                 final List<QueryDocumentSnapshot> documents =
@@ -769,24 +915,59 @@ class ProductDetailspage extends StatelessWidget {
                                           return Padding(
                                             padding: const EdgeInsets.only(
                                                 right: 15),
-                                            child: TrendingproductsCard(
-                                                addToFavourite: () {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            WishListpage(),
-                                                      ));
-                                                },
-                                                isProducts: true,
-                                                url: product['productUrl'],
-                                                maxcount: product['openstock'],
-                                                title: product['productName'],
-                                                name: product['category'],
-                                                oldRate:
-                                                    product['originalPrice'],
-                                                newRate: product['ourPrice'],
-                                                count: product['currentstock']),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ProductDetailspage(
+                                                              products:
+                                                                  product),
+                                                    ));
+                                              },
+                                              child: TrendingproductsCard(
+                                                  addToFavourite: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              WishListpage(),
+                                                        ));
+                                                  },
+                                                  addToCartTap: () {
+                                                    //add to cart
+                                                    addToCart({
+                                                      "productId": product
+                                                          .id, // Store product ID
+                                                      "productUrl":
+                                                          product['productUrl'],
+                                                      "productName": product[
+                                                          'productName'],
+                                                      "category":
+                                                          product['category'],
+                                                      "originalPrice": product[
+                                                          'originalPrice'],
+                                                      "ourPrice":
+                                                          product['ourPrice'],
+                                                      "currentstock": product[
+                                                          'currentstock'],
+                                                      "quantity":
+                                                          1 // Default quantity
+                                                    });
+                                                  },
+                                                  isProducts: true,
+                                                  url: product['productUrl'],
+                                                  maxcount:
+                                                      product['openstock'],
+                                                  title: product['productName'],
+                                                  name: product['category'],
+                                                  oldRate:
+                                                      product['originalPrice'],
+                                                  newRate: product['ourPrice'],
+                                                  count:
+                                                      product['currentstock']),
+                                            ),
                                           );
                                         },
                                       ),

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gomart_wahy/view/homescreen/widget/customtextformfield.dart';
 
@@ -14,7 +16,137 @@ class _UpdatedprofileBoxState extends State<UpdatedprofileBox> {
   TextEditingController newPassword = TextEditingController();
   TextEditingController mobile = TextEditingController();
   TextEditingController email = TextEditingController();
+  TextEditingController email1 = TextEditingController();
+  TextEditingController image = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
+  String imageUrl = "assets/png/client-2.png"; // Default image
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  // Function to update user profile in Firestore
+  Future<void> _updateUserProfile() async {
+    try {
+      User? user = _auth.currentUser; // Get the current user
+      if (user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("No authenticated user found!")),
+        );
+        return;
+      }
+
+      String uid = user.uid; // Get the UID of the logged-in user
+
+      await _firestore.collection("users").doc(uid).update({
+        "name": fname.text,
+        "email": email.text,
+        "mobile": mobile.text,
+        "imageUrl": imageUrl, // Update the image URL
+        "userAddress": {
+          "mobile": mobile.text,
+          "email": email.text,
+          "firstName": fname.text,
+          'lastName': "",
+          'address': "",
+          "eirCode": "",
+          "state": ""
+        }
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.green,
+          content: Text(
+            "Profile Updated Successfully",
+            style: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+          )));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error updating profile: $e")),
+      );
+    }
+  }
+
+  void showImageInputDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Enter Image URL"),
+          content: TextField(
+            controller: image,
+            decoration: InputDecoration(
+              hintText: "Paste your image URL here",
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context), // Close dialog
+              child: Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  imageUrl = image.text.isNotEmpty
+                      ? image.text
+                      : imageUrl; // Update image if URL is valid
+                });
+                image.clear();
+                Navigator.pop(context); // Close dialog
+              },
+              child: Text("Save"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _changePassword() async {
+    try {
+      User? user = _auth.currentUser;
+      if (user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("No authenticated user found!")),
+        );
+        return;
+      }
+
+      if (newPassword.text != confirmPassword.text) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text("New password and confirm password do not match!")),
+        );
+        return;
+      }
+
+      // Reauthenticate user before updating password
+      AuthCredential credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: currentPassword.text, // Get current password from input
+      );
+
+      await user.reauthenticateWithCredential(credential); // Reauthenticate
+      await user.updatePassword(newPassword.text); // Update password
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.green,
+          content: Text(
+            "Password Updated Successfully",
+            style: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+          )));
+      currentPassword.clear();
+      email1.clear();
+      newPassword.clear();
+      confirmPassword.clear();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error changing password: $e")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Use MediaQuery to get screen width and height
@@ -46,31 +178,28 @@ class _UpdatedprofileBoxState extends State<UpdatedprofileBox> {
             alignment: Alignment.center,
             child: Column(
               children: [
-                Image.asset("assets/png/client-2.png"),
-                SizedBox(
-                  height: 5,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Drop your files here or",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      "browse",
-                      style: TextStyle(
-                          color: Colors.green,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16),
-                    ),
-                  ],
+                GestureDetector(
+                  onTap: showImageInputDialog, // Open alert box,
+                  child: Column(
+                    children: [
+                      Image.network(
+                        imageUrl,
+                        width: 100,
+                        height: 100,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.asset("assets/png/client-2.png",
+                              width: 100, height: 100);
+                        },
+                      ),
+                      Text(
+                        "Click here to input Image URL",
+                        style: TextStyle(
+                            color: Colors.green,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16),
+                      )
+                    ],
+                  ),
                 ),
                 Text(
                   textAlign: TextAlign.center,
@@ -120,19 +249,24 @@ class _UpdatedprofileBoxState extends State<UpdatedprofileBox> {
           SizedBox(
             height: 20,
           ), //update button
-          Container(
-            height: 50,
-            width: 180,
-            alignment: Alignment.center,
-            child: Text(
-              "Update Profile",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16),
+          GestureDetector(
+            onTap: () {
+              _updateUserProfile();
+            },
+            child: Container(
+              height: 50,
+              width: 180,
+              alignment: Alignment.center,
+              child: Text(
+                "Update Profile",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16),
+              ),
+              decoration: BoxDecoration(
+                  color: Colors.green, borderRadius: BorderRadius.circular(5)),
             ),
-            decoration: BoxDecoration(
-                color: Colors.green, borderRadius: BorderRadius.circular(5)),
           ),
           SizedBox(
             height: 25,
@@ -148,7 +282,7 @@ class _UpdatedprofileBoxState extends State<UpdatedprofileBox> {
           isMobile
               ? Column(
                   children: [
-                    Customtextformfield(hintText: "Email", controller: email),
+                    Customtextformfield(hintText: "Email", controller: email1),
                     SizedBox(
                       height: 20,
                     ),
@@ -161,7 +295,7 @@ class _UpdatedprofileBoxState extends State<UpdatedprofileBox> {
                   children: [
                     Expanded(
                         child: Customtextformfield(
-                            hintText: "Email", controller: email)),
+                            hintText: "Email", controller: email1)),
                     SizedBox(
                       width: 15,
                     ),
@@ -205,19 +339,24 @@ class _UpdatedprofileBoxState extends State<UpdatedprofileBox> {
             height: 20,
           ),
           //change passwrd button
-          Container(
-            height: 50,
-            width: 180,
-            alignment: Alignment.center,
-            child: Text(
-              "Change Password",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16),
+          GestureDetector(
+            onTap: () {
+              _changePassword();
+            },
+            child: Container(
+              height: 50,
+              width: 180,
+              alignment: Alignment.center,
+              child: Text(
+                "Change Password",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16),
+              ),
+              decoration: BoxDecoration(
+                  color: Colors.green, borderRadius: BorderRadius.circular(5)),
             ),
-            decoration: BoxDecoration(
-                color: Colors.green, borderRadius: BorderRadius.circular(5)),
           ),
         ],
       ),

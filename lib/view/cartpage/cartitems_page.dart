@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gomart_wahy/view/all_products/all_productscreen.dart';
 import 'package:gomart_wahy/view/checkout/checkout_page.dart';
@@ -16,6 +18,51 @@ class CartitemsPage extends StatefulWidget {
 }
 
 class _CartitemsPageState extends State<CartitemsPage> {
+  // Function to get current user's ID
+  Future<String?> getCurrentUserId() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        return user.uid;
+      } else {
+        return null; // User is not logged in
+      }
+    } catch (e) {
+      print('Error getting current user ID: $e');
+      return null;
+    }
+  }
+
+  // Function to remove item from Firestore cart
+
+  Future<void> removeCartItem(String userId, String productId) async {
+    try {
+      // Reference to the user's document
+      DocumentReference userDocRef =
+          FirebaseFirestore.instance.collection('users').doc(userId);
+
+      // Get the current cart items
+      DocumentSnapshot userDoc = await userDocRef.get();
+      if (!userDoc.exists) {
+        print("User document not found.");
+        return;
+      }
+
+      List<dynamic> cartItems =
+          (userDoc.data() as Map<String, dynamic>)['cartItems'] ?? [];
+
+      // Filter out the item to be removed based on `productId`
+      cartItems.removeWhere((item) => item['productId'] == productId);
+
+      // Update Firestore with the new cart list
+      await userDocRef.update({'cartItems': cartItems});
+
+      print("Item removed successfully.");
+    } catch (e) {
+      print('Error removing item from cart: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Use MediaQuery to get screen width and height
@@ -150,203 +197,304 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                       //cart items box
                                       Container(
                                         // height: 500,
-                                        child: Expanded(
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Container(
-                                                    height:
-                                                        screenHeight * 0.085,
-                                                    width: screenWidth * 0.05,
-                                                    color:
-                                                        Colors.green.shade200,
-                                                  ),
-                                                  Container(
-                                                    child: Center(
-                                                      child: Text(
-                                                        "Image",
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Container(
+                                                  height: screenHeight * 0.085,
+                                                  width: screenWidth * 0.05,
+                                                  color: Colors.green.shade200,
+                                                ),
+                                                Container(
+                                                  child: Center(
+                                                    child: Text(
+                                                      "Image",
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold),
                                                     ),
-                                                    height:
-                                                        screenHeight * 0.085,
-                                                    width: screenWidth * 0.19,
-                                                    color:
-                                                        Colors.green.shade200,
                                                   ),
-                                                  Container(
-                                                    height:
-                                                        screenHeight * 0.085,
-                                                    width: screenWidth * 0.18,
-                                                    child: Center(
-                                                      child: Text(
-                                                        "Product Name",
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
+                                                  height: screenHeight * 0.085,
+                                                  width: screenWidth * 0.19,
+                                                  color: Colors.green.shade200,
+                                                ),
+                                                Container(
+                                                  height: screenHeight * 0.085,
+                                                  width: screenWidth * 0.18,
+                                                  child: Center(
+                                                    child: Text(
+                                                      "Product Name",
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold),
                                                     ),
-                                                    color:
-                                                        Colors.green.shade200,
                                                   ),
-                                                  Container(
-                                                    height:
-                                                        screenHeight * 0.085,
-                                                    width: screenWidth * 0.15,
-                                                    child: Center(
-                                                      child: Text(
-                                                        "Quantity",
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
+                                                  color: Colors.green.shade200,
+                                                ),
+                                                Container(
+                                                  height: screenHeight * 0.085,
+                                                  width: screenWidth * 0.15,
+                                                  child: Center(
+                                                    child: Text(
+                                                      "Quantity",
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold),
                                                     ),
-                                                    color:
-                                                        Colors.green.shade200,
                                                   ),
-                                                  Container(
-                                                    height:
-                                                        screenHeight * 0.085,
-                                                    width: screenWidth * 0.078,
-                                                    child: Center(
-                                                      child: Text(
-                                                        "Unit Price",
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
+                                                  color: Colors.green.shade200,
+                                                ),
+                                                Container(
+                                                  height: screenHeight * 0.085,
+                                                  width: screenWidth * 0.078,
+                                                  child: Center(
+                                                    child: Text(
+                                                      "Unit Price",
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold),
                                                     ),
-                                                    color:
-                                                        Colors.green.shade200,
                                                   ),
-                                                  Container(
-                                                    height:
-                                                        screenHeight * 0.085,
-                                                    width: screenWidth * 0.12,
-                                                    child: Center(
-                                                      child: Text(
-                                                        "Deal Price",
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
+                                                  color: Colors.green.shade200,
+                                                ),
+                                                Container(
+                                                  height: screenHeight * 0.085,
+                                                  width: screenWidth * 0.12,
+                                                  child: Center(
+                                                    child: Text(
+                                                      "Deal Price",
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold),
                                                     ),
-                                                    color:
-                                                        Colors.green.shade200,
                                                   ),
-                                                  Container(
-                                                    height:
-                                                        screenHeight * 0.085,
-                                                    width: screenWidth * 0.075,
-                                                    child: Center(
-                                                      child: Text(
-                                                        "Price",
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
+                                                  color: Colors.green.shade200,
+                                                ),
+                                                Container(
+                                                  height: screenHeight * 0.085,
+                                                  width: screenWidth * 0.075,
+                                                  child: Center(
+                                                    child: Text(
+                                                      "Price",
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold),
                                                     ),
-                                                    color:
-                                                        Colors.green.shade200,
                                                   ),
-                                                  Container(
-                                                    height:
-                                                        screenHeight * 0.085,
-                                                    width: screenWidth * 0.06,
-                                                    color:
-                                                        Colors.green.shade200,
-                                                  ),
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                height: 5,
-                                              ),
-                                              //list of items in cart
-                                              ListView.builder(
-                                                padding: EdgeInsets.only(
-                                                    top: 15, right: 10),
-                                                itemCount: 2,
-                                                physics: ScrollPhysics(),
-                                                shrinkWrap: true,
-                                                itemBuilder: (context, index) {
-                                                  return Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      SizedBox(),
-                                                      //checkbox
-                                                      Container(
-                                                        height: 12,
-                                                        width: 12,
-                                                        decoration: BoxDecoration(
-                                                            shape: BoxShape
-                                                                .rectangle,
-                                                            border: Border.all(
-                                                                color: Colors
-                                                                    .grey)),
-                                                      ),
+                                                  color: Colors.green.shade200,
+                                                ),
+                                                Container(
+                                                  height: screenHeight * 0.085,
+                                                  width: screenWidth * 0.06,
+                                                  color: Colors.green.shade200,
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            FutureBuilder<String?>(
+                                              future: getCurrentUserId(),
+                                              builder:
+                                                  (context, userIdSnapshot) {
+                                                if (userIdSnapshot
+                                                        .connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return Center(
+                                                      child:
+                                                          CircularProgressIndicator());
+                                                }
 
-                                                      //image
-                                                      Container(
-                                                        height: screenHeight *
-                                                            (isDesktop
-                                                                ? 0.2
-                                                                : 0.1),
-                                                        width: screenWidth *
-                                                            (isDesktop
-                                                                ? 0.165
-                                                                : 0.05),
-                                                        decoration: BoxDecoration(
-                                                            image: DecorationImage(
-                                                                fit: BoxFit
-                                                                    .contain,
-                                                                image: NetworkImage(
-                                                                    "https://rukminim2.flixcart.com/image/850/1000/l1nwnm80/spice-masala/m/h/z/100-sambar-powder-1-pouch-kitchen-treasures-powder-original-imagd6knzpdyhnwp.jpeg?q=90&crop=false"))),
-                                                      ),
+                                                if (userIdSnapshot.hasError ||
+                                                    userIdSnapshot.data ==
+                                                        null) {
+                                                  return Center(
+                                                      child: Text(
+                                                          "No user logged in"));
+                                                }
 
-                                                      Text(
-                                                        "Sambar Powder 99gm",
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10,
-                                                      ),
+                                                // User ID successfully fetched, use it to get cart items
+                                                String userId =
+                                                    userIdSnapshot.data!;
+                                                return StreamBuilder<
+                                                    DocumentSnapshot>(
+                                                  stream: FirebaseFirestore
+                                                      .instance
+                                                      .collection(
+                                                          'users') // users collection
+                                                      .doc(
+                                                          userId) // Document ID will be the user's UID
+                                                      .snapshots(),
+                                                  builder: (context, snapshot) {
+                                                    if (snapshot
+                                                            .connectionState ==
+                                                        ConnectionState
+                                                            .waiting) {
+                                                      return Center(
+                                                          child:
+                                                              CircularProgressIndicator());
+                                                    }
 
-                                                      //quantity button
-                                                      Container(
-                                                        child: Row(
+                                                    if (!snapshot.hasData ||
+                                                        snapshot.data == null) {
+                                                      return Center(
+                                                          child: Text(
+                                                              "No data available"));
+                                                    }
+
+                                                    var cartItems = snapshot
+                                                            .data!['cartItems']
+                                                        as List; // Your cart array field in Firestore
+
+                                                    if (cartItems == null ||
+                                                        cartItems.isEmpty) {
+                                                      return Center(
+                                                          child: Text(
+                                                              "Your cart is empty"));
+                                                    }
+
+                                                    return //list of items in cart
+                                                        ListView.builder(
+                                                      padding: EdgeInsets.only(
+                                                          top: 15, right: 10),
+                                                      itemCount:
+                                                          cartItems.length,
+                                                      physics: ScrollPhysics(),
+                                                      shrinkWrap: true,
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        var item =
+                                                            cartItems[index];
+                                                        return Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
                                                           children: [
+                                                            SizedBox(),
+                                                            //checkbox
                                                             Container(
+                                                              height: 12,
+                                                              width: 12,
+                                                              decoration: BoxDecoration(
+                                                                  shape: BoxShape
+                                                                      .rectangle,
+                                                                  border: Border.all(
+                                                                      color: Colors
+                                                                          .grey)),
+                                                            ),
+
+                                                            //image
+                                                            Container(
+                                                              height:
+                                                                  screenHeight *
+                                                                      (isDesktop
+                                                                          ? 0.2
+                                                                          : 0.1),
+                                                              width: screenWidth *
+                                                                  (isDesktop
+                                                                      ? 0.165
+                                                                      : 0.05),
+                                                              decoration: BoxDecoration(
+                                                                  image: DecorationImage(
+                                                                      fit: BoxFit
+                                                                          .fill,
+                                                                      image: NetworkImage(
+                                                                          item[
+                                                                              'productUrl']))),
+                                                            ),
+
+                                                            Text(
+                                                              maxLines: 1,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              item[
+                                                                  'productName'],
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 10,
+                                                            ),
+
+                                                            //quantity button
+                                                            Container(
+                                                              child: Row(
+                                                                children: [
+                                                                  Container(
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      border: Border.all(
+                                                                          color: Colors
+                                                                              .grey
+                                                                              .shade200),
+                                                                    ),
+                                                                    padding:
+                                                                        EdgeInsets
+                                                                            .all(5),
+                                                                    height: 50,
+                                                                    child: Icon(
+                                                                      Icons
+                                                                          .remove,
+                                                                      color: Colors
+                                                                          .black,
+                                                                    ),
+                                                                  ),
+                                                                  Container(
+                                                                      padding:
+                                                                          EdgeInsets.all(
+                                                                              10),
+                                                                      height:
+                                                                          50,
+                                                                      child:
+                                                                          Text(
+                                                                        "1",
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.black,
+                                                                            fontWeight: FontWeight.bold),
+                                                                      )),
+                                                                  Container(
+                                                                    padding:
+                                                                        EdgeInsets
+                                                                            .all(5),
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      border: Border.all(
+                                                                          color: Colors
+                                                                              .grey
+                                                                              .shade200),
+                                                                    ),
+                                                                    height: 50,
+                                                                    child: Icon(
+                                                                      Icons.add,
+                                                                      color: Colors
+                                                                          .black,
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
                                                               decoration:
                                                                   BoxDecoration(
                                                                 border: Border.all(
@@ -354,126 +502,92 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                                                         .grey
                                                                         .shade200),
                                                               ),
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(5),
-                                                              height: 50,
-                                                              child: Icon(
-                                                                Icons.remove,
-                                                                color: Colors
-                                                                    .black,
-                                                              ),
                                                             ),
-                                                            Container(
+                                                            SizedBox(
+                                                              width: 1,
+                                                            ),
+
+                                                            //unitprice
+                                                            Text(
+                                                              "₹${item['ourPrice']}",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+
+                                                            //dealprice
+                                                            Text(
+                                                              "Not Applicable",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+
+                                                            //price
+                                                            Text(
+                                                              "₹${item['ourPrice']}",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+
+                                                            //remove button
+                                                            GestureDetector(
+                                                              onTap: () async {
+                                                                // Remove the item from the cart
+                                                                await removeCartItem(
+                                                                    userId,
+                                                                    item[
+                                                                        'productId']);
+                                                              },
+                                                              child: Container(
                                                                 padding:
                                                                     EdgeInsets
-                                                                        .all(
-                                                                            10),
-                                                                height: 50,
+                                                                        .all(8),
+                                                                height: 40,
                                                                 child: Text(
-                                                                  "1",
+                                                                  "Remove",
                                                                   style: TextStyle(
                                                                       color: Colors
-                                                                          .black,
+                                                                          .white,
+                                                                      fontSize:
+                                                                          16,
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .bold),
-                                                                )),
-                                                            Container(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(5),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                border: Border.all(
+                                                                ),
+                                                                decoration: BoxDecoration(
                                                                     color: Colors
-                                                                        .grey
-                                                                        .shade200),
+                                                                        .red,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            5)),
                                                               ),
-                                                              height: 50,
-                                                              child: Icon(
-                                                                Icons.add,
-                                                                color: Colors
-                                                                    .black,
-                                                              ),
-                                                            )
+                                                            ),
+                                                            // SizedBox(
+                                                            //   width: 1,
+                                                            // )
                                                           ],
-                                                        ),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          border: Border.all(
-                                                              color: Colors.grey
-                                                                  .shade200),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 1,
-                                                      ),
-
-                                                      //unitprice
-                                                      Text(
-                                                        "₹7.38",
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-
-                                                      //dealprice
-                                                      Text(
-                                                        "Not Applicable",
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-
-                                                      //price
-                                                      Text(
-                                                        "₹7.38",
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-
-                                                      //remove button
-                                                      Container(
-                                                        padding:
-                                                            EdgeInsets.all(8),
-                                                        height: 40,
-                                                        child: Text(
-                                                          "Remove",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                        decoration: BoxDecoration(
-                                                            color: Colors.red,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        5)),
-                                                      ),
-                                                      // SizedBox(
-                                                      //   width: 1,
-                                                      // )
-                                                    ],
-                                                  );
-                                                },
-                                              ),
-                                            ],
-                                          ),
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                            )
+                                          ],
                                         ),
                                         decoration: BoxDecoration(
                                             color: Colors.white,
@@ -733,184 +847,272 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                         ),
                                         //cart items list
                                         Container(
-                                          child: ListView.builder(
-                                            itemCount: 2,
-                                            physics: ScrollPhysics(),
-                                            shrinkWrap: true,
-                                            itemBuilder: (context, index) {
-                                              return Column(
-                                                children: [
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  //checkbox
-                                                  Container(
-                                                    height: 12,
-                                                    width: 12,
-                                                    decoration: BoxDecoration(
-                                                        shape:
-                                                            BoxShape.rectangle,
-                                                        border: Border.all(
-                                                            color:
-                                                                Colors.grey)),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 20,
-                                                  ),
-                                                  //image
-                                                  Container(
-                                                    height: screenHeight * 0.2,
-                                                    width: screenWidth *
-                                                        (isTablet
-                                                            ? 0.165
-                                                            : 0.25),
-                                                    decoration: BoxDecoration(
-                                                        image: DecorationImage(
-                                                            fit: BoxFit.fill,
-                                                            image: NetworkImage(
-                                                                "https://rukminim2.flixcart.com/image/850/1000/l1nwnm80/spice-masala/m/h/z/100-sambar-powder-1-pouch-kitchen-treasures-powder-original-imagd6knzpdyhnwp.jpeg?q=90&crop=false"))),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Text(
-                                                    "Sambar Powder",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  //quantity button
-                                                  Container(
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
+                                          child: FutureBuilder<String?>(
+                                            future: getCurrentUserId(),
+                                            builder: (context, userIdSnapshot) {
+                                              if (userIdSnapshot
+                                                      .connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return Center(
+                                                    child:
+                                                        CircularProgressIndicator());
+                                              }
+
+                                              if (userIdSnapshot.hasError ||
+                                                  userIdSnapshot.data == null) {
+                                                return Center(
+                                                    child: Text(
+                                                        "No user logged in"));
+                                              }
+
+                                              // User ID successfully fetched, use it to get cart items
+                                              String userId =
+                                                  userIdSnapshot.data!;
+                                              return StreamBuilder<
+                                                  DocumentSnapshot>(
+                                                stream: FirebaseFirestore
+                                                    .instance
+                                                    .collection(
+                                                        'users') // users collection
+                                                    .doc(
+                                                        userId) // Document ID will be the user's UID
+                                                    .snapshots(),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot
+                                                          .connectionState ==
+                                                      ConnectionState.waiting) {
+                                                    return Center(
+                                                        child:
+                                                            CircularProgressIndicator());
+                                                  }
+
+                                                  if (!snapshot.hasData ||
+                                                      snapshot.data == null) {
+                                                    return Center(
+                                                        child: Text(
+                                                            "No data available"));
+                                                  }
+
+                                                  var cartItems = snapshot
+                                                          .data!['cartItems']
+                                                      as List; // Your cart array field in Firestore
+
+                                                  if (cartItems == null ||
+                                                      cartItems.isEmpty) {
+                                                    return Center(
+                                                        child: Text(
+                                                            "Your cart is empty"));
+                                                  }
+
+                                                  return ListView.builder(
+                                                    itemCount: cartItems.length,
+                                                    physics: ScrollPhysics(),
+                                                    shrinkWrap: true,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      var item =
+                                                          cartItems[index];
+                                                      return Column(
+                                                        children: [
+                                                          SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          //checkbox
+                                                          Container(
+                                                            height: 12,
+                                                            width: 12,
+                                                            decoration: BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .rectangle,
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .grey)),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 20,
+                                                          ),
+                                                          //image
+                                                          Container(
+                                                            height:
+                                                                screenHeight *
+                                                                    0.2,
+                                                            width: screenWidth *
+                                                                (isTablet
+                                                                    ? 0.165
+                                                                    : 0.25),
+                                                            decoration: BoxDecoration(
+                                                                image: DecorationImage(
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                    image: NetworkImage(
+                                                                        item[
+                                                                            'productUrl']))),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Text(
+                                                            item['productName'],
+                                                            style: TextStyle(
                                                                 color: Colors
-                                                                    .grey
-                                                                    .shade200),
+                                                                    .black,
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
                                                           ),
-                                                          padding:
-                                                              EdgeInsets.all(5),
-                                                          height: 50,
-                                                          child: Icon(
-                                                            Icons.remove,
-                                                            color: Colors.black,
+                                                          SizedBox(
+                                                            height: 10,
                                                           ),
-                                                        ),
-                                                        Container(
+                                                          //quantity button
+                                                          Container(
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Container(
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    border: Border.all(
+                                                                        color: Colors
+                                                                            .grey
+                                                                            .shade200),
+                                                                  ),
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .all(
+                                                                              5),
+                                                                  height: 50,
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .remove,
+                                                                    color: Colors
+                                                                        .black,
+                                                                  ),
+                                                                ),
+                                                                Container(
+                                                                    padding:
+                                                                        EdgeInsets.all(
+                                                                            10),
+                                                                    height: 50,
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      border: Border.all(
+                                                                          color: Colors
+                                                                              .grey
+                                                                              .shade200),
+                                                                    ),
+                                                                    child: Text(
+                                                                      "1",
+                                                                      style: TextStyle(
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    )),
+                                                                Container(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .all(
+                                                                              5),
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    border: Border.all(
+                                                                        color: Colors
+                                                                            .grey
+                                                                            .shade200),
+                                                                  ),
+                                                                  height: 50,
+                                                                  child: Icon(
+                                                                    Icons.add,
+                                                                    color: Colors
+                                                                        .black,
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          //unitprice
+                                                          Text(
+                                                            "Unit Price: ₹${item['ourPrice']}",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10,
+                                                          ),
+
+                                                          //dealprice
+                                                          Text(
+                                                            "Deal Price: Not Applicable",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10,
+                                                          ),
+
+                                                          //price
+                                                          Text(
+                                                            "Total Price: ₹${item['ourPrice']}",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10,
+                                                          ),
+
+                                                          //remove button
+                                                          Container(
                                                             padding:
                                                                 EdgeInsets.all(
-                                                                    10),
-                                                            height: 50,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              border: Border.all(
-                                                                  color: Colors
-                                                                      .grey
-                                                                      .shade200),
-                                                            ),
+                                                                    8),
+                                                            height: 40,
                                                             child: Text(
-                                                              "1",
+                                                              "Remove",
                                                               style: TextStyle(
                                                                   color: Colors
-                                                                      .black,
+                                                                      .white,
+                                                                  fontSize: 16,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold),
-                                                            )),
-                                                        Container(
-                                                          padding:
-                                                              EdgeInsets.all(5),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade200),
+                                                            ),
+                                                            decoration: BoxDecoration(
+                                                                color:
+                                                                    Colors.red,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5)),
                                                           ),
-                                                          height: 50,
-                                                          child: Icon(
-                                                            Icons.add,
-                                                            color: Colors.black,
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  //unitprice
-                                                  Text(
-                                                    "Unit Price: ₹7.38",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-
-                                                  //dealprice
-                                                  Text(
-                                                    "Deal Price: Not Applicable",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-
-                                                  //price
-                                                  Text(
-                                                    "Total Price: ₹7.38",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-
-                                                  //remove button
-                                                  Container(
-                                                    padding: EdgeInsets.all(8),
-                                                    height: 40,
-                                                    child: Text(
-                                                      "Remove",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.red,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(5)),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 20,
-                                                  )
-                                                ],
+                                                          SizedBox(
+                                                            height: 20,
+                                                          )
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                },
                                               );
                                             },
                                           ),
