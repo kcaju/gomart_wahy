@@ -9,7 +9,8 @@ class NewAndOrganicItemsCard extends StatelessWidget {
     this.addToFavourite,
     required this.oldrate,
   });
-  final String url, title, rate, oldrate;
+  final String url, title, oldrate;
+  final num rate;
   final VoidCallback? addToFavourite;
 
   @override
@@ -77,7 +78,7 @@ class NewAndOrganicItemsCard extends StatelessWidget {
                       width: 5,
                     ),
                     Text(
-                      rate,
+                      "${rate}",
                       style: TextStyle(
                           color: Colors.red,
                           fontSize: 16,
@@ -165,7 +166,7 @@ class NewAndOrganicItemsCard extends StatelessWidget {
                             width: 5,
                           ),
                           Text(
-                            rate,
+                            "${rate}",
                             style: TextStyle(
                                 color: Colors.red,
                                 fontSize: 16,

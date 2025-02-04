@@ -802,14 +802,6 @@ class HomeScreen extends StatelessWidget {
                                                         ));
                                                   },
                                                   child: TrendingproductsCard(
-                                                      addToFavourite: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  WishListpage(),
-                                                            ));
-                                                      },
                                                       addToCartTap: () {
                                                         //add to cart
                                                         addToCart({
@@ -923,14 +915,6 @@ class HomeScreen extends StatelessWidget {
                                                         ));
                                                   },
                                                   child: TrendingproductsCard(
-                                                      addToFavourite: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  WishListpage(),
-                                                            ));
-                                                      },
                                                       addToCartTap: () {
                                                         //add to cart
                                                         addToCart({
@@ -2078,26 +2062,15 @@ class HomeScreen extends StatelessWidget {
                                                                 ),
                                                               ));
                                                         },
-                                                        child:
-                                                            NewAndOrganicItemsCard(
-                                                                addToFavourite:
-                                                                    () {
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                        builder:
-                                                                            (context) =>
-                                                                                WishListpage(),
-                                                                      ));
-                                                                },
-                                                                oldrate: product[
-                                                                    'originalPrice'],
-                                                                url: product[
-                                                                    'productUrl'],
-                                                                title: product[
-                                                                    'productName'],
-                                                                rate: product[
-                                                                    'ourPrice']),
+                                                        child: NewAndOrganicItemsCard(
+                                                            oldrate: product[
+                                                                'originalPrice'],
+                                                            url: product[
+                                                                'productUrl'],
+                                                            title: product[
+                                                                'productName'],
+                                                            rate: product[
+                                                                'ourPrice']),
                                                       );
                                                     },
                                                     separatorBuilder:
@@ -2213,26 +2186,15 @@ class HomeScreen extends StatelessWidget {
                                                                 ),
                                                               ));
                                                         },
-                                                        child:
-                                                            NewAndOrganicItemsCard(
-                                                                addToFavourite:
-                                                                    () {
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                        builder:
-                                                                            (context) =>
-                                                                                WishListpage(),
-                                                                      ));
-                                                                },
-                                                                oldrate: product[
-                                                                    'originalPrice'],
-                                                                url: product[
-                                                                    'productUrl'],
-                                                                title: product[
-                                                                    'productName'],
-                                                                rate: product[
-                                                                    'ourPrice']),
+                                                        child: NewAndOrganicItemsCard(
+                                                            oldrate: product[
+                                                                'originalPrice'],
+                                                            url: product[
+                                                                'productUrl'],
+                                                            title: product[
+                                                                'productName'],
+                                                            rate: product[
+                                                                'ourPrice']),
                                                       );
                                                     },
                                                     separatorBuilder:
@@ -2650,25 +2612,15 @@ class HomeScreen extends StatelessWidget {
                                                                   ),
                                                                 ));
                                                           },
-                                                          child:
-                                                              NewAndOrganicItemsCard(
-                                                                  addToFavourite:
-                                                                      () {
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                          builder: (context) =>
-                                                                              WishListpage(),
-                                                                        ));
-                                                                  },
-                                                                  oldrate: product[
-                                                                      'originalPrice'],
-                                                                  url: product[
-                                                                      'productUrl'],
-                                                                  title: product[
-                                                                      'productName'],
-                                                                  rate: product[
-                                                                      'ourPrice']),
+                                                          child: NewAndOrganicItemsCard(
+                                                              oldrate: product[
+                                                                  'originalPrice'],
+                                                              url: product[
+                                                                  'productUrl'],
+                                                              title: product[
+                                                                  'productName'],
+                                                              rate: product[
+                                                                  'ourPrice']),
                                                         );
                                                       },
                                                       separatorBuilder:
@@ -2790,25 +2742,15 @@ class HomeScreen extends StatelessWidget {
                                                                   ),
                                                                 ));
                                                           },
-                                                          child:
-                                                              NewAndOrganicItemsCard(
-                                                                  addToFavourite:
-                                                                      () {
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                          builder: (context) =>
-                                                                              WishListpage(),
-                                                                        ));
-                                                                  },
-                                                                  oldrate: product[
-                                                                      'originalPrice'],
-                                                                  url: product[
-                                                                      'productUrl'],
-                                                                  title: product[
-                                                                      'productName'],
-                                                                  rate: product[
-                                                                      'ourPrice']),
+                                                          child: NewAndOrganicItemsCard(
+                                                              oldrate: product[
+                                                                  'originalPrice'],
+                                                              url: product[
+                                                                  'productUrl'],
+                                                              title: product[
+                                                                  'productName'],
+                                                              rate: product[
+                                                                  'ourPrice']),
                                                         );
                                                       },
                                                       separatorBuilder:

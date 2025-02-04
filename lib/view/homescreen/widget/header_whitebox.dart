@@ -233,11 +233,6 @@ class HeaderWhitebox extends StatelessWidget {
                             builder: (context) => CartitemsPage()),
                       );
                     } else if (value == 3) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => WishListpage()),
-                      );
-                    } else if (value == 4) {
                       //logout
                       await FirebaseAuth.instance.signOut();
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -301,26 +296,6 @@ class HeaderWhitebox extends StatelessWidget {
                     ),
                     PopupMenuItem(
                       value: 3,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.favorite,
-                            color: Colors.grey,
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            "My Wishlist",
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: 4,
                       child: Row(
                         children: [
                           Icon(

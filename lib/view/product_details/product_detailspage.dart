@@ -927,14 +927,6 @@ class ProductDetailspage extends StatelessWidget {
                                                     ));
                                               },
                                               child: TrendingproductsCard(
-                                                  addToFavourite: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              WishListpage(),
-                                                        ));
-                                                  },
                                                   addToCartTap: () {
                                                     //add to cart
                                                     addToCart({

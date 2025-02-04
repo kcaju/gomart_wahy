@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gomart_wahy/controller/cartitem_controller/cartitem_controller.dart';
 import 'package:gomart_wahy/view/all_products/all_productscreen.dart';
 import 'package:gomart_wahy/view/checkout/checkout_page.dart';
 import 'package:gomart_wahy/view/floatingactionbutton/custom_floatingbutton.dart';
@@ -9,60 +10,12 @@ import 'package:gomart_wahy/view/homescreen/home_screen.dart';
 import 'package:gomart_wahy/view/homescreen/widget/header_greencard.dart';
 import 'package:gomart_wahy/view/homescreen/widget/header_whitebox.dart';
 import 'package:gomart_wahy/view/homescreen/widget/homepage.dart';
+import 'package:provider/provider.dart';
 
-class CartitemsPage extends StatefulWidget {
+class CartitemsPage extends StatelessWidget {
   const CartitemsPage({super.key});
 
-  @override
-  State<CartitemsPage> createState() => _CartitemsPageState();
-}
-
-class _CartitemsPageState extends State<CartitemsPage> {
-  // Function to get current user's ID
-  Future<String?> getCurrentUserId() async {
-    try {
-      User? user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        return user.uid;
-      } else {
-        return null; // User is not logged in
-      }
-    } catch (e) {
-      print('Error getting current user ID: $e');
-      return null;
-    }
-  }
-
-  // Function to remove item from Firestore cart
-
-  Future<void> removeCartItem(String userId, String productId) async {
-    try {
-      // Reference to the user's document
-      DocumentReference userDocRef =
-          FirebaseFirestore.instance.collection('users').doc(userId);
-
-      // Get the current cart items
-      DocumentSnapshot userDoc = await userDocRef.get();
-      if (!userDoc.exists) {
-        print("User document not found.");
-        return;
-      }
-
-      List<dynamic> cartItems =
-          (userDoc.data() as Map<String, dynamic>)['cartItems'] ?? [];
-
-      // Filter out the item to be removed based on `productId`
-      cartItems.removeWhere((item) => item['productId'] == productId);
-
-      // Update Firestore with the new cart list
-      await userDocRef.update({'cartItems': cartItems});
-
-      print("Item removed successfully.");
-    } catch (e) {
-      print('Error removing item from cart: $e');
-    }
-  }
-
+  // // Function to get current user's ID
   @override
   Widget build(BuildContext context) {
     // Use MediaQuery to get screen width and height
@@ -73,6 +26,7 @@ class _CartitemsPageState extends State<CartitemsPage> {
     bool isMobile = screenWidth < 600;
     bool isTablet = screenWidth >= 600 && screenWidth <= 1024;
     bool isDesktop = screenWidth > 1024;
+    final cartController = Provider.of<CartitemController>(context);
     return Scaffold(
       endDrawer: DrawerScreen(),
       floatingActionButton: CustomFloatingbutton(),
@@ -138,239 +92,282 @@ class _CartitemsPageState extends State<CartitemsPage> {
                               height: 100,
                             ),
                             isDesktop
-                                ? Column(
-                                    children: [
-                                      //delete button box
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 5, vertical: 5),
-                                        height: 70,
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              width: 120,
-                                              child: Center(
-                                                child: Text(
-                                                  "Delete All",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold),
+                                ? FutureBuilder<String?>(
+                                    future: cartController.getCurrentUserId(),
+                                    builder: (context, userIdSnapshot) {
+                                      if (userIdSnapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Center(
+                                            child: CircularProgressIndicator());
+                                      }
+
+                                      if (userIdSnapshot.hasError ||
+                                          userIdSnapshot.data == null) {
+                                        return Center(
+                                            child: Text("No user logged in"));
+                                      }
+
+                                      // User ID successfully fetched, use it to get cart items
+                                      String userId = userIdSnapshot.data!;
+                                      return StreamBuilder<DocumentSnapshot>(
+                                        stream: FirebaseFirestore.instance
+                                            .collection(
+                                                'users') // users collection
+                                            .doc(
+                                                userId) // Document ID will be the user's UID
+                                            .snapshots(),
+                                        builder: (context, cartSnapshot) {
+                                          if (cartSnapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return Center(
+                                                child:
+                                                    CircularProgressIndicator());
+                                          }
+
+                                          if (!cartSnapshot.hasData ||
+                                              cartSnapshot.data == null) {
+                                            return Center(
+                                                child:
+                                                    Text("No data available"));
+                                          }
+
+                                          // var cartItems = snapshot
+                                          //         .data!['cartItems']
+                                          //     as List; // Your cart array field in Firestore
+                                          // double totalPrice =
+                                          //     snapshot.data!['totalPrice'] ??
+                                          //         0.0;
+                                          Map<String, dynamic> userData =
+                                              cartSnapshot.data!.data()
+                                                  as Map<String, dynamic>;
+                                          List<dynamic> cartItems =
+                                              userData['cartItems'] ?? [];
+                                          double totalPrice =
+                                              userData['totalPrice'] ?? 0.0;
+
+                                          if (cartItems == null ||
+                                              cartItems.isEmpty) {
+                                            return Center(
+                                                child:
+                                                    Text("Your cart is empty"));
+                                          }
+
+                                          return Column(
+                                            children: [
+                                              //delete button box
+                                              Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 5, vertical: 5),
+                                                height: 70,
+                                                child: Row(
+                                                  children: [
+                                                    Container(
+                                                      width: 120,
+                                                      child: Center(
+                                                        child: Text(
+                                                          "Delete All",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.orange,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5)),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    Container(
+                                                      width: 160,
+                                                      child: Center(
+                                                        child: Text(
+                                                          "Delete selectec only",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.orange,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5)),
+                                                    ),
+                                                  ],
                                                 ),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    border: Border.all(
+                                                        color: Colors
+                                                            .grey.shade200),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            3)),
                                               ),
-                                              decoration: BoxDecoration(
-                                                  color: Colors.orange,
-                                                  borderRadius:
-                                                      BorderRadius.circular(5)),
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            Container(
-                                              width: 160,
-                                              child: Center(
-                                                child: Text(
-                                                  "Delete selectec only",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
+                                              SizedBox(
+                                                height: 10,
                                               ),
-                                              decoration: BoxDecoration(
-                                                  color: Colors.orange,
-                                                  borderRadius:
-                                                      BorderRadius.circular(5)),
-                                            ),
-                                          ],
-                                        ),
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border.all(
-                                                color: Colors.grey.shade200),
-                                            borderRadius:
-                                                BorderRadius.circular(3)),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      //cart items box
-                                      Container(
-                                        // height: 500,
-                                        child: Column(
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Container(
-                                                  height: screenHeight * 0.085,
-                                                  width: screenWidth * 0.05,
-                                                  color: Colors.green.shade200,
-                                                ),
-                                                Container(
-                                                  child: Center(
-                                                    child: Text(
-                                                      "Image",
-                                                      style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                              //cart items box
+                                              Container(
+                                                // height: 500,
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Container(
+                                                          height: screenHeight *
+                                                              0.085,
+                                                          width: screenWidth *
+                                                              0.05,
+                                                          color: Colors
+                                                              .green.shade200,
+                                                        ),
+                                                        Container(
+                                                          child: Center(
+                                                            child: Text(
+                                                              "Image",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                          height: screenHeight *
+                                                              0.085,
+                                                          width: screenWidth *
+                                                              0.19,
+                                                          color: Colors
+                                                              .green.shade200,
+                                                        ),
+                                                        Container(
+                                                          height: screenHeight *
+                                                              0.085,
+                                                          width: screenWidth *
+                                                              0.18,
+                                                          child: Center(
+                                                            child: Text(
+                                                              "Product Name",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                          color: Colors
+                                                              .green.shade200,
+                                                        ),
+                                                        Container(
+                                                          height: screenHeight *
+                                                              0.085,
+                                                          width: screenWidth *
+                                                              0.15,
+                                                          child: Center(
+                                                            child: Text(
+                                                              "Quantity",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                          color: Colors
+                                                              .green.shade200,
+                                                        ),
+                                                        Container(
+                                                          height: screenHeight *
+                                                              0.085,
+                                                          width: screenWidth *
+                                                              0.078,
+                                                          child: Center(
+                                                            child: Text(
+                                                              "Unit Price",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                          color: Colors
+                                                              .green.shade200,
+                                                        ),
+                                                        Container(
+                                                          height: screenHeight *
+                                                              0.085,
+                                                          width: screenWidth *
+                                                              0.12,
+                                                          child: Center(
+                                                            child: Text(
+                                                              "Deal Price",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                          color: Colors
+                                                              .green.shade200,
+                                                        ),
+                                                        Container(
+                                                          height: screenHeight *
+                                                              0.085,
+                                                          width: screenWidth *
+                                                              0.075,
+                                                          child: Center(
+                                                            child: Text(
+                                                              "Price",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                          color: Colors
+                                                              .green.shade200,
+                                                        ),
+                                                        Container(
+                                                          height: screenHeight *
+                                                              0.085,
+                                                          width: screenWidth *
+                                                              0.06,
+                                                          color: Colors
+                                                              .green.shade200,
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ),
-                                                  height: screenHeight * 0.085,
-                                                  width: screenWidth * 0.19,
-                                                  color: Colors.green.shade200,
-                                                ),
-                                                Container(
-                                                  height: screenHeight * 0.085,
-                                                  width: screenWidth * 0.18,
-                                                  child: Center(
-                                                    child: Text(
-                                                      "Product Name",
-                                                      style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                    SizedBox(
+                                                      height: 5,
                                                     ),
-                                                  ),
-                                                  color: Colors.green.shade200,
-                                                ),
-                                                Container(
-                                                  height: screenHeight * 0.085,
-                                                  width: screenWidth * 0.15,
-                                                  child: Center(
-                                                    child: Text(
-                                                      "Quantity",
-                                                      style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  ),
-                                                  color: Colors.green.shade200,
-                                                ),
-                                                Container(
-                                                  height: screenHeight * 0.085,
-                                                  width: screenWidth * 0.078,
-                                                  child: Center(
-                                                    child: Text(
-                                                      "Unit Price",
-                                                      style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  ),
-                                                  color: Colors.green.shade200,
-                                                ),
-                                                Container(
-                                                  height: screenHeight * 0.085,
-                                                  width: screenWidth * 0.12,
-                                                  child: Center(
-                                                    child: Text(
-                                                      "Deal Price",
-                                                      style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  ),
-                                                  color: Colors.green.shade200,
-                                                ),
-                                                Container(
-                                                  height: screenHeight * 0.085,
-                                                  width: screenWidth * 0.075,
-                                                  child: Center(
-                                                    child: Text(
-                                                      "Price",
-                                                      style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  ),
-                                                  color: Colors.green.shade200,
-                                                ),
-                                                Container(
-                                                  height: screenHeight * 0.085,
-                                                  width: screenWidth * 0.06,
-                                                  color: Colors.green.shade200,
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: 5,
-                                            ),
-                                            FutureBuilder<String?>(
-                                              future: getCurrentUserId(),
-                                              builder:
-                                                  (context, userIdSnapshot) {
-                                                if (userIdSnapshot
-                                                        .connectionState ==
-                                                    ConnectionState.waiting) {
-                                                  return Center(
-                                                      child:
-                                                          CircularProgressIndicator());
-                                                }
-
-                                                if (userIdSnapshot.hasError ||
-                                                    userIdSnapshot.data ==
-                                                        null) {
-                                                  return Center(
-                                                      child: Text(
-                                                          "No user logged in"));
-                                                }
-
-                                                // User ID successfully fetched, use it to get cart items
-                                                String userId =
-                                                    userIdSnapshot.data!;
-                                                return StreamBuilder<
-                                                    DocumentSnapshot>(
-                                                  stream: FirebaseFirestore
-                                                      .instance
-                                                      .collection(
-                                                          'users') // users collection
-                                                      .doc(
-                                                          userId) // Document ID will be the user's UID
-                                                      .snapshots(),
-                                                  builder: (context, snapshot) {
-                                                    if (snapshot
-                                                            .connectionState ==
-                                                        ConnectionState
-                                                            .waiting) {
-                                                      return Center(
-                                                          child:
-                                                              CircularProgressIndicator());
-                                                    }
-
-                                                    if (!snapshot.hasData ||
-                                                        snapshot.data == null) {
-                                                      return Center(
-                                                          child: Text(
-                                                              "No data available"));
-                                                    }
-
-                                                    var cartItems = snapshot
-                                                            .data!['cartItems']
-                                                        as List; // Your cart array field in Firestore
-
-                                                    if (cartItems == null ||
-                                                        cartItems.isEmpty) {
-                                                      return Center(
-                                                          child: Text(
-                                                              "Your cart is empty"));
-                                                    }
-
-                                                    return //list of items in cart
-                                                        ListView.builder(
+                                                    ListView.builder(
                                                       padding: EdgeInsets.only(
                                                           top: 15, right: 10),
                                                       itemCount:
@@ -442,23 +439,34 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                                             Container(
                                                               child: Row(
                                                                 children: [
-                                                                  Container(
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      border: Border.all(
-                                                                          color: Colors
-                                                                              .grey
-                                                                              .shade200),
-                                                                    ),
-                                                                    padding:
-                                                                        EdgeInsets
-                                                                            .all(5),
-                                                                    height: 50,
-                                                                    child: Icon(
-                                                                      Icons
-                                                                          .remove,
-                                                                      color: Colors
-                                                                          .black,
+                                                                  InkWell(
+                                                                    onTap:
+                                                                        () async {
+                                                                      await cartController.updateCartQuantity(
+                                                                          item[
+                                                                              'productId'],
+                                                                          -1);
+                                                                    },
+                                                                    child:
+                                                                        Container(
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        border: Border.all(
+                                                                            color:
+                                                                                Colors.grey.shade200),
+                                                                      ),
+                                                                      padding:
+                                                                          EdgeInsets.all(
+                                                                              5),
+                                                                      height:
+                                                                          50,
+                                                                      child:
+                                                                          Icon(
+                                                                        Icons
+                                                                            .remove,
+                                                                        color: Colors
+                                                                            .black,
+                                                                      ),
                                                                     ),
                                                                   ),
                                                                   Container(
@@ -469,28 +477,41 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                                                           50,
                                                                       child:
                                                                           Text(
-                                                                        "1",
+                                                                        item['quantity']
+                                                                            .toString(),
                                                                         style: TextStyle(
                                                                             color:
                                                                                 Colors.black,
                                                                             fontWeight: FontWeight.bold),
                                                                       )),
-                                                                  Container(
-                                                                    padding:
-                                                                        EdgeInsets
-                                                                            .all(5),
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      border: Border.all(
-                                                                          color: Colors
-                                                                              .grey
-                                                                              .shade200),
-                                                                    ),
-                                                                    height: 50,
-                                                                    child: Icon(
-                                                                      Icons.add,
-                                                                      color: Colors
-                                                                          .black,
+                                                                  InkWell(
+                                                                    onTap:
+                                                                        () async {
+                                                                      await cartController
+                                                                          .updateCartQuantity(
+                                                                              item['productId'],
+                                                                              1);
+                                                                    },
+                                                                    child:
+                                                                        Container(
+                                                                      padding:
+                                                                          EdgeInsets.all(
+                                                                              5),
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        border: Border.all(
+                                                                            color:
+                                                                                Colors.grey.shade200),
+                                                                      ),
+                                                                      height:
+                                                                          50,
+                                                                      child:
+                                                                          Icon(
+                                                                        Icons
+                                                                            .add,
+                                                                        color: Colors
+                                                                            .black,
+                                                                      ),
                                                                     ),
                                                                   )
                                                                 ],
@@ -509,7 +530,7 @@ class _CartitemsPageState extends State<CartitemsPage> {
 
                                                             //unitprice
                                                             Text(
-                                                              "₹${item['ourPrice']}",
+                                                              "₹${item['ourPrice'] * item['quantity']}",
                                                               style: TextStyle(
                                                                   color: Colors
                                                                       .black,
@@ -533,7 +554,7 @@ class _CartitemsPageState extends State<CartitemsPage> {
 
                                                             //price
                                                             Text(
-                                                              "₹${item['ourPrice']}",
+                                                              "₹${item['ourPrice'] * item['quantity']}",
                                                               style: TextStyle(
                                                                   color: Colors
                                                                       .black,
@@ -547,10 +568,10 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                                             GestureDetector(
                                                               onTap: () async {
                                                                 // Remove the item from the cart
-                                                                await removeCartItem(
-                                                                    userId,
-                                                                    item[
-                                                                        'productId']);
+                                                                await cartController
+                                                                    .removeCartItem(
+                                                                        item[
+                                                                            'productId']);
                                                               },
                                                               child: Container(
                                                                 padding:
@@ -582,329 +603,359 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                                           ],
                                                         );
                                                       },
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                            )
-                                          ],
-                                        ),
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border.all(
-                                                color: Colors.grey.shade200),
-                                            borderRadius:
-                                                BorderRadius.circular(5)),
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      //total section
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 5, horizontal: 5),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 10, vertical: 8),
-                                              width: screenWidth * 0.35,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text(
-                                                        "Subtotal",
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 20,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w600),
-                                                      ),
-                                                      Text(
-                                                        "₹ 8.69",
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 20,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w600),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Divider(
-                                                    color: Colors.grey.shade200,
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text(
-                                                        "Total",
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 20,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w600),
-                                                      ),
-                                                      Text(
-                                                        "₹ 8.69",
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 20,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w600),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                  Text(
-                                                    "Shipping options will be updated during checkout.",
-                                                    style: TextStyle(
-                                                        color: Colors.grey,
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      //confirm button
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        CheckoutPage(),
-                                                              ));
-                                                        },
-                                                        child: Container(
-                                                          alignment:
-                                                              Alignment.center,
-                                                          child: Text(
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            "Confirm Order",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 15,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                          height: screenHeight *
-                                                              0.06,
-                                                          width: screenWidth *
-                                                              0.09,
-                                                          decoration: BoxDecoration(
-                                                              color: Color(
-                                                                  0xFF03AC13),
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5)),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 15,
-                                                      ),
-                                                      //continue button
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        AllProductscreen(),
-                                                              ));
-                                                        },
-                                                        child: Container(
-                                                          alignment:
-                                                              Alignment.center,
-                                                          child: Text(
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            "Continue Shopping",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .orange,
-                                                                fontSize: 15,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                          height: screenHeight *
-                                                              0.06,
-                                                          width: screenWidth *
-                                                              0.095,
-                                                          decoration: BoxDecoration(
-                                                              color:
-                                                                  Colors.white,
-                                                              border: Border.all(
-                                                                  color: Colors
-                                                                      .orange),
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5)),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  )
-                                                ],
-                                              ),
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  border: Border.all(
-                                                      color: Colors
-                                                          .grey.shade200)),
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  )
-                                : //other devices
-                                Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20),
-                                    child: Column(
-                                      children: [
-                                        //delete button box
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 5, vertical: 5),
-                                          height: 70,
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                width: 120,
-                                                child: Center(
-                                                  child: Text(
-                                                    "Delete All",
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
+                                                    )
+                                                  ],
                                                 ),
                                                 decoration: BoxDecoration(
-                                                    color: Colors.orange,
+                                                    color: Colors.white,
+                                                    border: Border.all(
+                                                        color: Colors
+                                                            .grey.shade200),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             5)),
                                               ),
                                               SizedBox(
-                                                width: 5,
+                                                height: 20,
                                               ),
-                                              Container(
-                                                width: 160,
-                                                child: Center(
-                                                  child: Text(
-                                                    "Delete selected only",
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
+                                              //total section
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 5,
+                                                        horizontal: 5),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 10,
+                                                              vertical: 8),
+                                                      width: screenWidth * 0.35,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text(
+                                                                "Subtotal",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        20,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600),
+                                                              ),
+                                                              Text(
+                                                                "₹${totalPrice.toStringAsFixed(2)}",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        20,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Divider(
+                                                            color: Colors
+                                                                .grey.shade200,
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Text(
+                                                                "Total",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        20,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600),
+                                                              ),
+                                                              Text(
+                                                                "₹${totalPrice.toStringAsFixed(2)}",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        20,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                            height: 15,
+                                                          ),
+                                                          Text(
+                                                            "Shipping options will be updated during checkout.",
+                                                            style: TextStyle(
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 15,
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              //confirm button
+                                                              GestureDetector(
+                                                                onTap: () {
+                                                                  Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                CheckoutPage(),
+                                                                      ));
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  child: Text(
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    "Confirm Order",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontSize:
+                                                                            15,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ),
+                                                                  height:
+                                                                      screenHeight *
+                                                                          0.06,
+                                                                  width:
+                                                                      screenWidth *
+                                                                          0.09,
+                                                                  decoration: BoxDecoration(
+                                                                      color: Color(
+                                                                          0xFF03AC13),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5)),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 15,
+                                                              ),
+                                                              //continue button
+                                                              GestureDetector(
+                                                                onTap: () {
+                                                                  Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                AllProductscreen(),
+                                                                      ));
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  child: Text(
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    "Continue Shopping",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .orange,
+                                                                        fontSize:
+                                                                            15,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ),
+                                                                  height:
+                                                                      screenHeight *
+                                                                          0.06,
+                                                                  width:
+                                                                      screenWidth *
+                                                                          0.095,
+                                                                  decoration: BoxDecoration(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      border: Border.all(
+                                                                          color: Colors
+                                                                              .orange),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5)),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.white,
+                                                          border: Border.all(
+                                                              color: Colors.grey
+                                                                  .shade200)),
+                                                    )
+                                                  ],
                                                 ),
-                                                decoration: BoxDecoration(
-                                                    color: Colors.orange,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5)),
-                                              ),
+                                              )
                                             ],
-                                          ),
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              border: Border.all(
-                                                  color: Colors.grey.shade200),
-                                              borderRadius:
-                                                  BorderRadius.circular(3)),
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        //cart items list
-                                        Container(
-                                          child: FutureBuilder<String?>(
-                                            future: getCurrentUserId(),
-                                            builder: (context, userIdSnapshot) {
-                                              if (userIdSnapshot
-                                                      .connectionState ==
-                                                  ConnectionState.waiting) {
-                                                return Center(
-                                                    child:
-                                                        CircularProgressIndicator());
-                                              }
+                                          );
+                                        },
+                                      );
+                                    },
+                                  )
+                                : //other devices
+                                FutureBuilder<String?>(
+                                    future: cartController.getCurrentUserId(),
+                                    builder: (context, userIdSnapshot) {
+                                      if (userIdSnapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Center(
+                                            child: CircularProgressIndicator());
+                                      }
 
-                                              if (userIdSnapshot.hasError ||
-                                                  userIdSnapshot.data == null) {
-                                                return Center(
-                                                    child: Text(
-                                                        "No user logged in"));
-                                              }
+                                      if (userIdSnapshot.hasError ||
+                                          userIdSnapshot.data == null) {
+                                        return Center(
+                                            child: Text("No user logged in"));
+                                      }
 
-                                              // User ID successfully fetched, use it to get cart items
-                                              String userId =
-                                                  userIdSnapshot.data!;
-                                              return StreamBuilder<
-                                                  DocumentSnapshot>(
-                                                stream: FirebaseFirestore
-                                                    .instance
-                                                    .collection(
-                                                        'users') // users collection
-                                                    .doc(
-                                                        userId) // Document ID will be the user's UID
-                                                    .snapshots(),
-                                                builder: (context, snapshot) {
-                                                  if (snapshot
-                                                          .connectionState ==
-                                                      ConnectionState.waiting) {
-                                                    return Center(
-                                                        child:
-                                                            CircularProgressIndicator());
-                                                  }
+                                      // User ID successfully fetched, use it to get cart items
+                                      String userId = userIdSnapshot.data!;
+                                      return StreamBuilder<DocumentSnapshot>(
+                                        stream: FirebaseFirestore.instance
+                                            .collection(
+                                                'users') // users collection
+                                            .doc(
+                                                userId) // Document ID will be the user's UID
+                                            .snapshots(),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return Center(
+                                                child:
+                                                    CircularProgressIndicator());
+                                          }
 
-                                                  if (!snapshot.hasData ||
-                                                      snapshot.data == null) {
-                                                    return Center(
-                                                        child: Text(
-                                                            "No data available"));
-                                                  }
+                                          if (!snapshot.hasData ||
+                                              snapshot.data == null) {
+                                            return Center(
+                                                child:
+                                                    Text("No data available"));
+                                          }
 
-                                                  var cartItems = snapshot
-                                                          .data!['cartItems']
-                                                      as List; // Your cart array field in Firestore
+                                          var cartItems = snapshot
+                                                  .data!['cartItems']
+                                              as List; // Your cart array field in Firestore
 
-                                                  if (cartItems == null ||
-                                                      cartItems.isEmpty) {
-                                                    return Center(
-                                                        child: Text(
-                                                            "Your cart is empty"));
-                                                  }
+                                          if (cartItems == null ||
+                                              cartItems.isEmpty) {
+                                            return Center(
+                                                child:
+                                                    Text("Your cart is empty"));
+                                          }
 
-                                                  return ListView.builder(
+                                          return Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 20),
+                                            child: Column(
+                                              children: [
+                                                //delete button box
+                                                Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 5,
+                                                      vertical: 5),
+                                                  height: 70,
+                                                  child: Row(
+                                                    children: [
+                                                      Container(
+                                                        width: 120,
+                                                        child: Center(
+                                                          child: Text(
+                                                            "Delete All",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                        decoration: BoxDecoration(
+                                                            color:
+                                                                Colors.orange,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5)),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 5,
+                                                      ),
+                                                      Container(
+                                                        width: 160,
+                                                        child: Center(
+                                                          child: Text(
+                                                            "Delete selected only",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                        decoration: BoxDecoration(
+                                                            color:
+                                                                Colors.orange,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5)),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      border: Border.all(
+                                                          color: Colors
+                                                              .grey.shade200),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              3)),
+                                                ),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                //cart items list
+                                                Container(
+                                                  child: ListView.builder(
                                                     itemCount: cartItems.length,
                                                     physics: ScrollPhysics(),
                                                     shrinkWrap: true,
@@ -1111,176 +1162,202 @@ class _CartitemsPageState extends State<CartitemsPage> {
                                                         ],
                                                       );
                                                     },
-                                                  );
-                                                },
-                                              );
-                                            },
-                                          ),
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color: Colors.grey.shade200),
-                                              color: Colors.white),
-                                        ),
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        //total section
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 8),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    "Subtotal",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.w600),
                                                   ),
-                                                  Text(
-                                                    "₹ 8.69",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.w600),
-                                                  ),
-                                                ],
-                                              ),
-                                              Divider(
-                                                color: Colors.grey.shade200,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    "Total",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.w600),
-                                                  ),
-                                                  Text(
-                                                    "₹ 8.69",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.w600),
-                                                  ),
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                height: 15,
-                                              ),
-                                              Text(
-                                                "Shipping options will be updated during checkout.",
-                                                style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 18,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                              SizedBox(
-                                                height: 15,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  //confirm button
+                                                  decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color: Colors
+                                                              .grey.shade200),
+                                                      color: Colors.white),
+                                                ),
+                                                SizedBox(
+                                                  height: 20,
+                                                ),
+                                                //total section
+                                                Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 10,
+                                                      vertical: 8),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                            "Subtotal",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600),
+                                                          ),
+                                                          Text(
+                                                            "₹ 8.69",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Divider(
+                                                        color: Colors
+                                                            .grey.shade200,
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                            "Total",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600),
+                                                          ),
+                                                          Text(
+                                                            "₹ 8.69",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(
+                                                        height: 15,
+                                                      ),
+                                                      Text(
+                                                        "Shipping options will be updated during checkout.",
+                                                        style: TextStyle(
+                                                            color: Colors.grey,
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 15,
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          //confirm button
 
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                CheckoutPage(),
-                                                          ));
-                                                    },
-                                                    child: Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Text(
-                                                        "Confirm Order",
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 15,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      height:
-                                                          screenHeight * 0.05,
-                                                      width: 120,
-                                                      decoration: BoxDecoration(
-                                                          color:
-                                                              Color(0xFF03AC13),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(5)),
-                                                    ),
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            CheckoutPage(),
+                                                                  ));
+                                                            },
+                                                            child: Container(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              child: Text(
+                                                                "Confirm Order",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize:
+                                                                        15,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                              height:
+                                                                  screenHeight *
+                                                                      0.05,
+                                                              width: 120,
+                                                              decoration: BoxDecoration(
+                                                                  color: Color(
+                                                                      0xFF03AC13),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              5)),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 15,
+                                                          ),
+                                                          //continue button
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            AllProductscreen(),
+                                                                  ));
+                                                            },
+                                                            child: Container(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              child: Text(
+                                                                "Continue Shopping",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .orange,
+                                                                    fontSize:
+                                                                        15,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                              height:
+                                                                  screenHeight *
+                                                                      0.05,
+                                                              width: 150,
+                                                              decoration: BoxDecoration(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  border: Border.all(
+                                                                      color: Colors
+                                                                          .orange),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              5)),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      )
+                                                    ],
                                                   ),
-                                                  SizedBox(
-                                                    width: 15,
-                                                  ),
-                                                  //continue button
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                AllProductscreen(),
-                                                          ));
-                                                    },
-                                                    child: Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Text(
-                                                        "Continue Shopping",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.orange,
-                                                            fontSize: 15,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      height:
-                                                          screenHeight * 0.05,
-                                                      width: 150,
-                                                      decoration: BoxDecoration(
-                                                          color: Colors.white,
-                                                          border: Border.all(
-                                                              color: Colors
-                                                                  .orange),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(5)),
-                                                    ),
-                                                  ),
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              border: Border.all(
-                                                  color: Colors.grey.shade200)),
-                                        )
-                                      ],
-                                    ),
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      border: Border.all(
+                                                          color: Colors
+                                                              .grey.shade200)),
+                                                )
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
                                   )
                           ],
                         ),
