@@ -82,118 +82,120 @@ class _AlertboxFieldsState extends State<AlertboxFields> {
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10), color: Colors.white),
-        child: Form(
-          key: formkey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "Edit Shipment Address",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25),
-              ),
-              SizedBox(
-                width: screenWidth * 0.7,
-                child: Customtextformfield(
-                    hintText: "First Name", controller: fname),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                width: screenWidth * 0.7,
-                child: Customtextformfield(
-                    hintText: "Last Name", controller: lname),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                width: screenWidth * 0.7,
-                child:
-                    Customtextformfield(hintText: "Email", controller: email),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                width: screenWidth * 0.7,
-                child:
-                    Customtextformfield(hintText: "Mobile", controller: mobile),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                width: screenWidth * 0.7,
-                child:
-                    Customtextformfield(hintText: "State", controller: state),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                width: screenWidth * 0.7,
-                child: Customtextformfield(
-                    hintText: "Street Address", controller: address),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                width: screenWidth * 0.7,
-                child: Customtextformfield(
-                    hintText: "EirCode", controller: eirCode),
-              ),
-              SizedBox(
-                height: 10,
-              ), //close and save button
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      "Close",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 15,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      if (formkey.currentState!.validate()) {
-                        saveUserData();
-                      }
-                    },
-                    child: Container(
-                      height: 45,
-                      padding: EdgeInsets.all(10),
-                      alignment: Alignment.center,
+        child: SingleChildScrollView(
+          child: Form(
+            key: formkey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Edit Shipment Address",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25),
+                ),
+                SizedBox(
+                  width: screenWidth * 0.7,
+                  child: Customtextformfield(
+                      hintText: "First Name", controller: fname),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  width: screenWidth * 0.7,
+                  child: Customtextformfield(
+                      hintText: "Last Name", controller: lname),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  width: screenWidth * 0.7,
+                  child:
+                      Customtextformfield(hintText: "Email", controller: email),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  width: screenWidth * 0.7,
+                  child: Customtextformfield(
+                      hintText: "Mobile", controller: mobile),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  width: screenWidth * 0.7,
+                  child:
+                      Customtextformfield(hintText: "State", controller: state),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  width: screenWidth * 0.7,
+                  child: Customtextformfield(
+                      hintText: "Street Address", controller: address),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  width: screenWidth * 0.7,
+                  child: Customtextformfield(
+                      hintText: "EirCode", controller: eirCode),
+                ),
+                SizedBox(
+                  height: 10,
+                ), //close and save button
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
                       child: Text(
-                        "Save Changes",
+                        "Close",
                         style: TextStyle(
-                            color: Colors.white,
+                            color: Colors.black,
                             fontWeight: FontWeight.w600,
                             fontSize: 16),
                       ),
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
                     ),
-                  )
-                ],
-              )
-            ],
+                    SizedBox(
+                      width: 15,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        if (formkey.currentState!.validate()) {
+                          saveUserData();
+                        }
+                      },
+                      child: Container(
+                        height: 45,
+                        padding: EdgeInsets.all(10),
+                        alignment: Alignment.center,
+                        child: Text(
+                          "Save Changes",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16),
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

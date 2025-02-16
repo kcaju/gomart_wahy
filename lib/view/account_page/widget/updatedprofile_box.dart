@@ -252,6 +252,9 @@ class _UpdatedprofileBoxState extends State<UpdatedprofileBox> {
           GestureDetector(
             onTap: () {
               _updateUserProfile();
+              fname.clear();
+              email.clear();
+              mobile.clear();
             },
             child: Container(
               height: 50,
@@ -342,6 +345,10 @@ class _UpdatedprofileBoxState extends State<UpdatedprofileBox> {
           GestureDetector(
             onTap: () {
               _changePassword();
+              email.clear();
+              currentPassword.clear();
+              newPassword.clear();
+              confirmPassword.clear();
             },
             child: Container(
               height: 50,

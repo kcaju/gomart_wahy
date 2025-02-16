@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:gomart_wahy/view/account_page/account_page.dart';
 import 'package:gomart_wahy/view/all_products/all_productscreen.dart';
 import 'package:gomart_wahy/view/cartpage/cartitems_page.dart';
+import 'package:gomart_wahy/view/homescreen/home_screen.dart';
 import 'package:gomart_wahy/view/homescreen/widget/category_popup.dart';
-import 'package:gomart_wahy/view/homescreen/widget/homepage.dart';
 import 'package:gomart_wahy/view/quick_enquiry/quick_enquiryscreen.dart';
 import 'package:gomart_wahy/view/signin/signin_screen.dart';
-import 'package:gomart_wahy/view/wishlist_page/wish_listpage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HeaderWhitebox extends StatelessWidget {
   const HeaderWhitebox({super.key});
@@ -58,7 +56,7 @@ class HeaderWhitebox extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Homepage(),
+                          builder: (context) => HomeScreen(),
                         ));
                   },
                   child: Text(

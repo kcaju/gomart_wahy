@@ -34,60 +34,12 @@ class _SplashScreenState extends State<SplashScreen> {
     bool isTablet = screenWidth >= 600 && screenWidth < 1024;
     bool isDesktop = screenWidth >= 1024;
     return Scaffold(
-      body: isMobile
+      body: isDesktop
           ? Container(
               decoration: BoxDecoration(
                   image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage("assets/png/mobilesplash.jpg"))),
-              child: Center(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 100, horizontal: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Go",
-                                style: TextStyle(
-                                    color: Colors.orange,
-                                    fontSize: 80,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                "mart",
-                                style: TextStyle(
-                                    color: Color(0xFF03AC13),
-                                    fontSize: 80,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            textAlign: TextAlign.center,
-                            "Your Ultimate Destination for Fresh Groceries, Spices, and More!",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            )
-          : Container(
-              decoration: BoxDecoration(
-                  image: DecorationImage(
                       fit: BoxFit.fill,
-                      image: AssetImage("assets/png/shop.jpg"))),
+                      image: AssetImage("assets/png/cover1.jpg"))),
               child: Center(
                 child: Padding(
                   padding: EdgeInsets.only(right: 60),
@@ -101,14 +53,14 @@ class _SplashScreenState extends State<SplashScreen> {
                           Text(
                             "Go",
                             style: TextStyle(
-                                color: Colors.orange,
+                                color: Colors.white,
                                 fontSize: 100,
                                 fontWeight: FontWeight.bold),
                           ),
                           Text(
                             "mart",
                             style: TextStyle(
-                                color: Color(0xFF03AC13),
+                                color: Colors.black,
                                 fontSize: 100,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -116,7 +68,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       ),
                       isDesktop
                           ? Text(
-                              "Your Ultimate Destination for Fresh Groceries, Spices, and More!",
+                              "The Perfect Blend of Quality\n and Convenience for Your Home!",
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 20,
@@ -141,6 +93,54 @@ class _SplashScreenState extends State<SplashScreen> {
                                 )
                               ],
                             ),
+                    ],
+                  ),
+                ),
+              ),
+            )
+          : Container(
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      fit: BoxFit.fill,
+                      image: AssetImage("assets/png/cover2.jpg"))),
+              child: Center(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Go",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 80,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "mart",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 80,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            textAlign: TextAlign.center,
+                            "The Perfect Blend of Quality and Convenience for Your Home!",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: isTablet ? 25 : 18,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),

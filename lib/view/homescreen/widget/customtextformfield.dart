@@ -19,10 +19,10 @@ class Customtextformfield extends StatelessWidget {
       child: TextFormField(
         validator: isPassword
             ? (value) {
-                if (value != null && value.length >= 8) {
+                if (value != null && value.length >= 6) {
                   return null;
                 } else {
-                  return "enter password with atleast 8 charaters";
+                  return "enter password with atleast 6 charaters";
                 }
               }
             : (value) {

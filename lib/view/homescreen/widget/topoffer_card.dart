@@ -80,7 +80,7 @@ class TopofferCard extends StatelessWidget {
               : isMobile
                   ? double.infinity
                   : 0.6),
-      height: screenHeight * (isMobile ? 0.3 : 0.25),
+      height: screenHeight * (isMobile ? 0.4 : 0.25),
       decoration: BoxDecoration(
           color: Colors.amber,
           image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(url)),

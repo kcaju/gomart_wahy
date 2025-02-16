@@ -322,18 +322,18 @@ class _SigninScreenState extends State<SigninScreen> {
                         SizedBox(
                           height: 10,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              "Forgot Password",
-                              style: TextStyle(
-                                  color: Colors.green,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal),
-                            ),
-                          ],
-                        ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.end,
+                        //   children: [
+                        //     Text(
+                        //       "Forgot Password",
+                        //       style: TextStyle(
+                        //           color: Colors.green,
+                        //           fontSize: 16,
+                        //           fontWeight: FontWeight.normal),
+                        //     ),
+                        //   ],
+                        // ),
                         SizedBox(
                           height: 20,
                         ),
