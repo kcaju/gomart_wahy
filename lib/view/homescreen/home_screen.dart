@@ -15,6 +15,7 @@ import 'package:gomart_wahy/view/homescreen/widget/header_greencard.dart';
 import 'package:gomart_wahy/view/homescreen/widget/header_whitebox.dart';
 import 'package:gomart_wahy/view/homescreen/widget/homepage.dart';
 import 'package:gomart_wahy/view/homescreen/widget/new_and_organic_items_card.dart';
+import 'package:gomart_wahy/view/homescreen/widget/product_search_screen.dart';
 import 'package:gomart_wahy/view/homescreen/widget/shop_and_about_button.dart';
 import 'package:gomart_wahy/view/homescreen/widget/topoffer_card.dart';
 import 'package:gomart_wahy/view/homescreen/widget/trendingproducts_card.dart';
@@ -35,6 +36,8 @@ class HomeScreen extends StatelessWidget {
     bool isMobile = screenWidth < 600;
     bool isTablet = screenWidth >= 600 && screenWidth <= 1024;
     bool isDesktop = screenWidth > 1024;
+
+    TextEditingController searchController = TextEditingController();
 
     // Get Firestore instance
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -3391,6 +3394,7 @@ class HomeScreen extends StatelessWidget {
                                     children: [
                                       Expanded(
                                         child: TextFormField(
+                                          controller: searchController,
                                           decoration: InputDecoration(
                                               contentPadding:
                                                   EdgeInsets.symmetric(
@@ -3405,21 +3409,37 @@ class HomeScreen extends StatelessWidget {
                                               border: InputBorder.none),
                                         ),
                                       ),
-                                      Container(
-                                        width: screenWidth * 0.09,
-                                        // height: screenHeight * 0.07,
-                                        child: Center(
-                                          child: Icon(
-                                            Icons.search,
-                                            color: Colors.white,
+                                      GestureDetector(
+                                        onTap: () {
+                                          String query =
+                                              searchController.text.trim();
+                                          if (query.isNotEmpty) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ProductSearchScreen(
+                                                        searchQuery: query),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        child: Container(
+                                          width: screenWidth * 0.09,
+                                          // height: screenHeight * 0.07,
+                                          child: Center(
+                                            child: Icon(
+                                              Icons.search,
+                                              color: Colors.white,
+                                            ),
                                           ),
+                                          decoration: BoxDecoration(
+                                              color: Colors.orange,
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(5),
+                                                  bottomRight:
+                                                      Radius.circular(5))),
                                         ),
-                                        decoration: BoxDecoration(
-                                            color: Colors.orange,
-                                            borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(5),
-                                                bottomRight:
-                                                    Radius.circular(5))),
                                       )
                                     ],
                                   ),

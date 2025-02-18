@@ -169,22 +169,22 @@ class TrendingproductsCard extends StatelessWidget {
                   color: Colors.red,
                 ),
               ),
-        Positioned(
-          right: isProducts ? 120 : 8,
-          top: 8,
-          child: GestureDetector(
-            onTap: addToFavourite,
-            child: CircleAvatar(
-              radius: 15,
-              backgroundColor: Colors.green,
-              child: Icon(
-                Icons.favorite_outline,
-                size: 20,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        )
+        // Positioned(
+        //   right: isProducts ? 120 : 8,
+        //   top: 8,
+        //   child: GestureDetector(
+        //     onTap: addToFavourite,
+        //     child: CircleAvatar(
+        //       radius: 15,
+        //       backgroundColor: Colors.green,
+        //       child: Icon(
+        //         Icons.favorite_outline,
+        //         size: 20,
+        //         color: Colors.white,
+        //       ),
+        //     ),
+        //   ),
+        // )
       ],
     );
   }

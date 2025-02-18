@@ -23,6 +23,8 @@ class AllProductscreen extends StatefulWidget {
 class _AllProductscreenState extends State<AllProductscreen> {
   // Firebase Firestore instance
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  TextEditingController searchController = TextEditingController();
+  String searchQuery = '';
   String? selectedValue;
   List countries = [];
   // Fetch country from Firestore
@@ -252,6 +254,8 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                                 children: [
                                                   Expanded(
                                                     child: TextFormField(
+                                                      controller:
+                                                          searchController,
                                                       decoration: InputDecoration(
                                                           contentPadding:
                                                               EdgeInsets
@@ -276,12 +280,12 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                                   //search button
                                                   GestureDetector(
                                                     onTap: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                AllProductscreen(),
-                                                          ));
+                                                      setState(() {
+                                                        searchQuery =
+                                                            searchController
+                                                                .text
+                                                                .trim(); // Convert to lowercase
+                                                      });
                                                     },
                                                     child: Container(
                                                       width: 40,
@@ -581,109 +585,6 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Container(
-                                              height: 80,
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 10, vertical: 15),
-                                              decoration: BoxDecoration(
-                                                color: Colors.white70,
-                                                border: Border.all(
-                                                    color:
-                                                        Colors.grey.shade200),
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  Text(
-                                                    "Showing 1-6 of 5 results",
-                                                    style: TextStyle(
-                                                      color:
-                                                          Colors.grey.shade700,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16,
-                                                    ),
-                                                  ),
-                                                  Spacer(),
-                                                  Text(
-                                                    "Sort Price By:",
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16,
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: 8),
-                                                  Container(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 5),
-                                                    decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                          color: Colors
-                                                              .grey.shade400),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
-                                                    ),
-                                                    child:
-                                                        DropdownButton<String>(
-                                                      hint: Text(
-                                                        "Select Any Option",
-                                                        style: TextStyle(
-                                                            color: Colors.grey,
-                                                            fontSize: 14),
-                                                      ),
-                                                      value:
-                                                          selectedValue, // Define this variable to hold the selected value
-                                                      underline:
-                                                          SizedBox(), // Removes the default underline
-                                                      items: [
-                                                        DropdownMenuItem(
-                                                          value: "recent",
-                                                          child: Text(
-                                                            "Recent Products",
-                                                            style: TextStyle(
-                                                                color:
-                                                                    Colors.grey,
-                                                                fontSize: 14),
-                                                          ),
-                                                        ),
-                                                        DropdownMenuItem(
-                                                          value: "highToLow",
-                                                          child: Text(
-                                                              "High to Low",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  fontSize:
-                                                                      14)),
-                                                        ),
-                                                        DropdownMenuItem(
-                                                          value: "lowToHigh",
-                                                          child: Text(
-                                                              "Low to High",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  fontSize:
-                                                                      14)),
-                                                        ),
-                                                      ],
-                                                      onChanged:
-                                                          (String? newValue) {
-                                                        setState(() {
-                                                          selectedValue =
-                                                              newValue!;
-                                                        });
-                                                      },
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
                                             SizedBox(
                                               height: 20,
                                             ),
@@ -713,8 +614,26 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                                         QueryDocumentSnapshot>
                                                     documents =
                                                     snapshot.data!.docs;
+                                                // **Filter products by name or category**
+                                                List<QueryDocumentSnapshot>
+                                                    filteredProducts =
+                                                    documents.where((doc) {
+                                                  String productName =
+                                                      doc['productName']
+                                                          .toString()
+                                                          .toLowerCase();
+                                                  String category =
+                                                      doc['category']
+                                                          .toString()
+                                                          .toLowerCase();
+                                                  return productName.contains(
+                                                          searchQuery) ||
+                                                      category.contains(
+                                                          searchQuery);
+                                                }).toList();
                                                 return GridView.builder(
-                                                  itemCount: documents.length,
+                                                  itemCount:
+                                                      filteredProducts.length,
                                                   shrinkWrap: true,
                                                   gridDelegate:
                                                       SliverGridDelegateWithFixedCrossAxisCount(
@@ -724,8 +643,9 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                                           mainAxisExtent: 600),
                                                   itemBuilder:
                                                       (context, index) {
-                                                    final product = documents[
-                                                        index]; // Access each product as a map
+                                                    final product =
+                                                        filteredProducts[
+                                                            index]; // Access each product as a map
                                                     return GestureDetector(
                                                       onTap: () {
                                                         Navigator.push(
@@ -861,6 +781,8 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                                   children: [
                                                     Expanded(
                                                       child: TextFormField(
+                                                        controller:
+                                                            searchController,
                                                         decoration: InputDecoration(
                                                             contentPadding:
                                                                 EdgeInsets
@@ -886,12 +808,12 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                                     //search button
                                                     GestureDetector(
                                                       onTap: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  AllProductscreen(),
-                                                            ));
+                                                        setState(() {
+                                                          searchQuery =
+                                                              searchController
+                                                                  .text
+                                                                  .trim(); // Convert to lowercase
+                                                        });
                                                       },
                                                       child: Container(
                                                         width: 40,
@@ -1164,217 +1086,8 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                               borderRadius:
                                                   BorderRadius.circular(5)),
                                         ),
-                                        SizedBox(
-                                          height: 15,
-                                        ),
                                         //sort option
-                                        Container(
-                                          height: isMobile ? 110 : 80,
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 15),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white70,
-                                            border: Border.all(
-                                                color: Colors.grey.shade200),
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                          child: isTablet
-                                              ? Row(
-                                                  children: [
-                                                    Text(
-                                                      "Showing 1-6 of 5 results",
-                                                      style: TextStyle(
-                                                        color: Colors
-                                                            .grey.shade700,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 16,
-                                                      ),
-                                                    ),
-                                                    Spacer(),
-                                                    Text(
-                                                      "Sort Price By:",
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 16,
-                                                      ),
-                                                    ),
-                                                    SizedBox(width: 8),
-                                                    Container(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 5),
-                                                      decoration: BoxDecoration(
-                                                        border: Border.all(
-                                                            color: Colors
-                                                                .grey.shade400),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(5),
-                                                      ),
-                                                      child: DropdownButton<
-                                                          String>(
-                                                        hint: Text(
-                                                          "Select Any Option",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.grey,
-                                                              fontSize: 14),
-                                                        ),
-                                                        value:
-                                                            selectedValue, // Define this variable to hold the selected value
-                                                        underline:
-                                                            SizedBox(), // Removes the default underline
-                                                        items: [
-                                                          DropdownMenuItem(
-                                                            value: "recent",
-                                                            child: Text(
-                                                              "Recent Products",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  fontSize: 14),
-                                                            ),
-                                                          ),
-                                                          DropdownMenuItem(
-                                                            value: "highToLow",
-                                                            child: Text(
-                                                                "High to Low",
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .grey,
-                                                                    fontSize:
-                                                                        14)),
-                                                          ),
-                                                          DropdownMenuItem(
-                                                            value: "lowToHigh",
-                                                            child: Text(
-                                                                "Low to High",
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .grey,
-                                                                    fontSize:
-                                                                        14)),
-                                                          ),
-                                                        ],
-                                                        onChanged:
-                                                            (String? newValue) {
-                                                          setState(() {
-                                                            selectedValue =
-                                                                newValue!;
-                                                          });
-                                                        },
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ) //for mobile
-                                              : Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      "Showing 1-6 of 5 results",
-                                                      style: TextStyle(
-                                                        color: Colors
-                                                            .grey.shade700,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 17,
-                                                      ),
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Text(
-                                                          "Sort Price By:",
-                                                          style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 15,
-                                                          ),
-                                                        ),
-                                                        SizedBox(width: 8),
-                                                        Container(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  horizontal:
-                                                                      5),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade400),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        5),
-                                                          ),
-                                                          child: DropdownButton<
-                                                              String>(
-                                                            hint: Text(
-                                                              "Select Any Option",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  fontSize: 13),
-                                                            ),
-                                                            value:
-                                                                selectedValue, // Define this variable to hold the selected value
-                                                            underline:
-                                                                SizedBox(), // Removes the default underline
-                                                            items: [
-                                                              DropdownMenuItem(
-                                                                value: "recent",
-                                                                child: Text(
-                                                                  "Recent Products",
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .grey,
-                                                                      fontSize:
-                                                                          12),
-                                                                ),
-                                                              ),
-                                                              DropdownMenuItem(
-                                                                value:
-                                                                    "highToLow",
-                                                                child: Text(
-                                                                    "High to Low",
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .grey,
-                                                                        fontSize:
-                                                                            12)),
-                                                              ),
-                                                              DropdownMenuItem(
-                                                                value:
-                                                                    "lowToHigh",
-                                                                child: Text(
-                                                                    "Low to High",
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .grey,
-                                                                        fontSize:
-                                                                            12)),
-                                                              ),
-                                                            ],
-                                                            onChanged: (String?
-                                                                newValue) {
-                                                              setState(() {
-                                                                selectedValue =
-                                                                    newValue!;
-                                                              });
-                                                            },
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    )
-                                                  ],
-                                                ),
-                                        ),
+
                                         SizedBox(
                                           height: 15,
                                         ),
@@ -1406,8 +1119,26 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                                           QueryDocumentSnapshot>
                                                       documents =
                                                       snapshot.data!.docs;
+                                                  // **Filter products by name or category**
+                                                  List<QueryDocumentSnapshot>
+                                                      filteredProducts =
+                                                      documents.where((doc) {
+                                                    String productName =
+                                                        doc['productName']
+                                                            .toString()
+                                                            .toLowerCase();
+                                                    String category =
+                                                        doc['category']
+                                                            .toString()
+                                                            .toLowerCase();
+                                                    return productName.contains(
+                                                            searchQuery) ||
+                                                        category.contains(
+                                                            searchQuery);
+                                                  }).toList();
                                                   return GridView.builder(
-                                                    itemCount: documents.length,
+                                                    itemCount:
+                                                        filteredProducts.length,
                                                     shrinkWrap: true,
                                                     gridDelegate:
                                                         SliverGridDelegateWithFixedCrossAxisCount(
@@ -1419,8 +1150,9 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                                                 600),
                                                     itemBuilder:
                                                         (context, index) {
-                                                      final product = documents[
-                                                          index]; // Access each product as a map
+                                                      final product =
+                                                          filteredProducts[
+                                                              index]; // Access each product as a map
                                                       return GestureDetector(
                                                         onTap: () {
                                                           Navigator.push(
@@ -1517,13 +1249,31 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                                           QueryDocumentSnapshot>
                                                       documents =
                                                       snapshot.data!.docs;
+                                                  // **Filter products by name or category**
+                                                  List<QueryDocumentSnapshot>
+                                                      filteredProducts =
+                                                      documents.where((doc) {
+                                                    String productName =
+                                                        doc['productName']
+                                                            .toString()
+                                                            .toLowerCase();
+                                                    String category =
+                                                        doc['category']
+                                                            .toString()
+                                                            .toLowerCase();
+                                                    return productName.contains(
+                                                            searchQuery) ||
+                                                        category.contains(
+                                                            searchQuery);
+                                                  }).toList();
                                                   return ListView.separated(
                                                       shrinkWrap: true,
                                                       physics: ScrollPhysics(),
                                                       itemBuilder:
                                                           (context, index) {
-                                                        final product = documents[
-                                                            index]; // Access each product as a map
+                                                        final product =
+                                                            filteredProducts[
+                                                                index]; // Access each product as a map
                                                         return GestureDetector(
                                                           onTap: () {
                                                             Navigator.push(
@@ -1596,7 +1346,8 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                                                 height: 10,
                                                               ),
                                                       itemCount:
-                                                          documents.length);
+                                                          filteredProducts
+                                                              .length);
                                                 },
                                               )
                                       ],

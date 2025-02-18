@@ -5,12 +5,19 @@ import 'package:gomart_wahy/view/all_products/all_productscreen.dart';
 import 'package:gomart_wahy/view/cartpage/cartitems_page.dart';
 import 'package:gomart_wahy/view/homescreen/home_screen.dart';
 import 'package:gomart_wahy/view/homescreen/widget/category_popup.dart';
+import 'package:gomart_wahy/view/homescreen/widget/product_search_screen.dart';
 import 'package:gomart_wahy/view/quick_enquiry/quick_enquiryscreen.dart';
 import 'package:gomart_wahy/view/signin/signin_screen.dart';
 
-class HeaderWhitebox extends StatelessWidget {
+class HeaderWhitebox extends StatefulWidget {
   const HeaderWhitebox({super.key});
 
+  @override
+  State<HeaderWhitebox> createState() => _HeaderWhiteboxState();
+}
+
+class _HeaderWhiteboxState extends State<HeaderWhitebox> {
+  TextEditingController searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     // Use MediaQuery to get screen width and height
@@ -166,6 +173,7 @@ class HeaderWhitebox extends StatelessWidget {
                           children: [
                             Expanded(
                               child: TextFormField(
+                                controller: searchController,
                                 decoration: InputDecoration(
                                     contentPadding: EdgeInsets.symmetric(
                                         horizontal: 10, vertical: 5),
@@ -178,20 +186,34 @@ class HeaderWhitebox extends StatelessWidget {
                                     border: InputBorder.none),
                               ),
                             ),
-                            Container(
-                              width: screenWidth * 0.04,
-                              // height: screenHeight * 0.07,
-                              child: Center(
-                                child: Icon(
-                                  Icons.search,
-                                  color: Colors.white,
+                            GestureDetector(
+                              onTap: () {
+                                String query = searchController.text.trim();
+                                if (query.isNotEmpty) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ProductSearchScreen(
+                                          searchQuery: query),
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Container(
+                                width: screenWidth * 0.04,
+                                // height: screenHeight * 0.07,
+                                child: Center(
+                                  child: Icon(
+                                    Icons.search,
+                                    color: Colors.white,
+                                  ),
                                 ),
+                                decoration: BoxDecoration(
+                                    color: Colors.orange,
+                                    borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(5),
+                                        bottomRight: Radius.circular(5))),
                               ),
-                              decoration: BoxDecoration(
-                                  color: Colors.orange,
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(5),
-                                      bottomRight: Radius.circular(5))),
                             )
                           ],
                         ),
