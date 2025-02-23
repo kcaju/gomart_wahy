@@ -33,6 +33,7 @@ class Customtextformfield extends StatelessWidget {
                 }
               },
         controller: controller,
+        obscureText: isPassword ? true : false,
         decoration: InputDecoration(
             hintText: hintText,
             suffixIcon: isPassword

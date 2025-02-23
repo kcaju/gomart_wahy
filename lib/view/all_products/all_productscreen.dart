@@ -660,16 +660,16 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                                       },
                                                       child:
                                                           TrendingproductsCard(
-                                                              addToFavourite:
-                                                                  () {
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
-                                                                              WishListpage(),
-                                                                    ));
-                                                              },
+                                                              // addToFavourite:
+                                                              //     () {
+                                                              //   Navigator.push(
+                                                              //       context,
+                                                              //       MaterialPageRoute(
+                                                              //         builder:
+                                                              //             (context) =>
+                                                              //                 WishListpage(),
+                                                              //       ));
+                                                              // },
                                                               addToCartTap: () {
                                                                 //add to cart
                                                                 addToCart(
@@ -1168,16 +1168,16 @@ class _AllProductscreenState extends State<AllProductscreen> {
                                                         },
                                                         child:
                                                             TrendingproductsCard(
-                                                                addToFavourite:
-                                                                    () {
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                        builder:
-                                                                            (context) =>
-                                                                                WishListpage(),
-                                                                      ));
-                                                                },
+                                                                // addToFavourite:
+                                                                //     () {
+                                                                //   Navigator.push(
+                                                                //       context,
+                                                                //       MaterialPageRoute(
+                                                                //         builder:
+                                                                //             (context) =>
+                                                                //                 WishListpage(),
+                                                                //       ));
+                                                                // },
                                                                 addToCartTap:
                                                                     () {
                                                                   //add to cart
